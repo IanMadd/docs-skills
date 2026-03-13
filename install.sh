@@ -66,16 +66,33 @@ if [[ -n "${1:-}" ]]; then
   cp "$SCRIPT_DIR"/.github/copilot-instructions.md "$TARGET_GITHUB/"
   cp "$SCRIPT_DIR"/.github/instructions/doc-types.instructions.md "$TARGET_INSTRUCTIONS/"
 
+  # ── Install vale config ─────────────────────────────────────────────────────
+  # .vale.ini points vale at the Google and Microsoft style packages.
+  # vale sync downloads the package files to .vale/styles/ — those should not be committed.
+  if [[ -f "$TARGET/.vale.ini" ]]; then
+    echo "  Skipping .vale.ini — file already exists in $TARGET"
+  else
+    cp "$SCRIPT_DIR"/.github/skills/docs-style-edit/assets/.vale.ini "$TARGET/"
+    echo "  Installed .vale.ini to: $TARGET"
+  fi
+
+  GITIGNORE="$TARGET/.gitignore"
+  if ! grep -qF '.vale/styles/' "$GITIGNORE" 2>/dev/null; then
+    printf '\n# Vale downloaded style packages\n.vale/styles/\n' >> "$GITIGNORE"
+    echo "  Added .vale/styles/ to $GITIGNORE"
+  fi
+
   echo ""
   echo "Installed workspace files to: $TARGET_GITHUB"
   echo ""
-  echo "  Next step: customize $TARGET_GITHUB/copilot-instructions.md"
-  echo "  Replace the placeholder audience and style content with details specific to this repo,"
-  echo "  then commit the file:"
+  echo "  Next steps:"
+  echo "    1. Run 'vale sync' in $TARGET to download the Google and Microsoft style packages."
+  echo "    2. Customize $TARGET_GITHUB/copilot-instructions.md for this repo."
+  echo "    3. Commit the new files:"
   echo ""
-  echo "    cd $TARGET"
-  echo "    git add .github/"
-  echo "    git commit -m \"Add DevOps docs AI skills workspace config\""
+  echo "       cd $TARGET"
+  echo "       git add .github/ .vale.ini .gitignore"
+  echo "       git commit -m \"Add DevOps docs AI skills workspace config\""
 fi
 
 echo ""

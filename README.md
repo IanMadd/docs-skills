@@ -5,11 +5,20 @@ writing technical content for DevOps engineers.
 
 ## What's in this toolkit
 
+### Instructions
+
 | File | What it does |
 |------|-------------|
 | `.github/copilot-instructions.md` | Always-on context: audience, tone, and style baseline for the whole workspace |
 | `.github/instructions/devops-docs-style.instructions.md` | Style rules auto-applied to every Markdown file |
 | `.github/instructions/doc-types.instructions.md` | On-demand structural templates for each of the six doc types |
+
+### Prompts
+
+Prompts are single-task slash commands. Use them for drafting or editing one document at a time.
+
+| File | What it does |
+|------|-------------|
 | `.github/prompts/draft-tutorial.prompt.md` | `/draft-tutorial` — scaffold a new tutorial |
 | `.github/prompts/draft-how-to.prompt.md` | `/draft-how-to` — scaffold a how-to guide |
 | `.github/prompts/draft-reference-doc.prompt.md` | `/draft-reference-doc` — scaffold a reference page |
@@ -20,6 +29,19 @@ writing technical content for DevOps engineers.
 | `.github/prompts/review-completeness.prompt.md` | `/review-completeness` — audit a doc for gaps, missing steps, and accuracy |
 | `.github/prompts/generate-code-examples.prompt.md` | `/generate-code-examples` — generate shell, YAML, CLI, HCL, or config examples |
 | `.github/prompts/notes-to-doc.prompt.md` | `/notes-to-doc` — convert raw notes or tickets into a structured draft |
+
+### Skills
+
+Skills are multi-stage workflows. Use them when a task requires sequential steps with intermediate results — for example, running a linter and then applying fixes based on its output.
+
+| Directory | What it does |
+|-----------|-------------|
+| `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
+
+### Install scripts
+
+| File | What it does |
+|------|-------------|
 | `install.sh` | Install or update the toolkit on macOS and Linux |
 | `install.ps1` | Install or update the toolkit on Windows |
 
@@ -106,6 +128,28 @@ All prompts appear as slash commands in Copilot Chat.
 2. Type `/edit-for-style` in Copilot Chat.
 3. Attach the file using `#` or paste the content directly.
 4. Copilot returns the corrected version with a summary of changes made.
+
+## How to use the docs-style-edit skill
+
+The `/docs-style-edit` skill runs a four-stage editing workflow for an existing document:
+
+1. **Stage 1 — Markdown lint**: Runs `markdownlint-cli2 --fix` to auto-correct formatting issues, then reports anything that couldn't be auto-fixed.
+2. **Stage 2 — Lint**: Uses the Vale MCP server (or CLI fallback) to capture all prose errors, warnings, and suggestions.
+3. **Stage 3 — Fix vale issues**: Applies fixes for every flagged item, working from errors down to suggestions.
+4. **Stage 4 — Apply style guide**: Edits the fixed document against the full DevOps docs style rules.
+
+**Prerequisites**: markdownlint-cli2 must be installed, and either the Vale MCP server must be
+configured in VS Code or vale must be installed with `vale sync` run in the repo. The skill
+uses the Vale MCP server when available and falls back to the CLI. See
+`.github/skills/docs-style-edit/references/markdownlint-setup.md` and
+`.github/skills/docs-style-edit/references/vale-setup.md` for setup instructions.
+
+**Usage**:
+
+1. Open Copilot Chat in VS Code.
+2. Type `/docs-style-edit`.
+3. Enter the path to the file you want to edit, for example: `docs/how-to-deploy.md`
+4. Copilot runs all three stages and returns the edited file plus a summary of changes.
 
 ## How the style instructions work
 

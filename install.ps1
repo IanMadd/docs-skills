@@ -74,16 +74,36 @@ if ($TargetRepo -ne "") {
     Copy-Item -Path (Join-Path $ScriptDir ".github\instructions\doc-types.instructions.md") `
         -Destination $TargetInstructions -Force
 
+    # ── Install vale config ───────────────────────────────────────────────────
+    # .vale.ini points vale at the Google and Microsoft style packages.
+    # vale sync downloads the package files to .vale\styles\ — those should not be committed.
+    $ValeIni = Join-Path $ScriptDir ".github\skills\docs-style-edit\assets\.vale.ini"
+    $TargetValeIni = Join-Path $TargetRepo ".vale.ini"
+    if (Test-Path $TargetValeIni) {
+        Write-Host "  Skipping .vale.ini — file already exists in $TargetRepo"
+    } else {
+        Copy-Item -Path $ValeIni -Destination $TargetRepo -Force
+        Write-Host "  Installed .vale.ini to: $TargetRepo"
+    }
+
+    $Gitignore = Join-Path $TargetRepo ".gitignore"
+    $ValeEntry = ".vale/styles/"
+    if (-not (Test-Path $Gitignore) -or -not (Select-String -Path $Gitignore -SimpleMatch $ValeEntry -Quiet)) {
+        Add-Content -Path $Gitignore -Value "`n# Vale downloaded style packages`n.vale/styles/"
+        Write-Host "  Added .vale/styles/ to .gitignore"
+    }
+
     Write-Host ""
     Write-Host "Installed workspace files to: $TargetGithub"
     Write-Host ""
-    Write-Host "  Next step: customize $TargetGithub\copilot-instructions.md"
-    Write-Host "  Replace the placeholder audience and style content with details specific to this repo,"
-    Write-Host "  then commit the file:"
+    Write-Host "  Next steps:"
+    Write-Host "    1. Run 'vale sync' in $TargetRepo to download the Google and Microsoft style packages."
+    Write-Host "    2. Customize $TargetGithub\copilot-instructions.md for this repo."
+    Write-Host "    3. Commit the new files:"
     Write-Host ""
-    Write-Host "    cd $TargetRepo"
-    Write-Host "    git add .github/"
-    Write-Host "    git commit -m 'Add DevOps docs AI skills workspace config'"
+    Write-Host "       cd $TargetRepo"
+    Write-Host "       git add .github/ .vale.ini .gitignore"
+    Write-Host "       git commit -m 'Add DevOps docs AI skills workspace config'"
 }
 
 Write-Host ""
