@@ -74,6 +74,19 @@ if ($TargetRepo -ne "") {
     Copy-Item -Path (Join-Path $ScriptDir ".github\instructions\doc-types.instructions.md") `
         -Destination $TargetInstructions -Force
 
+    # ── Install skills ────────────────────────────────────────────────────────────
+    # Skills are workspace-scoped and must be present in the target repo to appear
+    # as slash commands in VS Code Copilot Agent mode.
+    # All skill directories under .github\skills\ are installed automatically.
+    $TargetSkills = Join-Path $TargetGithub "skills"
+    New-Item -ItemType Directory -Path $TargetSkills -Force | Out-Null
+    $SkillDirs = Get-ChildItem -Path (Join-Path $ScriptDir ".github\skills") -Directory
+    foreach ($skillDir in $SkillDirs) {
+        Copy-Item -Path $skillDir.FullName -Destination $TargetSkills -Recurse -Force
+        Write-Host "  Installed $($skillDir.Name) skill to: $TargetSkills"
+    }
+    Write-Host "  Installed $($SkillDirs.Count) skill(s) total"
+
     # ── Install vale config ───────────────────────────────────────────────────
     # .vale.ini points vale at the Google and Microsoft style packages.
     # vale sync downloads the package files to .vale\styles\ — those should not be committed.

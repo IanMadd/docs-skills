@@ -146,10 +146,14 @@ uses the Vale MCP server when available and falls back to the CLI. See
 
 **Usage**:
 
-1. Open Copilot Chat in VS Code.
+1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
 2. Type `/docs-style-edit`.
 3. Enter the path to the file you want to edit, for example: `docs/how-to-deploy.md`
-4. Copilot runs all three stages and returns the edited file plus a summary of changes.
+4. Copilot runs all four stages and returns the edited file plus a summary of changes.
+
+> **Tip**: If `/docs-style-edit` doesn't appear, check that you're in **Agent** mode (not Ask
+> or Edit) and that `.github/skills/docs-style-edit/` exists in the repo you have open. Run
+> `./install.sh <path-to-your-docs-repo>` to install it.
 
 ## How the style instructions work
 
@@ -182,7 +186,8 @@ After running, reload VS Code (`Cmd/Ctrl+Shift+P` → **Developer: Reload Window
 
 > **Note:** The `install.sh` and `install.ps1` scripts update your VS Code user profile only.
 > If your docs repos have a committed `.github/copilot-instructions.md`, that file is
-> project-specific and won't be overwritten by the script.
+> project-specific and won't be overwritten by the script. The `docs-style-edit` skill is
+> workspace-scoped — run the install script with a target repo path to install it there.
 
 ## Customizing the toolkit
 

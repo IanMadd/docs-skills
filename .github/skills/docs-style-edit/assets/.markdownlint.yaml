@@ -119,7 +119,7 @@ MD028: false
 # MD029/ol-prefix - Ordered list item prefix
 MD029:
   # List style
-  style: "one_or_ordered"
+  style: "one"
 
 # MD030/list-marker-space - Spaces after list markers
 MD030:
@@ -204,3 +204,7 @@ MD046:
 
 # MD047/single-trailing-newline - Files should end with a single newline character
 MD047: true
+
+MD060:
+  aligned_delimiter: true
+  style: aligned

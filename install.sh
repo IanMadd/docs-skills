@@ -66,6 +66,21 @@ if [[ -n "${1:-}" ]]; then
   cp "$SCRIPT_DIR"/.github/copilot-instructions.md "$TARGET_GITHUB/"
   cp "$SCRIPT_DIR"/.github/instructions/doc-types.instructions.md "$TARGET_INSTRUCTIONS/"
 
+  # ── Install skills ────────────────────────────────────────────────────────────
+  # Skills are workspace-scoped and must be present in the target repo to appear
+  # as slash commands in VS Code Copilot Agent mode.
+  # All skill directories under .github/skills/ are installed automatically.
+  TARGET_SKILLS="$TARGET_GITHUB/skills"
+  mkdir -p "$TARGET_SKILLS"
+  skill_count=0
+  for skill_dir in "$SCRIPT_DIR"/.github/skills/*/; do
+    skill_name="$(basename "$skill_dir")"
+    cp -r "${skill_dir%/}" "$TARGET_SKILLS/"
+    echo "  Installed $skill_name skill to: $TARGET_SKILLS"
+    (( skill_count++ )) || true
+  done
+  echo "  Installed $skill_count skill(s) total"
+
   # ── Install vale config ─────────────────────────────────────────────────────
   # .vale.ini points vale at the Google and Microsoft style packages.
   # vale sync downloads the package files to .vale/styles/ — those should not be committed.
