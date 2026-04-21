@@ -39,6 +39,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 |-----------|-------------|
 | `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
 | `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
+| `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
 
 ### Install scripts
 
@@ -185,6 +186,41 @@ flagged with a `<!-- TODO: verify -->` comment for human review.
 > or Edit) and that `.github/skills/alt-text-edit/` exists in the repo you have open. Run
 > `./install.sh <path-to-your-docs-repo>` to install it.
 
+## How to use the fix-broken-links skill
+
+The `/fix-broken-links` skill checks a documentation site for dead links and fixes them in
+the Markdown source. It supports three check targets and can scope the check to one section
+of a multi-repo site.
+
+1. **Stage 1 — Verify installation**: Confirms linkchecker is installed and the check target
+   is ready (dev server running, or build output directory populated).
+2. **Stage 2 — Configure check**: Builds the linkchecker command for the target type. Applies
+   URL filters to restrict the crawl to the section this repository owns.
+3. **Stage 3 — Run linkchecker**: Runs the check and writes errors to `linkchecker-errors.csv`.
+4. **Stage 4 — Parse errors**: Reads the CSV and extracts every broken URL with its parent page.
+5. **Stage 5 — Map to source**: Maps each broken link back to the Markdown file that generated
+   the parent page, using generator-specific path patterns (Hugo, MkDocs, Jekyll).
+6. **Stage 6 — Fix links**: Searches the repo for a likely replacement URL, presents it for
+   confirmation, and applies the fix. Flags links with no replacement as TODO comments.
+
+**Prerequisites**: linkchecker must be installed. See
+`.github/skills/fix-broken-links/references/linkchecker-setup.md` for installation instructions.
+The check target must be reachable when the skill runs — start your local dev server or run
+your site generator's build command first.
+
+**Usage**:
+
+1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
+2. Type `/fix-broken-links`.
+3. Enter the check target when prompted — for example:
+   - `http://localhost:1313/` for a Hugo dev server
+   - `https://docs.example.com/platform/v2/` to check a deployed section
+   - `/path/to/public/` for a local build output
+4. Optionally provide a URL path prefix to scope the check to one section of the site.
+5. Copilot runs all six stages and returns a fix summary with every change made.
+
+> **Tip**: If `/fix-broken-links` doesn't appear, check that you're in **Agent** mode (not Ask
+> or Edit) and that `.github/skills/fix-broken-links/` exists in the repo you have open. Run
 > `./install.sh <path-to-your-docs-repo>` to install it.
 
 ## How the style instructions work
