@@ -28,8 +28,9 @@ material. Use these rules:
 - Communicate the image's **purpose and meaning**, not just its appearance. Ask: what
   information does this image convey? Describe that, not what the image looks like.
 - Begin with a capital letter. End with a period, even for fragments.
-- Start by identifying the image type: "Screenshot of...", "Diagram of...",
-  "Bar chart showing...", "Photograph of...". Don't start with the generic word "Image".
+- Don't prefix alt text with the image type or medium. Phrases like "Screenshot of",
+  "Image of", "Picture of", and "Photograph of" are redundant — screen readers already
+  announce that it's an image. Describe the content directly.
 - Keep alt text under 150 characters. If the image is too complex to describe concisely,
   write a short summary in the alt text and add a longer description in the surrounding
   text or a linked data table. Add a `<!-- TODO: verify long description -->` comment.
@@ -57,8 +58,8 @@ Describe what the screenshot illustrates in the procedure, not every UI element 
 The procedural steps already provide element-level detail. Focus on context: what tab,
 dialog, or state is being shown.
 
-- Good: `Screenshot of the Create cluster dialog with the Region field highlighted.`
-- Avoid: `Screenshot of a dialog box with fields for name, region, tier, and a Create button.`
+- Good: `The Create cluster dialog with the Region field highlighted.`
+- Avoid: `A dialog box with fields for name, region, tier, and a Create button.`
 
 #### Architecture diagrams and flow charts
 
@@ -66,19 +67,19 @@ Identify the diagram type, then describe the key components and their relationsh
 flow being illustrated. For complex diagrams, provide a short alt text and a text summary
 below the image.
 
-- Good: `Architecture diagram showing a Kubernetes cluster with an ingress controller
-  routing external traffic to three microservices, each with a sidecar proxy.`
-- For very complex diagrams: `Architecture diagram of the CI/CD pipeline. See the
-  description below for a full text version.`
+- Good: `A Kubernetes cluster with an ingress controller routing external traffic to
+  three microservices, each with a sidecar proxy.`
+- For very complex diagrams: `CI/CD pipeline overview. See the description below
+  for a full text version.`
 
 #### Charts and graphs
 
 State the chart type and describe the key trend or finding, not every data point. If the
 chart contains data a reader needs, include a data table below the image or link to one.
 
-- Good: `Bar chart showing deployment frequency by team. Platform team leads at 12 per day;
-  all other teams are under 4 per day.`
-- Avoid: `Bar chart of deployment data.`
+- Good: `Deployment frequency by team. Platform team leads at 12 per day; all other
+  teams are under 4 per day.`
+- Avoid: `Deployment data.`
 
 #### Logos
 
@@ -158,7 +159,8 @@ as weak or missing.
 - The text is generic without context (`image`, `screenshot`, `diagram`, `figure`, `photo`)
 - The text describes appearance only, not purpose or meaning
 - The text repeats the surrounding paragraph verbatim
-- The text starts with "Image of" or similar redundant phrasing
+- The text starts with "Screenshot of", "Image of", "Picture of", "Photograph of",
+  or similar medium-describing phrases
 
 **Acceptable** — the alt text passes all quality checks above.
 
