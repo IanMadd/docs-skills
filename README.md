@@ -76,6 +76,18 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
    ./install.sh ../path/to/your-docs-repo
    ```
 
+   To install specific prompts, instructions, or skills instead of everything, use the
+   `--prompts`, `--instructions`, and `--skills` flags with `all` or a comma-separated list
+   of names. Run `./install.sh --help` to see available names and more examples.
+
+   ```shell
+   # Install a specific skill to an existing docs repo
+   ./install.sh --target ../path/to/your-docs-repo --skills fix-broken-links
+
+   # Install specific prompts only
+   ./install.sh --prompts review-alt-text,review-completeness
+   ```
+
 3. Open VS Code and reload the window (`Cmd+Shift+P` → **Developer: Reload Window**).
 
 4. Open Copilot Chat (`Cmd+Option+I`) and type `/` to see the available prompts.
@@ -105,6 +117,18 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 
    ```shell
    .\install.ps1 -TargetRepo .\path\to\your-docs-repo
+   ```
+
+   To install specific prompts, instructions, or skills instead of everything, use the
+   `-Prompts`, `-Instructions`, and `-Skills` flags with `all` or a comma-separated list
+   of names. Run `.\install.ps1 -Help` to see available names and more examples.
+
+   ```shell
+   # Install a specific skill to an existing docs repo
+   .\install.ps1 -TargetRepo .\path\to\your-docs-repo -Skills fix-broken-links
+
+   # Install specific prompts only
+   .\install.ps1 -Prompts review-alt-text,review-completeness
    ```
 
 3. Open VS Code and reload the window (`Ctrl+Shift+P` → **Developer: Reload Window**).
@@ -156,6 +180,7 @@ uses the Vale MCP server when available and falls back to the CLI. See
 
 > **Tip**: If `/docs-style-edit` doesn't appear, check that you're in **Agent** mode (not Ask
 > or Edit) and that `.github/skills/docs-style-edit/` exists in the repo you have open. Run
+> `./install.sh <path-to-your-docs-repo>` to install it.
 
 ## How to use the alt-text-edit skill
 
