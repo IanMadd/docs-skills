@@ -40,6 +40,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
 | `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
 | `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
+| `.github/skills/generate-examples-from-repo/` | `/generate-examples-from-repo` — fetch source code from a public GitHub repository, extract usage patterns for one command or all commands, and generate formatted, annotated examples ready for documentation |
 
 ### Install scripts
 
@@ -302,6 +303,36 @@ your site generator's build command first.
 > **Tip**: If `/fix-broken-links` doesn't appear, check that you're in **Agent** mode (not Ask
 > or Edit) and that `.github/skills/fix-broken-links/` exists in the repo you have open. Run
 > `./install.sh <path-to-your-docs-repo>` to install it.
+
+## How to use the generate-examples-from-repo skill
+
+The `/generate-examples-from-repo` skill reads source code from a public GitHub repository and
+generates documentation-ready code examples with realistic argument values and expected output.
+Examples come from spec and test files, so they reflect how the tool is actually used.
+
+1. **Stage 1 — Discover**: Fetches the repo's directory listing and locates command definitions
+   by language and framework (Ruby, Go, Python, Node.js). Builds a full command inventory.
+2. **Stage 2 — Fetch**: Retrieves spec and test files for each command in scope using raw
+   GitHub URLs. Falls back to implementation files when spec coverage is missing.
+3. **Stage 3 — Extract**: Reads invocation patterns, flag combinations, output assertions, and
+   error-path tests from the fetched files. Builds a per-command usage inventory.
+4. **Stage 4 — Generate**: Produces a canonical usage line, two to four concrete invocations,
+   expected output (only when asserted in specs), a key-flags description list, and an
+   explanatory paragraph per command.
+
+**Usage**:
+
+1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
+2. Type `/generate-examples-from-repo`.
+3. Enter a GitHub repository URL when prompted — for example:
+   `https://github.com/chef/chef-cli`
+4. Optionally add a command name to scope the output to a single command — for example:
+   `https://github.com/chef/chef-cli generate cookbook`
+5. Copilot runs all four stages and returns formatted Markdown examples with a source summary.
+
+> **Tip**: If you want examples for all commands, let the skill enumerate them first. When a
+> repo has more than 15 commands, it asks you to confirm scope or select a subset before
+> fetching anything.
 
 ## How the style instructions work
 

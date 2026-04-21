@@ -20,7 +20,7 @@ For each example:
   - `hcl` — Terraform and HCL
   - `dockerfile` — Dockerfiles
   - `console` — expected terminal output (read-only)
-- Use angle brackets for all values the reader must replace: `<cluster-name>`, `<namespace>`, `<image-tag>`
+- Use angle brackets for all values the reader must replace: `<CLUSTER_NAME>`, `<NAMESPACE>`, `<IMAGE_TAG>`
 - Add a comment above the code block explaining what the example does (use the language's comment syntax)
 - Show expected output in a separate `console` block when the output helps verify success
 - Keep examples minimal: show only what is needed to illustrate the point
