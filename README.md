@@ -48,92 +48,147 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `install.sh` | Install or update the toolkit on macOS and Linux |
 | `install.ps1` | Install or update the toolkit on Windows |
 
-## Requirements
+## Install skills, prompts, and instructions
+
+### Requirements
 
 - [VS Code](https://code.visualstudio.com/) 1.99 or later
 - [GitHub Copilot extension](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) with an active Copilot subscription
 
-## Quick start
+### Before you install
 
-### macOS and Linux
+Clone this repository if you haven't already:
 
-1. Clone this repository.
+```shell
+git clone <repo-url>
+cd docs-skills
+```
 
-   ```shell
-   git clone <repo-url>
-   cd docs-skills
-   ```
+Run `./install.sh --help` (macOS and Linux) or `.\install.ps1 -Help` (Windows) to list
+available names for all component types and see additional usage examples.
 
-2. Run the install script.
+### Install prompts
 
-   ```shell
-   ./install.sh
-   ```
+Prompts are installed to the VS Code user profile and appear as slash commands in every
+workspace on the machine. No target repo is needed.
 
-   To also install workspace files into an existing docs repo, pass the repo path as an argument:
+To install all prompts:
 
-   ```shell
-   ./install.sh ../path/to/your-docs-repo
-   ```
+**macOS and Linux**:
 
-   To install specific prompts, instructions, or skills instead of everything, use the
-   `--prompts`, `--instructions`, and `--skills` flags with `all` or a comma-separated list
-   of names. Run `./install.sh --help` to see available names and more examples.
+```shell
+./install.sh --prompts all
+```
 
-   ```shell
-   # Install a specific skill to an existing docs repo
-   ./install.sh --target ../path/to/your-docs-repo --skills fix-broken-links
+**Windows**:
 
-   # Install specific prompts only
-   ./install.sh --prompts review-alt-text,review-completeness
-   ```
+```shell
+.\install.ps1 -Prompts all
+```
 
-3. Open VS Code and reload the window (`Cmd+Shift+P` → **Developer: Reload Window**).
+To install specific prompts, provide a comma-separated list of prompt names:
 
-4. Open Copilot Chat (`Cmd+Option+I`) and type `/` to see the available prompts.
+**macOS and Linux**:
 
-### Windows
+```shell
+./install.sh --prompts draft-tutorial,review-alt-text
+```
 
-1. Clone this repository.
+**Windows**:
 
-   ```shell
-   git clone <repo-url>
-   cd docs-skills
-   ```
+```shell
+.\install.ps1 -Prompts draft-tutorial,review-alt-text
+```
 
-2. Run the install script in PowerShell.
+After installing, reload VS Code (`Cmd+Shift+P` / `Ctrl+Shift+P` → **Developer: Reload Window**)
+and open Copilot Chat. Type `/` to see the installed prompts.
 
-   ```shell
-   .\install.ps1
-   ```
+### Install instructions
 
-   If you see an execution policy error, run this first:
+Instruction files are installed to the VS Code user profile. The `devops-docs-style`
+instruction file uses `applyTo: "**/*.md"` and loads automatically whenever you work with
+a Markdown file. The `doc-types` file is loaded on demand when you ask about document
+structure or templates.
 
-   ```shell
-   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-   ```
+To install all instruction files:
 
-   To also install workspace files into an existing docs repo, pass the repo path:
+**macOS and Linux**:
 
-   ```shell
-   .\install.ps1 -TargetRepo .\path\to\your-docs-repo
-   ```
+```shell
+./install.sh --instructions all
+```
 
-   To install specific prompts, instructions, or skills instead of everything, use the
-   `-Prompts`, `-Instructions`, and `-Skills` flags with `all` or a comma-separated list
-   of names. Run `.\install.ps1 -Help` to see available names and more examples.
+**Windows**:
 
-   ```shell
-   # Install a specific skill to an existing docs repo
-   .\install.ps1 -TargetRepo .\path\to\your-docs-repo -Skills fix-broken-links
+```shell
+.\install.ps1 -Instructions all
+```
 
-   # Install specific prompts only
-   .\install.ps1 -Prompts review-alt-text,review-completeness
-   ```
+To install a specific instruction file, provide its name without the `.instructions.md` extension:
 
-3. Open VS Code and reload the window (`Ctrl+Shift+P` → **Developer: Reload Window**).
+**macOS and Linux**:
 
-4. Open Copilot Chat (`Ctrl+Alt+I`) and type `/` to see the available prompts.
+```shell
+./install.sh --instructions devops-docs-style
+```
+
+**Windows**:
+
+```shell
+.\install.ps1 -Instructions devops-docs-style
+```
+
+After installing, reload VS Code (`Cmd+Shift+P` / `Ctrl+Shift+P` → **Developer: Reload Window**)
+to pick up the updated instruction files.
+
+### Install skills
+
+Skills are workspace-scoped and must be installed into each docs repo where you want to use
+them. They appear as slash commands only in VS Code Copilot Agent mode when the
+`.github/skills/` directory is present in the open repo.
+
+Installing skills also copies `copilot-instructions.md` and the `doc-types` instruction
+file into the target repo's `.github/` directory, and installs `.vale.ini` if it isn't
+already present.
+
+To install all skills into a docs repo:
+
+**macOS and Linux**:
+
+```shell
+./install.sh --target ../path/to/your-docs-repo --skills all
+```
+
+**Windows**:
+
+```shell
+.\install.ps1 -TargetRepo ..\path\to\your-docs-repo -Skills all
+```
+
+To install a specific skill, provide its directory name:
+
+**macOS and Linux**:
+
+```shell
+./install.sh --target ../path/to/your-docs-repo --skills fix-broken-links
+```
+
+**Windows**:
+
+```shell
+.\install.ps1 -TargetRepo ..\path\to\your-docs-repo -Skills fix-broken-links
+```
+
+After installing, reload VS Code (`Cmd+Shift+P` / `Ctrl+Shift+P` → **Developer: Reload Window**)
+and switch to Agent mode in Copilot Chat. Type `/` to see the installed skills.
+
+If you installed the `docs-style-edit` skill, run `vale sync` in the target repo to
+download the required style packages:
+
+```shell
+cd path/to/your-docs-repo
+vale sync
+```
 
 ## How to use the prompts
 
@@ -277,10 +332,10 @@ git pull
 
 After running, reload VS Code (`Cmd/Ctrl+Shift+P` → **Developer: Reload Window**) to pick up the changes.
 
-> **Note:** The `install.sh` and `install.ps1` scripts update your VS Code user profile only.
-> If your docs repos have a committed `.github/copilot-instructions.md`, that file is
-> project-specific and won't be overwritten by the script. The `docs-style-edit` skill is
-> workspace-scoped — run the install script with a target repo path to install it there.
+> **Note:** The install scripts update your VS Code user profile only when run without
+> `--target` / `-TargetRepo`. If your docs repos have a committed `.github/copilot-instructions.md`,
+> that file is project-specific and won't be overwritten by the script. Skills are
+> workspace-scoped — use `--target` / `-TargetRepo` to install or update them in each docs repo.
 
 ## Customizing the toolkit
 
