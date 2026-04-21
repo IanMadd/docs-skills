@@ -29,6 +29,7 @@ Prompts are single-task slash commands. Use them for drafting or editing one doc
 | `.github/prompts/review-completeness.prompt.md` | `/review-completeness` — audit a doc for gaps, missing steps, and accuracy |
 | `.github/prompts/generate-code-examples.prompt.md` | `/generate-code-examples` — generate shell, YAML, CLI, HCL, or config examples |
 | `.github/prompts/notes-to-doc.prompt.md` | `/notes-to-doc` — convert raw notes or tickets into a structured draft |
+| `.github/prompts/review-alt-text.prompt.md` | `/review-alt-text` — audit a doc for missing, weak, and unverified alt text; produces a per-image report with suggested fixes |
 
 ### Skills
 
@@ -37,6 +38,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | Directory | What it does |
 |-----------|-------------|
 | `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
+| `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
 
 ### Install scripts
 
@@ -153,6 +155,36 @@ uses the Vale MCP server when available and falls back to the CLI. See
 
 > **Tip**: If `/docs-style-edit` doesn't appear, check that you're in **Agent** mode (not Ask
 > or Edit) and that `.github/skills/docs-style-edit/` exists in the repo you have open. Run
+
+## How to use the alt-text-edit skill
+
+The `/alt-text-edit` skill runs a four-stage workflow to audit and fix alt text in an
+existing Markdown file:
+
+1. **Stage 1 — Find images**: Scans the file for all image references in Markdown
+   (`![]()`) and HTML (`<img>`) syntax.
+2. **Stage 2 — Audit**: Categorizes each image as missing, weak, decorative, or acceptable
+   based on accessibility and style standards.
+3. **Stage 3 — View and draft**: Uses the `view_image` tool to inspect each local image and
+   drafts accurate alt text based on what the image shows and its surrounding context.
+4. **Stage 4 — Edit**: Writes the new alt text into the file for every image that needs it.
+
+**Prerequisites**: No external tools required. The skill uses built-in agent capabilities to
+view images. Images must be in the workspace for the agent to view them; external URLs are
+flagged with a `<!-- TODO: verify -->` comment for human review.
+
+**Usage**:
+
+1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
+2. Type `/alt-text-edit`.
+3. Enter the path to the file you want to edit, for example: `docs/how-to-deploy.md`
+4. Copilot audits every image, views local image files, drafts alt text, edits the file,
+   and returns a summary of every change made.
+
+> **Tip**: If `/alt-text-edit` doesn't appear, check that you're in **Agent** mode (not Ask
+> or Edit) and that `.github/skills/alt-text-edit/` exists in the repo you have open. Run
+> `./install.sh <path-to-your-docs-repo>` to install it.
+
 > `./install.sh <path-to-your-docs-repo>` to install it.
 
 ## How the style instructions work
