@@ -2,6 +2,9 @@
 description: "Use when asking about doc structure, how to organize a document, or what sections to include. Covers structural templates for tutorials, how-to guides, reference docs, conceptual docs, release notes, and READMEs."
 ---
 
+<!-- vale Microsoft.Quotes = NO -->
+<!-- vale Microsoft.Contractions = NO -->
+
 # Doc type structures
 
 Source guidance: [The Good Docs Project](https://www.thegooddocsproject.dev/template/)
@@ -10,7 +13,7 @@ Source guidance: [The Good Docs Project](https://www.thegooddocsproject.dev/temp
 
 ## Tutorial
 
-**Purpose**: Learning-oriented. The reader follows a guided path and ends with a working result and new skills. Assumes no prior practical knowledge of the tool. Tutorials eliminate unexpected scenarios — engineer the reader toward a successful finish.
+**Purpose**: Learning-oriented. The reader follows a guided path and ends with a working result and new skills. Assumes no prior practical knowledge of the tool. Tutorials eliminate unexpected scenarios---engineer the reader toward a successful finish.
 
 Tutorials differ from how-to guides: tutorials teach; how-to guides guide experienced users through a task.
 
@@ -34,7 +37,7 @@ Who this tutorial is for and what prior knowledge is assumed.
 
 ## Background (optional)
 
-Any context the reader needs before starting — feature explanation, project structure, key concepts.
+Any context the reader needs before starting---feature explanation, project structure, key concepts.
 Keep this brief; link to conceptual docs for deeper explanations.
 
 ## Before you begin
@@ -42,7 +45,7 @@ Keep this brief; link to conceptual docs for deeper explanations.
 - Prerequisite 1 (link to setup steps where applicable)
 - Prerequisite 2
 
-## Step 1: <Bare infinitive action — "Configure the namespace">
+## Step 1: <Bare infinitive action---"Configure the namespace">
 
 Introductory sentence explaining what this step accomplishes and why.
 
@@ -63,7 +66,7 @@ Introductory sentence explaining what this step accomplishes and why.
 ## Summary
 
 Recap the specific skills and knowledge the reader gained. Don't repeat the learning objectives
-word-for-word — describe what they actually built or configured.
+word-for-word---describe what they actually built or configured.
 
 ## Clean up (include if tutorial creates persistent or billable resources)
 
@@ -78,9 +81,9 @@ Steps to remove resources created during the tutorial.
 **Guidelines**:
 - Tutorials should take 15–60 minutes to complete
 - Keep steps to a maximum of 7 primary steps; maximum 4 substeps per step
-- Each step builds on the previous one — don't jump ahead
+- Each step builds on the previous one---don't jump ahead
 - Show expected output after commands so the reader can verify success
-- Use real, working examples — not placeholder logic
+- Use real, working examples---not placeholder logic
 - Add comments to all code samples explaining what each part does
 - Include a "Clean up" section whenever the tutorial creates persistent or billable resources
 
@@ -91,7 +94,7 @@ Steps to remove resources created during the tutorial.
 **Purpose**: Task-oriented. Helps an experienced reader complete one specific task or solve one specific problem. Assumes the reader has practical knowledge and knows what they want to achieve. Alerts readers to unexpected scenarios; it doesn't eliminate them the way a tutorial does.
 
 ```markdown
-# <Title: bare infinitive — "Deploy a container to Kubernetes">
+# <Title: bare infinitive---"Deploy a container to Kubernetes">
 
 One or two sentences describing the task and when a reader would perform it.
 For example: "Use this guide to create a Kubernetes NetworkPolicy that restricts pod-to-pod traffic."
@@ -127,7 +130,7 @@ Introductory sentence describing what these steps accomplish.
 - One how-to guide covers exactly one task
 - Maximum 8–10 steps; if longer, split into multiple guides
 - Use conditional imperatives for variations: "If you want X, do Y. To achieve Z, run..."
-- Don't explain concepts in the steps — link to conceptual docs instead
+- Don't explain concepts in the steps---link to conceptual docs instead
 - Document only the most common or recommended method; omit or link to alternative methods
 - Alert readers to possible unexpected scenarios with `> **Note:**` or `> **Warning:**` admonitions
 - Test instructions end-to-end before publishing; re-test after every notable product release
@@ -136,10 +139,10 @@ Introductory sentence describing what these steps accomplish.
 
 ## Reference doc
 
-**Purpose**: Provides accurate, complete technical information designed to be scanned, not read top to bottom. Mirrors the structure of the application or system it documents. Avoid high-level instructions or usage guides — link to how-to guides instead.
+**Purpose**: Provides accurate, complete technical information designed to be scanned, not read top to bottom. Mirrors the structure of the application or system it documents. Avoid high-level instructions or usage guides---link to how-to guides instead.
 
 ```markdown
-# <Title: noun phrase — "kubectl rollout options">
+# <Title: noun phrase---"kubectl rollout options">
 
 One sentence describing what this reference covers.
 
@@ -179,11 +182,11 @@ command --flag <value> --other-flag
 **Guidelines**:
 - Every flag, option, and parameter must be documented; include type and default
 - Use `required` in the Default column when there is no default value
-- Examples must be present — at least two, showing different configurations
+- Examples must be present---at least two, showing different configurations
 - Use active voice in descriptions: "Returns a JSON object" not "A JSON object is returned"
 - Use tables and bulleted lists to maximize scannability
 - Maintain consistent structure, terminology, and tone across all reference pages
-- Don't include step-by-step procedures — link out to how-to guides
+- Don't include step-by-step procedures---link out to how-to guides
 
 ---
 
@@ -194,7 +197,7 @@ command --flag <value> --other-flag
 Conceptual docs appear early in documentation journeys, or as mid-level layers when a reader encounters an unfamiliar concept in a how-to guide.
 
 ```markdown
-# <Title: noun phrase — "Deployment strategies in Kubernetes">
+# <Title: noun phrase---"Deployment strategies in Kubernetes">
 
 (Optional) An introductory paragraph framing the concept's relevance and what the page covers.
 Apply the inverted pyramid: start with the high-level idea, then go deeper.
@@ -203,7 +206,7 @@ Apply the inverted pyramid: start with the high-level idea, then go deeper.
 
 A clear definition scoped to what this document covers. State what is in scope and, where useful,
 what is out of scope. Explain how the concept fits into the broader system or workflow.
-Use analogies where they help — prefer universally understood comparisons.
+Use analogies where they help---prefer universally understood comparisons.
 
 ## (Optional) <Diagram or visual>
 
@@ -237,7 +240,7 @@ If the concept has multiple types, versions, or similar alternatives, include a 
 
 **Guidelines**:
 - One conceptual doc covers exactly one concept; if explaining a second concept becomes necessary, link to a separate doc
-- Don't include step-by-step procedures — add a `<!-- TODO: link to how-to guide for [task] -->` comment where a procedure link should go
+- Don't include step-by-step procedures---add a `<!-- TODO: link to how-to guide for [task] -->` comment where a procedure link should go
 - Use the inverted pyramid: high-level overview first, details later
 - Include a diagram whenever it clarifies structure, data flow, or relationships
 - Explain trade-offs and limitations honestly
@@ -246,14 +249,14 @@ If the concept has multiple types, versions, or similar alternatives, include a 
 
 ## Release notes
 
-**Purpose**: Communicate new features, improvements, bug fixes, and known issues to stakeholders. Release notes are customer-facing — use plain language, not developer-facing changelog language. Written for both technical and non-technical readers.
+**Purpose**: Communicate new features, improvements, bug fixes, and known issues to stakeholders. Release notes are customer-facing---use plain language, not developer-facing changelog language. Written for both technical and non-technical readers.
 
 ```markdown
-# Release notes — v<version> (<YYYY-MM-DD>)
+# Release notes---v<version> (<YYYY-MM-DD>)
 
 (Optional) One to two sentences highlighting the most important items in this release.
 
-## Breaking changes (include if present — always lead with this section)
+## Breaking changes (include if present---always lead with this section)
 
 > **Warning:** The following changes require action before upgrading.
 
@@ -295,7 +298,7 @@ If the concept has multiple types, versions, or similar alternatives, include a 
 - Use second person: "You can now...", "Use the new... to..."
 - Use present tense for new features and improvements: "Adds support for...", "Lets you..."
 - Use past tense for bug fixes: "Fixed an issue where...", "Resolved a problem that caused..."
-- Don't start bug fix entries with "Fixed the bug..." — describe what the software now does correctly
+- Don't start bug fix entries with "Fixed the bug..."---describe what the software now does correctly
 - List the most important items in each section first
 - Include issue or PR numbers and link them where your organization permits
 - Omit any section that has no entries
@@ -332,7 +335,7 @@ Who can use this project, what problems it helps them solve, and what tasks it h
 List what the reader needs before they can use the project, and why each dependency is needed.
 Link to installation instructions for each.
 
-- <Dependency>: <Why it's needed> — [Install](<link>)
+- <Dependency>: <Why it's needed>---[Install](<link>)
 
 ## Installation
 
@@ -378,8 +381,8 @@ For example: link to issues, a Slack channel, a mailing list, or Stack Overflow.
 
 ## Additional documentation
 
-- [<Doc title>](<link>) — brief description
-- [<Doc title>](<link>) — brief description
+- [<Doc title>](<link>)---brief description
+- [<Doc title>](<link>)---brief description
 
 ## License
 
@@ -387,9 +390,9 @@ License name and a link or brief statement.
 ```
 
 **Guidelines**:
-- Lead with why, not just what — explain why a reader should care before describing technical details
+- Lead with why, not just what---explain why a reader should care before describing technical details
 - Keep the README scannable: short paragraphs, code blocks for all commands, clear headings
-- The quick start must be minimal — the simplest path to a working result
+- The quick start must be minimal---the simplest path to a working result
 - Include a troubleshooting table for the most common errors new users encounter
-- Don't duplicate information that lives in linked docs — link instead
+- Don't duplicate information that lives in linked docs---link instead
 - Revisit the README regularly as the project evolves

@@ -1,23 +1,23 @@
 ---
 name: alt-text-edit
 description: 'Scan a Markdown file for images, audit every alt text value against accessibility and style guidelines, view each image in the workspace, draft accurate alt text, and edit the file in place. Use when you want to audit and fix image alt text for accessibility compliance and style quality. Triggers on: alt text, alternative text, image accessibility, fix alt text, audit alt text, missing alt text, edit alt text, image descriptions, accessibility, a11y, screen reader.'
-argument-hint: "Path to the Markdown file to audit and edit — for example: docs/how-to-deploy.md"
+argument-hint: "Path to the Markdown file to audit and edit---for example: docs/how-to-deploy.md"
 ---
 
 # Alt text audit and edit
 
 Runs a four-stage workflow on a Markdown documentation file:
 
-1. **Find images** — scans the file for all image references in Markdown and HTML syntax
-2. **Audit alt text** — categorizes each image as missing, empty/decorative, weak, or acceptable
-3. **View and draft** — views each image in the workspace and drafts alt text based on the image content, surrounding context, and the rules below
-4. **Edit the file** — writes the new alt text into every image reference that needs it
+1. **Find images**---scans the file for all image references in Markdown and HTML syntax
+2. **Audit alt text**---categorizes each image as missing, empty/decorative, weak, or acceptable
+3. **View and draft**---views each image in the workspace and drafts alt text based on the image content, surrounding context, and the rules below
+4. **Edit the file**---writes the new alt text into every image reference that needs it
 
 ---
 
 ## Alt text rules
 
-Apply these rules when auditing and drafting alt text. They are drawn from the
+Apply these rules when auditing and drafting alt text. They're drawn from the
 Microsoft Writing Style Guide and the Section 508 guidelines for alternative text.
 
 ### Informative images
@@ -28,14 +28,14 @@ material. Use these rules:
 - Communicate the image's **purpose and meaning**, not just its appearance. Ask: what
   information does this image convey? Describe that, not what the image looks like.
 - Begin with a capital letter. End with a period, even for fragments.
-- Don't prefix alt text with the image type or medium. Phrases like "Screenshot of",
-  "Image of", "Picture of", and "Photograph of" are redundant — screen readers already
+- Don't prefix alt text with the image type or medium. Phrases like _Screenshot of_,
+  _Image of_, _Picture of_, and _Photograph of_ are redundant---screen readers already
   announce that it's an image. Describe the content directly.
 - Keep alt text under 150 characters. If the image is too complex to describe concisely,
   write a short summary in the alt text and add a longer description in the surrounding
   text or a linked data table. Add a `<!-- TODO: verify long description -->` comment.
 - Don't use the file name or path as alt text.
-- Don't repeat text that is already in the surrounding paragraph or caption.
+- Don't repeat text that's already in the surrounding paragraph or caption.
 - If text is embedded in the image (labels, callouts, code), include it verbatim unless
   the surrounding text already contains it.
 - Match the language of the surrounding content. If the doc is in Spanish, write the
@@ -43,10 +43,10 @@ material. Use these rules:
 
 ### Decorative images
 
-A decorative image adds no information the reader needs — it is purely visual. Use these rules:
+A decorative image adds no information the reader needs---it's purely visual. Use these rules:
 
 - Set the alt attribute to an empty string: `alt=""` in HTML, or `![]()` in Markdown.
-- Do not omit the `alt` attribute entirely. Screen readers read the file name when `alt`
+- Don't omit the `alt` attribute entirely. Screen readers read the file name when `alt`
   is absent, which is confusing.
 - If you are unsure whether an image is decorative, treat it as informative.
 
@@ -106,7 +106,7 @@ contain it.
 #### Button and link images
 
 Focus on what the button or link does, not what the image looks like. Don't start
-with "Button" or "Link" — screen readers already announce these roles.
+with "Button" or "Link"---screen readers already announce these roles.
 
 - Good: `Open user settings.`
 - Avoid: `Image of two interlocking gears.`
@@ -146,23 +146,23 @@ If no images are found, stop and report that the file contains no images.
 
 For each image from Stage 1, assign one of the following categories:
 
-**Missing** — the image has no alt text at all. In Markdown, the brackets are empty: `![]()`.
+**Missing**---the image has no alt text at all. In Markdown, the brackets are empty: `![]()`.
 In HTML, the `alt` attribute is absent.
 
-**Empty/decorative** — the alt attribute is explicitly set to an empty string (`alt=""` in
+**Empty/decorative**---the alt attribute is explicitly set to an empty string (`alt=""` in
 HTML, or `![]()` in Markdown with intentionally empty brackets). Verify this is intentional:
 look at the image and surrounding context. If the image conveys information, reclassify it
 as weak or missing.
 
-**Weak** — the alt text is present but doesn't meet quality standards. Common signs:
+**Weak**---the alt text is present but doesn't meet quality standards. Common signs:
 - The text is the file name or path (for example, `screenshot.png` or `./images/diagram`)
 - The text is generic without context (`image`, `screenshot`, `diagram`, `figure`, `photo`)
 - The text describes appearance only, not purpose or meaning
 - The text repeats the surrounding paragraph verbatim
-- The text starts with "Screenshot of", "Image of", "Picture of", "Photograph of",
+- The text starts with _Screenshot of_, _Image of_, _Picture of_, _Photograph of_,
   or similar medium-describing phrases
 
-**Acceptable** — the alt text passes all quality checks above.
+**Acceptable**---the alt text passes all quality checks above.
 
 For each acceptable image, no further action is needed. Proceed to Stage 3 for all missing,
 weak, and unverified empty/decorative images.
@@ -178,16 +178,16 @@ For each image that needs new or revised alt text:
 Image paths in Markdown don't always map directly to the file system. Resolve the path
 using the following lookup order before calling `view_image`:
 
-1. **Relative path** — resolve the path relative to the Markdown file's location. Most
+1. **Relative path**---resolve the path relative to the Markdown file's location. Most
    standard static-site generators and docs tools use this convention.
 
-2. **Hugo static directory** — Hugo serves files in `static/` at the site root, so a
+2. **Hugo static directory**---Hugo serves files in `static/` at the site root, so a
    path like `product/version/image.png` or `/product/version/image.png` in Markdown
    corresponds to `static/product/version/image.png` in the repo. If the relative
    resolution in step 1 fails, strip any leading `/` from the path, prepend `static/`,
    and look for the file from the repo root.
 
-3. **Other asset directories** — some generators use `assets/`, `public/`, `docs/`, or
+3. **Other asset directories**---some generators use `assets/`, `public/`, `docs/`, or
    `content/` as the root for served files. If steps 1 and 2 both fail, check whether
    the repo contains one of these directories and repeat the lookup with each as the prefix.
 
@@ -199,7 +199,7 @@ Once you have resolved the absolute path, use the `view_image` tool to view the 
 then draft alt text based on:
 
 1. What the image actually shows
-2. The surrounding text in the document — headings, paragraphs, captions near the image
+2. The surrounding text in the document---headings, paragraphs, captions near the image
 3. The image type rules in the **Alt text rules** section above
 
 If none of the lookup strategies resolve to an existing file, treat the image as not found
@@ -208,18 +208,18 @@ section below.
 
 ### External images (URLs)
 
-The `view_image` tool cannot view external URLs. For images with `http://` or `https://`
+The `view_image` tool can't view external URLs. For images with `http://` or `https://`
 paths:
 
 - Read the surrounding context to infer purpose
 - Draft the best possible alt text from context alone
-- Add a `<!-- TODO: verify alt text — image is external and could not be viewed -->` comment
+- Add a `<!-- TODO: verify alt text---image is external and could not be viewed -->` comment
   on the line above the image reference
 
 ### Images not found in the workspace
 
-If a local path cannot be resolved (file doesn't exist in the workspace), draft alt text
-from context and add a `<!-- TODO: verify alt text — image file not found in workspace -->`
+If a local path can't be resolved (file doesn't exist in the workspace), draft alt text
+from context and add a `<!-- TODO: verify alt text---image file not found in workspace -->`
 comment on the line above.
 
 ---
