@@ -370,24 +370,36 @@ After running, reload VS Code (`Cmd/Ctrl+Shift+P` → **Developer: Reload Window
 
 ## Sync skills automatically with a GitHub Action
 
-If you manage several docs repos and want skills and instruction files to stay current
-automatically, add a GitHub Actions workflow to this repository.
-When you push changes to the `main` branch, the workflow checks out each target docs repo,
-runs the install script against it, and opens a pull request with the updated files.
+You can keep skills and instruction files current across target repos using either of the
+following approaches:
 
-### Requirements
+- **Push from docs-skills**: a workflow in this repository triggers on a push to `main` and
+  pushes changes into each target repo directly. Requires a PAT with write access to every
+  target repo.
+- **Pull from target repos (cron)**: a workflow in each target repo runs on a daily schedule,
+  checks whether this repository has changed, and pulls the updates. Requires no PAT and no
+  workflow in this repository.
+
+### Push from docs-skills
+
+This approach runs a workflow in this repository whenever you push to `main`. The workflow
+checks out each target docs repo, runs the install script against it, and opens a pull request
+with the updated files.
+
+#### Requirements
 
 - A GitHub personal access token (PAT) or a GitHub App token with `contents: write` and
-  `pull-requests: write` permissions on each target docs repo.
+  `pull-requests: write` permissions on each target docs repo, stored as a secret named
+  `SYNC_TOKEN` in this repository.
 - The [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request)
   action, which handles committing changes and opening the PR.
 
-### Set up the workflow
+#### Set up the push workflow
 
-To configure automatic syncing, follow these steps:
+To configure push-based syncing, follow these steps:
 
-1. Add your token as a repository secret named `SYNC_TOKEN` in the docs-skills repo settings
-   (**Settings** > **Secrets and variables** > **Actions** > **New repository secret**).
+1. Add your token as a repository secret named `SYNC_TOKEN` (**Settings** > **Secrets and
+   variables** > **Actions** > **New repository secret**).
 
 1. Create the workflow file at `.github/workflows/sync-skills.yml` in this repository:
 
@@ -398,6 +410,9 @@ To configure automatic syncing, follow these steps:
      push:
        branches:
          - main
+       paths:
+         - .github/instructions/**
+         - .github/skills/**
 
    jobs:
      sync:
@@ -445,10 +460,141 @@ To configure automatic syncing, follow these steps:
 
 1. Commit and push the workflow file to `main`.
 
-After setup, every push to `main` in this repository triggers the workflow and opens a pull
-request in each target repo with the updated files.
-To sync only specific components, replace `--skills all` in the install step with the flags
-you need---for example, `--skills fix-broken-links,docs-style-edit` or `--instructions all`.
+After setup, every push that changes `.github/instructions/` or `.github/skills/` in this
+repository triggers the workflow and opens a pull request in each target repo.
+
+### Pull from target repos (cron)
+
+This approach adds a workflow to each target docs repo. The workflow runs on a daily schedule,
+fetches the latest commit SHA from this repository, and runs the install script only when the
+SHA has changed since the last sync. No workflow is needed in this repository, and no PAT is
+required---the workflow uses the target repo's own `GITHUB_TOKEN`.
+
+#### Requirements
+
+- The [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request)
+  action in each target repo.
+- Read access from each target repo to this repository (no token needed if this repo is public).
+
+#### Set up the pull workflow
+
+Add the following workflow file at `.github/workflows/sync-docs-skills.yml` in each target
+docs repo:
+
+```yaml
+name: Sync docs-skills toolkit
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # Runs daily at 06:00 UTC
+  workflow_dispatch:        # Allow manual runs
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest docs-skills commit SHA
+        id: remote-sha
+        run: |
+          SHA=$(git ls-remote https://github.com/IanMadd/docs-skills.git HEAD | cut -f1)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Get last synced SHA
+        id: cached-sha
+        run: |
+          if [ -f .docs-skills-sha ]; then
+            echo "sha=$(cat .docs-skills-sha)" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if already up to date
+        if: steps.remote-sha.outputs.sha == steps.cached-sha.outputs.sha
+        run: |
+          echo "docs-skills is already up to date. Skipping."
+          exit 0
+
+      - name: Check out docs-skills
+        if: steps.remote-sha.outputs.sha != steps.cached-sha.outputs.sha
+        uses: actions/checkout@v4
+        with:
+          repository: IanMadd/docs-skills
+          path: docs-skills
+          fetch-depth: 0
+
+      - name: Check for relevant changes
+        id: relevant-changes
+        if: steps.remote-sha.outputs.sha != steps.cached-sha.outputs.sha
+        run: |
+          OLD_SHA="${{ steps.cached-sha.outputs.sha }}"
+          NEW_SHA="${{ steps.remote-sha.outputs.sha }}"
+          if [ -z "$OLD_SHA" ]; then
+            echo "First run — treating all files as changed."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            CHANGED=$(git -C docs-skills log --oneline "$OLD_SHA..$NEW_SHA" \
+              -- .github/skills .github/instructions)
+            if [ -n "$CHANGED" ]; then
+              echo "Relevant changes found."
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "No changes to .github/skills or .github/instructions. Skipping."
+              echo "changed=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Check out this repo
+        if: steps.relevant-changes.outputs.changed == 'true'
+        uses: actions/checkout@v4
+        with:
+          path: target-repo
+
+      - name: Run install script
+        if: steps.relevant-changes.outputs.changed == 'true'
+        run: |
+          cd docs-skills
+          ./install.sh --target ../target-repo --skills all
+
+      - name: Record new SHA
+        if: steps.relevant-changes.outputs.changed == 'true'
+        run: echo "${{ steps.remote-sha.outputs.sha }}" > target-repo/.docs-skills-sha
+
+      - name: Open pull request
+        if: steps.relevant-changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          path: target-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync docs-skills toolkit"
+          title: "chore: sync docs-skills toolkit"
+          body: |
+            Automated sync from the [docs-skills](https://github.com/IanMadd/docs-skills) repository.
+
+            Updated to commit `${{ steps.remote-sha.outputs.sha }}`.
+            Review the changes and merge when ready.
+          branch: sync/docs-skills
+          delete-branch: true
+```
+
+To sync only specific components, replace `--skills all` with the flags you need---for
+example, `--skills fix-broken-links,docs-style-edit` or `--instructions all`.
+
+The workflow runs at 06:00 UTC every day.
+It fetches the current `HEAD` SHA from this repository using `git ls-remote` and compares it
+to the SHA stored in `.docs-skills-sha` at the root of the target repo.
+If the SHAs match, the workflow exits early.
+If they differ, it checks out docs-skills with full history and uses `git log` to check
+whether any commits between the old and new SHA touched `.github/skills` or
+`.github/instructions`.
+If none did, the workflow skips the install and PR---no changes to those directories means
+nothing to sync.
+If relevant changes are found, it checks out the target repo, runs the install script,
+records the new SHA, and opens a pull request.
+
+The first time the workflow runs, `.docs-skills-sha` won't exist, so the install always runs
+and creates the file.
+You can also trigger the workflow manually from **Actions** > **Sync docs-skills toolkit** >
+**Run workflow** in the target repo.
 
 ## Customizing the toolkit
 
