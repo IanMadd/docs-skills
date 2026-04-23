@@ -368,6 +368,88 @@ After running, reload VS Code (`Cmd/Ctrl+Shift+P` → **Developer: Reload Window
 > that file is project-specific and won't be overwritten by the script. Skills are
 > workspace-scoped — use `--target` / `-TargetRepo` to install or update them in each docs repo.
 
+## Sync skills automatically with a GitHub Action
+
+If you manage several docs repos and want skills and instruction files to stay current
+automatically, add a GitHub Actions workflow to this repository.
+When you push changes to the `main` branch, the workflow checks out each target docs repo,
+runs the install script against it, and opens a pull request with the updated files.
+
+### Requirements
+
+- A GitHub personal access token (PAT) or a GitHub App token with `contents: write` and
+  `pull-requests: write` permissions on each target docs repo.
+- The [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request)
+  action, which handles committing changes and opening the PR.
+
+### Set up the workflow
+
+To configure automatic syncing, follow these steps:
+
+1. Add your token as a repository secret named `SYNC_TOKEN` in the docs-skills repo settings
+   (**Settings** > **Secrets and variables** > **Actions** > **New repository secret**).
+
+1. Create the workflow file at `.github/workflows/sync-skills.yml` in this repository:
+
+   ```yaml
+   name: Sync skills to docs repos
+
+   on:
+     push:
+       branches:
+         - main
+
+   jobs:
+     sync:
+       runs-on: ubuntu-latest
+       strategy:
+         matrix:
+           repo:
+             - <org>/<docs-repo-1>
+             - <org>/<docs-repo-2>
+       steps:
+         - name: Check out docs-skills
+           uses: actions/checkout@v4
+           with:
+             path: docs-skills
+
+         - name: Check out target repo
+           uses: actions/checkout@v4
+           with:
+             repository: ${{ matrix.repo }}
+             token: ${{ secrets.SYNC_TOKEN }}
+             path: target-repo
+
+         - name: Run install script
+           run: |
+             cd docs-skills
+             ./install.sh --target ../target-repo --skills all
+
+         - name: Open pull request
+           uses: peter-evans/create-pull-request@v6
+           with:
+             token: ${{ secrets.SYNC_TOKEN }}
+             path: target-repo
+             commit-message: "chore: sync docs-skills toolkit"
+             title: "chore: sync docs-skills toolkit"
+             body: |
+               Automated sync from the [docs-skills](https://github.com/IanMadd/docs-skills) repository.
+               Review the changes and merge when ready.
+             branch: sync/docs-skills
+             delete-branch: true
+   ```
+
+1. In the `matrix.repo` list, replace `<org>/<docs-repo-1>` and `<org>/<docs-repo-2>` with
+   the names of your target documentation repositories, for example `myorg/platform-docs`.
+   Add one entry per repo.
+
+1. Commit and push the workflow file to `main`.
+
+After setup, every push to `main` in this repository triggers the workflow and opens a pull
+request in each target repo with the updated files.
+To sync only specific components, replace `--skills all` in the install step with the flags
+you need---for example, `--skills fix-broken-links,docs-style-edit` or `--instructions all`.
+
 ## Customizing the toolkit
 
 ### Add product-specific terminology
