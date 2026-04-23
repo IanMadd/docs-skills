@@ -41,6 +41,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
 | `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
 | `.github/skills/generate-examples-from-repo/` | `/generate-examples-from-repo` — fetch source code from a public GitHub repository, extract usage patterns for one command or all commands, and generate formatted, annotated examples ready for documentation |
+| `.github/skills/review-release-notes/` | `/review-release-notes` — fetch each referenced GitHub pull request, enrich release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
 
 ### Install scripts
 
@@ -333,6 +334,41 @@ Examples come from spec and test files, so they reflect how the tool is actually
 > **Tip**: If you want examples for all commands, let the skill enumerate them first. When a
 > repo has more than 15 commands, it asks you to confirm scope or select a subset before
 > fetching anything.
+
+## How to use the review-release-notes skill
+
+The `/review-release-notes` skill reads a release notes file, fetches each referenced pull
+request using the GitHub MCP server, and rewrites each note to accurately reflect the actual
+changes in the PR.
+Optionally, provide a Jira epic key and the skill uses the Atlassian MCP server to retrieve
+epic and child issue details as additional context.
+
+1. **Stage 1 — Parse**: Reads the file and extracts every PR reference (`#123`, full GitHub
+   URLs, and Markdown links).
+2. **Stage 2 — Fetch PRs**: Retrieves the title, body, labels, and linked issues for each PR
+   using the GitHub MCP server.
+3. **Stage 3 — Fetch Jira epic** (optional): Retrieves the epic summary, description, and
+   child issues using the Atlassian MCP server, then maps child issues to PRs.
+4. **Stage 4 — Edit**: Rewrites each release note using PR and Jira data, flags notes that
+   need human review, and moves breaking change notes into the correct section.
+
+**Prerequisites**: The GitHub MCP server must be configured in VS Code.
+To use Jira context, the Atlassian MCP server must also be configured.
+
+**Usage**:
+
+1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
+2. Type `/review-release-notes`.
+3. Enter the path to the release notes file, for example: `docs/release-notes/v2.4.md`
+4. Optionally add a Jira epic key after the file path, for example:
+   `docs/release-notes/v2.4.md PLATFORM-456`
+5. Copilot runs all stages and returns the edited file plus a summary of every change made,
+   PRs that couldn't be fetched, and any notes flagged for human review.
+
+> **Tip**: If `/review-release-notes` doesn't appear, check that you're in **Agent** mode
+> (not Ask or Edit) and that `.github/skills/review-release-notes/` exists in the repo you
+> have open. Run `./install.sh --target <path-to-your-docs-repo> --skills review-release-notes`
+> to install it.
 
 ## How the style instructions work
 
