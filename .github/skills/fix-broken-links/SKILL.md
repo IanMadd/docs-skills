@@ -199,7 +199,8 @@ Show the user the final command and confirm before proceeding to Stage 3.
 
 ## Stage 3: Run linkchecker
 
-Run the command built in Stage 2.
+Run the command built in Stage 2 exactly as shown — do not append additional shell
+statements such as `; echo $?` or `&& echo done`. Run it as a standalone command.
 
 ```shell
 <linkchecker command from Stage 2>
@@ -208,6 +209,12 @@ Run the command built in Stage 2.
 Linkchecker exits with code 1 when it finds errors. This is expected and does not indicate
 a problem with the command. Exit code 2 indicates a program error — if this occurs, show
 the terminal output and stop.
+
+To check the exit code, run this as a separate command after linkchecker finishes:
+
+```shell
+echo "Exit code: $?"
+```
 
 After the command finishes, confirm that `linkchecker-errors.csv` was created:
 
@@ -252,6 +259,26 @@ Group the broken links by `parentname` so that all errors on the same page are p
 together in Stage 5.
 
 If all `valid` values are `True`, report that no broken links were found and stop.
+
+### Classify bot-blocked external links
+
+Before mapping errors to source files, separate bot-blocked external links from genuinely
+broken links.
+
+A link is bot-blocked if all of the following are true:
+
+- The `urlname` is an external URL (the host does not match the check target host).
+- The `result` contains one of the following status codes or phrases:
+  - `403 Forbidden`
+  - `429 Too Many Requests`
+  - `999` (used by LinkedIn and some other sites to block crawlers)
+  - `503 Service Unavailable` when `warningstring` or `infostring` contains a phrase such
+    as "bot", "captcha", "access denied", or "blocked"
+
+Mark these rows as **bot-blocked**. They will receive TODO comments automatically in
+Stage 6 without going through the replacement-search flow.
+
+Process all remaining broken links (non-bot-blocked) through Stages 5 and 6 as normal.
 
 ---
 
@@ -352,7 +379,20 @@ Build a table of all broken links, with:
 
 Process each broken link from Stage 5 one at a time.
 
-### Step 6a: Search for a replacement URL
+### Step 6a: Add TODO comments for bot-blocked external links
+
+For every link classified as bot-blocked in Stage 4, insert a TODO comment on the line
+above the broken link in its Markdown source file. Do not search for a replacement URL
+or ask for confirmation — apply these comments automatically:
+
+```markdown
+<!-- TODO: verify external link — <broken-url> returned <http-result>, which may indicate bot blocking -->
+```
+
+Do not remove or replace the link itself. Include all bot-blocked links in the final
+summary under "Bot-blocked links (TODO comments added)".
+
+### Step 6b: Search for a replacement URL
 
 For each broken URL, search the repo for a likely replacement. Use the last one or two
 path segments of the broken URL as search terms — these often match a page's filename,
@@ -372,7 +412,7 @@ grep -rn '^# .*<last-segment>' --include="*.md" .
 Derive the likely URL for any matching file using the same generator mapping from Stage 5
 (in reverse: file path → URL path).
 
-### Step 6b: Present and confirm
+### Step 6c: Present and confirm
 
 For each broken link, show the user:
 
@@ -391,7 +431,7 @@ Ask the user to:
 
 Do not apply any change without explicit confirmation.
 
-### Step 6c: Apply the fix
+### Step 6d: Apply the fix
 
 **Confirmed replacement**: Replace the broken URL with the confirmed URL in the Markdown
 source file at the line identified in Stage 5.
@@ -412,7 +452,7 @@ After replacing, read the changed line back to verify the syntax is intact.
 <!-- TODO: broken link — <broken-url> returned <http-result> -->
 ```
 
-### Step 6d: Re-verify (optional)
+### Step 6e: Re-verify (optional)
 
 After all fixes are applied, offer to re-run linkchecker against the same target to confirm
 the error count has dropped. Run the same command from Stage 3.
@@ -425,8 +465,10 @@ After all links have been processed, return an `## Fix summary` section with:
 
 - Total broken links found
 - Number fixed (with replacement URLs applied)
-- Number marked as TODO
+- Number marked as TODO (manually flagged by user)
+- Number of bot-blocked external links (TODO comments added automatically)
 - Number skipped
 - List of every change: source file, line, old URL, new URL
-- List of every TODO comment added: source file, line, broken URL, HTTP result
+- List of every TODO comment added (manual): source file, line, broken URL, HTTP result
+- List of bot-blocked links with TODO comments: source file, line, broken URL, HTTP result
 - List of skipped links
