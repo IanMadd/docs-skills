@@ -6,7 +6,7 @@ agent: "agent"
 ---
 
 Generate code examples suitable for DevOps technical documentation.
-Follow the code formatting standards in [devops-docs-style.instructions.md](../instructions/devops-docs-style.instructions.md).
+Follow the code formatting standards in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
 
 **Request**: $input
 

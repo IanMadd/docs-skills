@@ -7,7 +7,7 @@ agent: "agent"
 
 Review the following documentation for completeness, accuracy, and structural integrity.
 Assume the audience is DevOps engineers.
-Use the standards in [devops-docs-style.instructions.md](../instructions/devops-docs-style.instructions.md) and the doc type structures in [doc-types.instructions.md](../instructions/doc-types.instructions.md).
+Use the standards in [docs-style.instructions.md](../instructions/docs-style.instructions.md) and the doc type structures in [doc-types.instructions.md](../instructions/doc-types.instructions.md).
 
 **Document to review**:
 

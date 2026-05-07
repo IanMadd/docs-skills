@@ -225,6 +225,7 @@ if ($TargetRepo -ne "") {
     # copilot-instructions.md is kept per-repo so it can be customized for each project.
     Copy-Item -Path (Join-Path $ScriptDir ".github\copilot-instructions.md") -Destination $TargetGithub -Force
     Copy-Item -Path (Join-Path $ScriptDir ".github\instructions\doc-types.instructions.md") -Destination $TargetInstructions -Force
+    Copy-Item -Path (Join-Path $ScriptDir ".github\instructions\docs-style.instructions.md") -Destination $TargetInstructions -Force
     Write-Host "Installed workspace config to: $TargetGithub"
 
     # Install skills
@@ -243,12 +244,6 @@ if ($TargetRepo -ne "") {
             Write-Host "  Installed .vale.ini to: $TargetRepo"
         }
 
-        $Gitignore = Join-Path $TargetRepo ".gitignore"
-        $ValeEntry = ".vale/styles/"
-        if (-not (Test-Path $Gitignore) -or -not (Select-String -Path $Gitignore -SimpleMatch $ValeEntry -Quiet)) {
-            Add-Content -Path $Gitignore -Value "`n# Vale downloaded style packages`n.vale/styles/"
-            Write-Host "  Added .vale/styles/ to .gitignore"
-        }
     }
 
     if (-not $Explicit) {
@@ -259,7 +254,7 @@ if ($TargetRepo -ne "") {
         Write-Host "    3. Commit the new files:"
         Write-Host ""
         Write-Host "       cd $TargetRepo"
-        Write-Host "       git add .github/ .vale.ini .gitignore"
+        Write-Host "       git add .github/ .vale.ini"
         Write-Host "       git commit -m 'Add DevOps docs AI skills workspace config'"
     }
 }

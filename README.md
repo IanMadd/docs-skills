@@ -10,7 +10,7 @@ writing technical content for DevOps engineers.
 | File | What it does |
 |------|-------------|
 | `.github/copilot-instructions.md` | Always-on context: audience, tone, and style baseline for the whole workspace |
-| `.github/instructions/devops-docs-style.instructions.md` | Style rules auto-applied to every Markdown file |
+| `.github/instructions/docs-style.instructions.md` | Style rules auto-applied to every Markdown file |
 | `.github/instructions/doc-types.instructions.md` | On-demand structural templates for each of the six doc types |
 
 ### Prompts
@@ -107,7 +107,7 @@ and open Copilot Chat. Type `/` to see the installed prompts.
 
 ### Install instructions
 
-Instruction files are installed to the VS Code user profile. The `devops-docs-style`
+Instruction files are installed to the VS Code user profile. The `docs-style`
 instruction file uses `applyTo: "**/*.md"` and loads automatically whenever you work with
 a Markdown file. The `doc-types` file is loaded on demand when you ask about document
 structure or templates.
@@ -131,13 +131,13 @@ To install a specific instruction file, provide its name without the `.instructi
 **macOS and Linux**:
 
 ```shell
-./install.sh --instructions devops-docs-style
+./install.sh --instructions docs-style
 ```
 
 **Windows**:
 
 ```shell
-.\install.ps1 -Instructions devops-docs-style
+.\install.ps1 -Instructions docs-style
 ```
 
 After installing, reload VS Code (`Cmd+Shift+P` / `Ctrl+Shift+P` → **Developer: Reload Window**)
@@ -372,7 +372,7 @@ To use Jira context, the Atlassian MCP server must also be configured.
 
 ## How the style instructions work
 
-The file `.github/instructions/devops-docs-style.instructions.md` uses `applyTo: "**/*.md"` in
+The file `.github/instructions/docs-style.instructions.md` uses `applyTo: "**/*.md"` in
 its frontmatter. Copilot automatically loads it whenever you open or edit any Markdown file —
 no action needed. Style rules apply in the background on every interaction involving a `.md` file.
 
@@ -636,14 +636,14 @@ You can also trigger the workflow manually from **Actions** > **Sync docs-skills
 
 ### Add product-specific terminology
 
-Edit `.github/instructions/devops-docs-style.instructions.md` and add terms to the
+Edit `.github/instructions/docs-style.instructions.md` and add terms to the
 "DevOps terminology" section.
 
 ### Adjust the style guide reference
 
 The instructions reference both the Google Developer Documentation Style Guide and the
 Microsoft Writing Style Guide. To pin to one guide or add team-specific overrides, edit the
-opening section of `.github/instructions/devops-docs-style.instructions.md`.
+opening section of `.github/instructions/docs-style.instructions.md`.
 
 ### Add a new prompt
 
@@ -660,7 +660,7 @@ agent: "agent"
 ---
 
 Prompt body. Reference shared instructions like this:
-[devops-docs-style.instructions.md](../instructions/devops-docs-style.instructions.md)
+[docs-style.instructions.md](../instructions/docs-style.instructions.md)
 ```
 
 ## Contributing

@@ -12,7 +12,7 @@ Runs a five-stage editing workflow on a documentation file:
 2. **Vale lint** — lints prose with the Vale MCP server (or CLI fallback) and captures all errors, warnings, and suggestions
 3. **Vale fixes** — edits the file to resolve vale errors only
 4. **Spell check** — runs `cspell lint` to find spelling errors, fixes genuine misspellings, and adds valid technical terms to the project word list
-5. **Style guide edit** — applies team style rules from [devops-docs-style.instructions.md](../../instructions/devops-docs-style.instructions.md)
+5. **Style guide edit** — applies team style rules from [docs-style.instructions.md](../../instructions/docs-style.instructions.md)
 
 Each stage runs in sequence. Fixing Markdown structure in Stage 1 first ensures vale lints clean, well-formed content. Stages 3 and 4 use separate context to prevent their rule sets from interfering with each other.
 
@@ -181,7 +181,7 @@ Document the number of misspellings fixed and the number of words added to the w
 
 ## Stage 5: Apply the team style guide
 
-With vale issues resolved, apply the team style rules from [devops-docs-style.instructions.md](../../instructions/devops-docs-style.instructions.md).
+With vale issues resolved, apply the team style rules from [docs-style.instructions.md](../../instructions/docs-style.instructions.md).
 
 Work through these checks in order:
 

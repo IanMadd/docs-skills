@@ -140,7 +140,7 @@ Apply the following guidelines when writing:
   and language conventions. This is the primary reference for how release notes should be
   structured and written.
 - **Team prose style guide** from
-  [devops-docs-style.instructions.md](../../instructions/devops-docs-style.instructions.md)
+  [docs-style.instructions.md](../../instructions/docs-style.instructions.md)
   — apply for voice, tone, word choice, and formatting consistency.
 
 ### Editing guidelines

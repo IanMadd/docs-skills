@@ -233,6 +233,7 @@ if [[ -n "$TARGET" ]]; then
   # copilot-instructions.md is kept per-repo so it can be customized for each project.
   cp "$SCRIPT_DIR"/.github/copilot-instructions.md "$TARGET_GITHUB/"
   cp "$SCRIPT_DIR"/.github/instructions/doc-types.instructions.md "$TARGET_INSTRUCTIONS/"
+  cp "$SCRIPT_DIR"/.github/instructions/docs-style.instructions.md "$TARGET_INSTRUCTIONS/"
   echo "Installed workspace config to: $TARGET_GITHUB"
 
   # Install skills
@@ -249,11 +250,6 @@ if [[ -n "$TARGET" ]]; then
       echo "  Installed .vale.ini to: $TARGET"
     fi
 
-    GITIGNORE="$TARGET/.gitignore"
-    if ! grep -qF '.vale/styles/' "$GITIGNORE" 2>/dev/null; then
-      printf '\n# Vale downloaded style packages\n.vale/styles/\n' >> "$GITIGNORE"
-      echo "  Added .vale/styles/ to $GITIGNORE"
-    fi
   fi
 
   if [[ "$EXPLICIT" == "false" ]]; then
@@ -264,7 +260,7 @@ if [[ -n "$TARGET" ]]; then
     echo "    3. Commit the new files:"
     echo ""
     echo "       cd $TARGET"
-    echo "       git add .github/ .vale.ini .gitignore"
+    echo "       git add .github/ .vale.ini"
     echo "       git commit -m \"Add DevOps docs AI skills workspace config\""
   fi
 fi

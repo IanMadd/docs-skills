@@ -6,7 +6,7 @@ agent: "agent"
 ---
 
 Convert the following raw input into a structured technical documentation draft for a DevOps audience.
-Use the style rules in [devops-docs-style.instructions.md](../instructions/devops-docs-style.instructions.md) and the appropriate doc type structure from [doc-types.instructions.md](../instructions/doc-types.instructions.md).
+Use the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md) and the appropriate doc type structure from [doc-types.instructions.md](../instructions/doc-types.instructions.md).
 
 **Raw input**:
 

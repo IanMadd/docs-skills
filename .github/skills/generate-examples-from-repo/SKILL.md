@@ -231,7 +231,7 @@ For each command, record:
 ## Stage 4: Generate examples
 
 Using the inventory from Stage 3, produce documentation-ready examples. Apply the
-formatting rules from [devops-docs-style.instructions.md](../../instructions/devops-docs-style.instructions.md).
+formatting rules from [docs-style.instructions.md](../../instructions/docs-style.instructions.md).
 
 ### Example structure per command
 

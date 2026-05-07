@@ -5,7 +5,7 @@ argument-hint: "Paste or attach the document to edit"
 agent: "agent"
 ---
 
-Edit the following documentation to comply with the team style guide defined in [devops-docs-style.instructions.md](../instructions/devops-docs-style.instructions.md).
+Edit the following documentation to comply with the team style guide defined in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
 
 **Document to edit**:
 
