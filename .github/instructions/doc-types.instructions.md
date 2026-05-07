@@ -293,6 +293,18 @@ Release date: <MONTH> <DAY>, <YEAR>
 - **<Feature name>**: <Feature> will be removed in <version or date>.
   <Replacement feature> replaces it. The system will <describe data migration if applicable>.
   See [<deprecated feature docs>](<link>).
+
+### Packages
+
+Packages are available for the following platforms and architectures:
+
+| Platform | Architecture | Package format |
+|----------|--------------|----------------|
+| Windows | x86-64 | `.msi` |
+| macOS | x86-64, ARM64 | `.pkg` |
+| Red Hat Enterprise Linux, CentOS | x86-64, ARM64 | `.rpm` |
+| Debian, Ubuntu | x86-64, ARM64 | `.deb` |
+| Chef Habitat | x86-64, ARM64 | `.hart` |
 ```
 
 **Guidelines**:
@@ -305,6 +317,7 @@ Release date: <MONTH> <DAY>, <YEAR>
 - Include issue or PR numbers and link them where your organization permits
 - Omit any section that has no entries
 - Use semantic versioning for release numbers (for example, `1.3.2`); include the date in `YYYY-MM-DD` format
+- In the Packages section, list only the platforms and architectures available for the specific release; omit rows that don't apply
 
 ---
 

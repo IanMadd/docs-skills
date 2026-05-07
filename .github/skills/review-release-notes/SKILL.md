@@ -183,7 +183,8 @@ For each entry:
 
 5. **Check section structure** against the release notes template in
    [doc-types.instructions.md](../../instructions/doc-types.instructions.md).
-   Ensure the file uses the correct section order and omits any empty sections:
+   Ensure the file uses the correct section order and omits any empty sections.
+   The defined sections are:
    - Breaking changes (always first, if present)
    - New features
    - New features requiring configuration updates
@@ -191,9 +192,19 @@ For each entry:
    - Bug fixes
    - Known issues
    - Deprecated features
+   - Packages
 
    If sections are missing, misordered, or need to be created based on PR content, add
    or reorder them to match the template.
+
+   If the file contains a section that is **not** in the template above, don't delete
+   it. Instead:
+   - Edit the section content to improve clarity and apply the team style guide
+   - Add an HTML comment immediately above the section heading to flag it for review:
+
+   ```markdown
+   <!-- TODO: review — this section is not defined in the release notes doc type; confirm it should be included -->
+   ```
 
 5. **Flag notes that need human review** with an inline comment if:
    - The referenced PR was not merged or returned an error in Stage 2
@@ -233,6 +244,6 @@ After editing the file, report:
 - **Notes updated**: how many entries were changed and a one-line description of each change
 - **Notes unchanged**: how many entries needed no edits
 - **Flagged for review**: list each flagged note with its PR number or Jira key and the
-  reason it was flagged
+  reason it was flagged; include any sections flagged as unrecognized
 - **Jira issues used**: if Stage 3 ran, how many Jira child issues contributed context
 - **Breaking changes**: whether any breaking change notes were identified or moved
