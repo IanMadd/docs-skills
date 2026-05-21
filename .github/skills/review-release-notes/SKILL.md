@@ -296,6 +296,15 @@ For each entry:
    If sections are missing, misordered, or need to be created based on the source data,
    add or reorder them to match the template.
 
+   Delete any section heading that has no associated content. A section is empty if the
+   only content under the heading is one of the following:
+   - No content — the heading is immediately followed by the next heading or end of file
+   - A placeholder bullet with no text: `- ` (dash and space only)
+   - A placeholder value: `- None`, `- N/A`, `None`, `N/A`, or similar
+
+   Don't add a comment or flag before deleting — just remove the heading and any
+   placeholder content.
+
    If the file contains a section that is **not** in the template above, don't delete
    it. Instead:
    - Edit the section content to improve clarity and apply the team style guide
@@ -357,7 +366,8 @@ issues and/or PR data.
 4. **Apply the same style rules** from step 4 in edit mode above.
 
 5. **Check section structure** and include only sections that have entries.
-   Omit empty sections.
+   Delete any heading with no content or with only placeholder text such as `- None`,
+   `- N/A`, `- ` (empty bullet), or similar.
 
 6. **Flag notes that need human review.**
    For Jira items with no matching PR:
@@ -424,6 +434,8 @@ After editing the file, report:
 - **Notes updated**: how many entries were changed and a one-line description of each change
 - **Notes added**: in add mode, how many new entries were created
 - **Notes unchanged**: how many entries needed no edits
+- **Sections removed**: list any section headings that were deleted because they had no
+  content or contained only placeholder text
 - **Flagged for review**: list each flagged note with its PR number or Jira key and the
   reason it was flagged; include any sections flagged as unrecognized
 - **Breaking changes**: whether any breaking change notes were identified or moved
