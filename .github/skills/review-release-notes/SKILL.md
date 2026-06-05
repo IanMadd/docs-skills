@@ -306,9 +306,34 @@ For each entry:
    placeholder content.
 
    If the file contains a section that is **not** in the template above, don't delete
-   it. Instead:
-   - Edit the section content to improve clarity and apply the team style guide
-   - Add an HTML comment immediately above the section heading to flag it for review:
+   it. Instead, do the following in a single pass over all notes in that section:
+
+   **Classify notes for relocation** — if the section name suggests it may contain
+   release-note-worthy content (for example, "Technical changes", "Miscellaneous",
+   "Other", "Internal changes"), read all its entries at once and classify each note
+   using these signal words:
+
+   | Signal | Destination section |
+   |--------|-------------------|
+   | Present-tense "adds", "lets you", "supports", "introduces" | New features or Improvements |
+   | Past-tense "fixed", "resolved", "corrected" | Bug fixes |
+   | "deprecated", "removed", "no longer" | Deprecated features |
+   | "breaking", "requires updating", "must migrate" | Breaking changes |
+
+   Apply a confidence threshold: only move a note when its destination section is
+   unambiguous. If a note is vague or could fit more than one section, leave it in
+   place. Move confirmed notes into the appropriate template section and apply the
+   style rules from step 4.
+
+   If the section name clearly doesn't map to release note content (for example,
+   "Legal notices", "Acknowledgements"), skip classification and go directly to
+   style edits.
+
+   **Edit remaining content** — apply the team style guide to any notes that stay in
+   the section.
+
+   **Flag the section for review** — add an HTML comment immediately above the section
+   heading regardless of how many notes were moved:
 
    ```markdown
    <!-- TODO: review — this section is not defined in the release notes doc type; confirm it should be included -->
