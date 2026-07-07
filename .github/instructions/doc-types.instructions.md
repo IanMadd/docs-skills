@@ -120,6 +120,10 @@ Introductory sentence describing what these steps accomplish.
 
 3. If <condition>, do <alternative step>.
 
+## Next steps
+
+- Link to another procedure the reader should complete after this one
+
 ## See also
 
 - Link to a related how-to guide
@@ -134,6 +138,7 @@ Introductory sentence describing what these steps accomplish.
 - Document only the most common or recommended method; omit or link to alternative methods
 - Alert readers to possible unexpected scenarios with `> **Note:**` or `> **Warning:**` admonitions
 - Test instructions end-to-end before publishing; re-test after every notable product release
+- Include "Next steps" when the how-to guide is part of a larger workflow and leads directly into other procedures; omit it for standalone tasks
 
 ---
 
