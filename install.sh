@@ -62,11 +62,14 @@ usage() {
   echo "  # Install everything to the VS Code user profile"
   echo "  ./install.sh"
   echo ""
-  echo "  # Install everything, including workspace files for a docs repo"
+  echo "  # Install everything, including workspace files and prompts for a docs repo"
   echo "  ./install.sh --target ../my-docs-repo"
   echo ""
-  echo "  # Install specific prompts only"
+  echo "  # Install specific prompts to the VS Code user profile only"
   echo "  ./install.sh --prompts draft-tutorial,review-alt-text"
+  echo ""
+  echo "  # Install specific prompts to both the VS Code user profile and a docs repo"
+  echo "  ./install.sh --target ../my-docs-repo --prompts draft-tutorial,review-alt-text"
   echo ""
   echo "  # Install a specific skill to a docs repo"
   echo "  ./install.sh --target ../my-docs-repo --skills fix-broken-links"
@@ -236,6 +239,14 @@ if [[ -n "$TARGET" ]]; then
   cp "$SCRIPT_DIR"/.github/instructions/docs-style.instructions.md "$TARGET_INSTRUCTIONS/"
   echo "Installed workspace config to: $TARGET_GITHUB"
 
+  # Install prompts to the target repo when prompts are being installed.
+  # Prompts in .github/prompts/ are workspace-scoped and can be committed to source control.
+  if [[ -n "$PROMPTS_SEL" ]]; then
+    TARGET_PROMPTS="$TARGET_GITHUB/prompts"
+    mkdir -p "$TARGET_PROMPTS"
+    install_prompts "$TARGET_PROMPTS" "$PROMPTS_SEL"
+  fi
+
   # Install skills
   [[ -n "$SKILLS_SEL" ]] && install_skills "$TARGET_SKILLS" "$SKILLS_SEL"
 
@@ -262,6 +273,13 @@ if [[ -n "$TARGET" ]]; then
     echo "       cd $TARGET"
     echo "       git add .github/ .vale.ini"
     echo "       git commit -m \"Add DevOps docs AI skills workspace config\""
+  elif [[ -n "$PROMPTS_SEL" ]]; then
+    echo ""
+    echo "  To make these prompts available to all contributors, commit them:"
+    echo ""
+    echo "    cd $TARGET"
+    echo "    git add .github/prompts/"
+    echo "    git commit -m \"Add Copilot prompt files\""
   fi
 fi
 

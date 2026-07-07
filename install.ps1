@@ -80,11 +80,14 @@ EXAMPLES
   # Install everything to the VS Code user profile
   .\install.ps1
 
-  # Install everything, including workspace files for a docs repo
+  # Install everything, including workspace files and prompts for a docs repo
   .\install.ps1 -TargetRepo ..\my-docs-repo
 
-  # Install specific prompts only
+  # Install specific prompts to the VS Code user profile only
   .\install.ps1 -Prompts draft-tutorial,review-alt-text
+
+  # Install specific prompts to both the VS Code user profile and a docs repo
+  .\install.ps1 -TargetRepo ..\my-docs-repo -Prompts draft-tutorial,review-alt-text
 
   # Install a specific skill to a docs repo
   .\install.ps1 -TargetRepo ..\my-docs-repo -Skills fix-broken-links
@@ -228,6 +231,14 @@ if ($TargetRepo -ne "") {
     Copy-Item -Path (Join-Path $ScriptDir ".github\instructions\docs-style.instructions.md") -Destination $TargetInstructions -Force
     Write-Host "Installed workspace config to: $TargetGithub"
 
+    # Install prompts to the target repo when prompts are being installed.
+    # Prompts in .github/prompts/ are workspace-scoped and can be committed to source control.
+    if ($Prompts -ne "") {
+        $TargetPromptsDir = Join-Path $TargetGithub "prompts"
+        New-Item -ItemType Directory -Path $TargetPromptsDir -Force | Out-Null
+        Install-Prompts $TargetPromptsDir $Prompts
+    }
+
     # Install skills
     if ($Skills -ne "") { Install-Skills $TargetSkillsDir $Skills }
 
@@ -256,6 +267,13 @@ if ($TargetRepo -ne "") {
         Write-Host "       cd $TargetRepo"
         Write-Host "       git add .github/ .vale.ini"
         Write-Host "       git commit -m 'Add DevOps docs AI skills workspace config'"
+    } elseif ($Prompts -ne "") {
+        Write-Host ""
+        Write-Host "  To make these prompts available to all contributors, commit them:"
+        Write-Host ""
+        Write-Host "    cd $TargetRepo"
+        Write-Host "    git add .github\prompts\"
+        Write-Host "    git commit -m 'Add Copilot prompt files'"
     }
 }
 

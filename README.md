@@ -71,10 +71,14 @@ available names for all component types and see additional usage examples.
 
 ### Install prompts
 
-Prompts are installed to the VS Code user profile and appear as slash commands in every
-workspace on the machine. No target repo is needed.
+By default, prompts are installed to the VS Code user profile and appear as slash commands
+in every workspace on the machine.
+When you also provide a target repo path, the install script copies the same prompt files
+into `.github/prompts/` in that repo.
+Workspace-scoped prompts are available only when that repo is open and can be committed to
+source control so all contributors get the same commands.
 
-To install all prompts:
+To install all prompts to the VS Code user profile only:
 
 **macOS and Linux**:
 
@@ -100,6 +104,29 @@ To install specific prompts, provide a comma-separated list of prompt names:
 
 ```shell
 .\install.ps1 -Prompts draft-tutorial,review-alt-text
+```
+
+To install prompts into a specific docs repo (in addition to the VS Code user profile),
+add `--target` with the path to the repo:
+
+**macOS and Linux**:
+
+```shell
+./install.sh --target ../path/to/your-docs-repo --prompts all
+```
+
+**Windows**:
+
+```shell
+.\install.ps1 -TargetRepo ..\path\to\your-docs-repo -Prompts all
+```
+
+To make the repo-scoped prompts available to all contributors, commit the installed files:
+
+```shell
+cd path/to/your-docs-repo
+git add .github/prompts/
+git commit -m "Add Copilot prompt files"
 ```
 
 After installing, reload VS Code (`Cmd+Shift+P` / `Ctrl+Shift+P` → **Developer: Reload Window**)
