@@ -42,6 +42,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
 | `.github/skills/generate-examples-from-repo/` | `/generate-examples-from-repo` — fetch source code from a public GitHub repository, extract usage patterns for one command or all commands, and generate formatted, annotated examples ready for documentation |
 | `.github/skills/review-release-notes/` | `/review-release-notes` — fetch each referenced GitHub pull request, enrich release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
+| `.github/skills/generate-readme/` | `/generate-readme` — read through a repository and generate or update a `README.md` file, creating it from scratch if one doesn't exist |
 
 ### Install scripts
 
