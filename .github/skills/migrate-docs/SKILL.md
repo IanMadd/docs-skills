@@ -1,23 +1,29 @@
 ---
 name: migrate-docs
-description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch. Supports both versioned repos (branch-based, with a product/version directory structure) and unversioned repos (default branch, flat product directory). Copies content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links. Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation.'
-argument-hint: "Migration type (versioned or unversioned), product short name, version (versioned only), source repo path, and target repo path — e.g. 'versioned 360 1.6 /path/to/source-repo /path/to/chef/chef-web-docs' or 'unversioned inspec /path/to/source-repo /path/to/chef/chef-web-docs'"
+description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch, or unversion content from a release branch into the main branch of the same repository. Supports versioned repos (branch-based, with a product/version directory structure), unversioned repos (default branch, flat product directory), and in-repo versioned migrations (release branch to product/version subdirectory in the same repo). Copies content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links. Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation, in-repo versioned migration, unversion content, same-repository migration, in-repo content migration.'
+argument-hint: "Migration type (versioned, unversioned, or in-repo), product short name, version (versioned and in-repo only), source repo path, and target repo path — e.g. 'versioned 360 1.6 /path/to/source-repo /path/to/chef/chef-web-docs', 'unversioned inspec /path/to/source-repo /path/to/chef/chef-web-docs', or 'in-repo 360 1.6 /path/to/repo'"
 ---
 
 # Migrate docs to a product subdirectory
 
-Runs a five-stage workflow to migrate documentation from a source repo to the
-unified `chef/chef-web-docs` main branch. Supports two migration types:
+Runs a workflow to migrate documentation from a source repo to the
+unified `chef/chef-web-docs` main branch, or to unversion content from a release branch
+into the `main` branch of the same repository. Supports three migration types:
 
-- **Versioned** — source content lives on a `release-<version>` branch; target uses a `content/<product>/<version>/` directory structure
-- **Unversioned** — source content lives on the default branch; target uses a `content/<product>/` directory structure with no version component
+- **Versioned** — source content lives on a `release-<version>` branch; target uses a
+  `content/<product>/<version>/` directory structure in `chef/chef-web-docs`
+- **Unversioned** — source content lives on the default branch; target uses a
+  `content/<product>/` directory structure with no version component in `chef/chef-web-docs`
+- **In-repo versioned** — source content lives on a `release-<version>` branch in the
+  same repo as the target; target uses a `content/<product>/<version>/` directory structure
+  in the `main` branch of the same repo
 
 Stages:
 
-1. **Gather inputs and validate** — collects required inputs and confirms both repos exist
-2. **Copy files** — checks out the source branch (versioned) or confirms the working tree (unversioned) and copies content and static files to the target
+1. **Gather inputs and validate** — collects required inputs and confirms the repo or repos exist
+2. **Copy files** — sets up the working tree and copies content and static files to the target directory
 3. **Update frontmatter** — rewrites `[menu.X]` references and `identifier`/`parent` values in every migrated file
-4. **Update menu.toml** — merges source menu sections into a single menu in the target; adds the version to the version switcher (versioned only)
+4. **Update menu.toml** — merges source menu sections into a single menu in the target; adds the version to the version switcher (versioned and in-repo versioned only)
 5. **Rewrite links** — updates internal content links, image paths, shortcode file paths, and strips the `docs.chef.io` domain from cross-product links
 
 ---
@@ -26,11 +32,14 @@ Stages:
 
 Ask the user for the following if not already provided:
 
-1. **Migration type** — versioned or unversioned:
-   - **Versioned**: source content is on a `release-<version>` branch; target uses
-     `content/<product>/<version>/`
-   - **Unversioned**: source content is on the default branch; target uses
-     `content/<product>/` with no version component
+1. **Migration type** — versioned, unversioned, or in-repo versioned:
+   - **Versioned**: source content is on a `release-<version>` branch in a separate source
+     repo; target uses `content/<product>/<version>/` in `chef/chef-web-docs`
+   - **Unversioned**: source content is on the default branch of a separate source repo;
+     target uses `content/<product>/` with no version component in `chef/chef-web-docs`
+   - **In-repo versioned**: source content is on a `release-<version>` branch in the same
+     repo as the target; target uses `content/<product>/<version>/` in the `main` branch
+     of the same repo
 
 2. **Product short name** — the short identifier used in the URL and directory path, for
    example `360` for Chef 360 Platform or `inspec` for Chef InSpec.
@@ -82,15 +91,34 @@ continuing:
 - **Content target path**: `<target-repo>/content/<product>/`
 - **Static target path**: `<target-repo>/static/<product>/images/`
 
-### Validate both repos
+**In-repo versioned migration:**
 
-Confirm both repos exist and are valid git repositories:
+- **Branch name**: `release-<version>` — for example `release-1.6`
+- **Menu name**: `<product>_<version>` with all dots replaced by underscores — for
+  example `360_1_6` for product `360` and version `1.6`
+- **Worktree path**: a temporary directory outside the repo, for example
+  `/tmp/<product>-<version>-worktree`
+- **Content target path**: `<repo>/content/<product>/<version>/`
+- **Static target path**: `<repo>/static/<product>/<version>/images/`
+
+### Validate repos
+
+**Versioned and unversioned migrations** — confirm both repos exist and are valid git
+repositories:
 
 ```shell
 ls <source-repo>/.git && ls <target-repo>/.git
 ```
 
 If either check fails, stop and ask the user to correct the path.
+
+**In-repo versioned migrations** — confirm the repo exists and is a valid git repository:
+
+```shell
+ls <repo>/.git
+```
+
+If the check fails, stop and ask the user to correct the path.
 
 **Versioned migrations only** — confirm the source branch exists:
 
@@ -102,6 +130,18 @@ If the branch is not listed, show the user the available `release-*` branches an
 
 ```shell
 git -C <source-repo> branch --list 'release-*'
+```
+
+**In-repo versioned migrations only** — confirm the release branch exists:
+
+```shell
+git -C <repo> branch --list release-<version>
+```
+
+If the branch is not listed, show the user the available `release-*` branches and stop:
+
+```shell
+git -C <repo> branch --list 'release-*'
 ```
 
 **Unversioned migrations only** — confirm the source content subdirectory exists:
@@ -124,18 +164,9 @@ If it is missing, report the error and stop.
 
 ## Stage 1: Copy files
 
-### Check out the source branch (versioned migrations only)
+### Set up the working tree
 
-For **unversioned migrations**, skip to the **Create target directories** section below.
-Confirm the working tree is clean before copying:
-
-```shell
-git -C <source-repo> status --short
-```
-
-If there are uncommitted changes, warn the user and ask for confirmation before proceeding.
-
-For **versioned migrations**, check for uncommitted changes that would be lost before
+**Versioned migrations** — check for uncommitted changes that would be lost before
 checking out:
 
 ```shell
@@ -153,6 +184,34 @@ git -C <source-repo> checkout release-<version>
 
 If the checkout fails, show the error and stop.
 
+**Unversioned migrations** — confirm the working tree is clean before copying:
+
+```shell
+git -C <source-repo> status --short
+```
+
+If there are uncommitted changes, warn the user and ask for confirmation before proceeding.
+
+**In-repo versioned migrations** — confirm `main` is checked out and the working tree is
+clean:
+
+```shell
+git -C <repo> branch --show-current
+git -C <repo> status --short
+```
+
+If the working tree has uncommitted changes, warn the user and ask for confirmation before
+proceeding. Do not discard changes without explicit permission.
+
+Add the release branch as a git worktree at the temporary path so you can access its
+files without switching branches:
+
+```shell
+git -C <repo> worktree add <worktree-path> release-<version>
+```
+
+If the worktree add fails, show the error and stop.
+
 ### Create target directories
 
 **Versioned:**
@@ -167,6 +226,13 @@ mkdir -p <target-repo>/static/<product>/<version>/images
 ```shell
 mkdir -p <target-repo>/content/<product>
 mkdir -p <target-repo>/static/<product>/images
+```
+
+**In-repo versioned:**
+
+```shell
+mkdir -p <repo>/content/<product>/<version>
+mkdir -p <repo>/static/<product>/<version>/images
 ```
 
 ### Copy content files
@@ -192,6 +258,14 @@ rsync -av \
   <target-repo>/content/<product>/
 ```
 
+**In-repo versioned** — copy from the worktree checked out in the previous step:
+
+```shell
+rsync -av \
+  <worktree-path>/content/ \
+  <repo>/content/<product>/<version>/
+```
+
 ### Copy static files
 
 **Versioned:**
@@ -209,6 +283,20 @@ location (commonly `static/images/` or `docs-chef-io/static/images/`):
 rsync -av \
   <source-repo>/<static-subdir>/images/ \
   <target-repo>/static/<product>/images/
+```
+
+**In-repo versioned** — copy from the worktree, then remove the worktree:
+
+```shell
+rsync -av \
+  <worktree-path>/static/images/ \
+  <repo>/static/<product>/<version>/images/
+```
+
+After the rsync completes, remove the worktree:
+
+```shell
+git -C <repo> worktree remove <worktree-path>
 ```
 
 ### Verify the copy
@@ -237,6 +325,17 @@ ls <target-repo>/static/<product>/images/ | head -10
 find <target-repo>/content/<product> -name "*.md" | wc -l
 ```
 
+**In-repo versioned:**
+
+```shell
+ls <repo>/content/<product>/<version>/ | head -20
+ls <repo>/static/<product>/<version>/images/ | head -10
+```
+
+```shell
+find <repo>/content/<product>/<version> -name "*.md" | wc -l
+```
+
 ---
 
 ## Stage 2: Update frontmatter in migrated files
@@ -252,10 +351,18 @@ example `get_started/enroll_nodes`). Preserve whichever convention the source re
 ### Step 2a: Discover source menu names
 
 Before running any replacements, read the source `menu.toml` to identify all menu array
-names used in that repo. Don't assume them — they vary by product:
+names used in that repo. Don't assume them — they vary by product.
+
+**Versioned and unversioned migrations:**
 
 ```shell
 grep '^\[\[' <source-repo>/config/_default/menu.toml | sort -u
+```
+
+**In-repo versioned migrations** — read from the release branch using `git show`:
+
+```shell
+git -C <repo> show release-<version>:config/_default/menu.toml | grep '^\[\[' | sort -u
 ```
 
 This returns lines like `[[overview]]`, `[[get_started]]`, `[[aws]]`, `[[about]]`.
@@ -283,6 +390,8 @@ already fully qualified, skip steps 2d and 2e and go directly to step 2f.
 **Note**: For unversioned migrations, the content target path is
 `<target-repo>/content/<product>/`. Replace `<target-repo>/content/<product>/<version>/`
 with `<target-repo>/content/<product>/` in all commands in this stage.
+For in-repo versioned migrations, replace `<target-repo>` with `<repo>` in all commands
+in this stage.
 
 Work on all `.md` files under the content target path.
 
@@ -432,7 +541,7 @@ Field reference:
 After editing, confirm the section is syntactically correct by checking that the
 frontmatter opens and closes with `+++` and that the TOML is properly indented.
 
-### Step 2h: Add version entry to params.toml (versioned migrations only)
+### Step 2h: Add version entry to params.toml (versioned and in-repo versioned migrations only)
 
 For **unversioned migrations**, skip this step.
 
@@ -478,10 +587,18 @@ grep -A3 '^\[\[versions\.<product>\]\]' <target-repo>/config/_default/params.tom
 
 ### Step 3a: Read the source menu
 
-Read the source `config/_default/menu.toml` in full:
+Read the source `config/_default/menu.toml` in full.
+
+**Versioned and unversioned migrations:**
 
 ```shell
 cat <source-repo>/config/_default/menu.toml
+```
+
+**In-repo versioned migrations** — read from the release branch using `git show`:
+
+```shell
+git -C <repo> show release-<version>:config/_default/menu.toml
 ```
 
 Identify all menu arrays that are **not** `[[main]]`. These are the arrays you'll
@@ -572,17 +689,23 @@ weight = 10
 Show the user the complete new section before making any changes. Ask for confirmation
 before writing to the file.
 
-After confirmation, append the new section to `<target-repo>/config/_default/menu.toml`.
-Add it after the last existing `[[<product>_*]]` version menu block (versioned), or after
+After confirmation, append the new section to the target `menu.toml`:
+
+- **Versioned and unversioned migrations**: `<target-repo>/config/_default/menu.toml`
+- **In-repo versioned migrations**: `<repo>/config/_default/menu.toml`
+
+Add it after the last existing `[[<product>_*]]` version menu block (versioned and in-repo versioned), or after
 the `[[<product>]]` version switcher block (unversioned), or at the end of the file if
 neither exists yet.
 
-### Step 3d: Update the version switcher (versioned migrations only)
+### Step 3d: Update the version switcher (versioned and in-repo versioned migrations only)
 
 For **unversioned migrations**, skip this step.
 
-Read the `[[<product>]]` version switcher block in the target `menu.toml`. Check whether
-an entry for the version being migrated already exists by looking for
+Read the `[[<product>]]` version switcher block in the target `menu.toml`
+(`<target-repo>/config/_default/menu.toml` for versioned migrations,
+`<repo>/config/_default/menu.toml` for in-repo versioned migrations).
+Check whether an entry for the version being migrated already exists by looking for
 `url = "/<product>/<version>/"` (for example `url = "/360/1.6/"`).
 
 If the entry is missing, add it. Determine the correct `weight` by reviewing the existing
@@ -608,6 +731,7 @@ All link rewrites apply to every `.md` file under the content target path:
 
 - **Versioned**: `<target-repo>/content/<product>/<version>/`
 - **Unversioned**: `<target-repo>/content/<product>/`
+- **In-repo versioned**: `<repo>/content/<product>/<version>/`
 
 Use the appropriate path in all commands in this stage.
 
@@ -769,8 +893,8 @@ In the source repo, links to other Chef products included the full domain name b
 the source repo was served as a standalone site. In `chef/chef-web-docs`, all Chef
 products are served from the same domain, so the domain prefix can be removed.
 
-This stage applies to both versioned and unversioned migrations. Use the content target
-path for your migration type in all commands.
+This stage applies to all three migration types. Use the content target path for your
+migration type in all commands.
 
 ### Step 5a: Find all docs.chef.io links
 
@@ -784,6 +908,12 @@ grep -rn 'https://docs\.chef\.io' <target-repo>/content/<product>/<version>/
 
 ```shell
 grep -rn 'https://docs\.chef\.io' <target-repo>/content/<product>/
+```
+
+**In-repo versioned:**
+
+```shell
+grep -rn 'https://docs\.chef\.io' <repo>/content/<product>/<version>/
 ```
 
 Review the output before running any replacements. Confirm that none of the matched links
@@ -805,6 +935,13 @@ find <target-repo>/content/<product> -name "*.md" -exec \
   sed -i '' 's|https://docs\.chef\.io/|/|g' {} +
 ```
 
+**In-repo versioned:**
+
+```shell
+find <repo>/content/<product>/<version> -name "*.md" -exec \
+  sed -i '' 's|https://docs\.chef\.io/|/|g' {} +
+```
+
 Verify — the output should be empty:
 
 **Versioned:**
@@ -819,6 +956,12 @@ grep -rn 'https://docs\.chef\.io' <target-repo>/content/<product>/<version>/
 grep -rn 'https://docs\.chef\.io' <target-repo>/content/<product>/
 ```
 
+**In-repo versioned:**
+
+```shell
+grep -rn 'https://docs\.chef\.io' <repo>/content/<product>/<version>/
+```
+
 If any remain, they may be inside fenced code blocks or HTML comments. Review and fix
 them manually.
 
@@ -830,14 +973,23 @@ After all stages complete, verify the migration before committing:
 
 1. **Build locally**: Run the Hugo dev server in the target repo and confirm pages load:
 
+   **Versioned and unversioned migrations:**
+
    ```shell
    cd <target-repo> && hugo server
+   ```
+
+   **In-repo versioned migrations:**
+
+   ```shell
+   cd <repo> && hugo server
    ```
 
    Open the migrated section in a browser and confirm:
 
    - **Versioned**: `http://localhost:1313/<product>/<version>/`
    - **Unversioned**: `http://localhost:1313/<product>/`
+   - **In-repo versioned**: `http://localhost:1313/<product>/<version>/`
 
    Confirm:
    - The section loads without errors
@@ -850,8 +1002,8 @@ After all stages complete, verify the migration before committing:
 3. **Spot-check pages**: Manually verify at least three pages — choose a section index, a
    deeply nested content page, and a page with images and cross-product links.
 
-4. **Confirm menu** *(versioned migrations only)*: Confirm the version appears in the
-   version switcher on the product landing page.
+4. **Confirm menu** *(versioned and in-repo versioned only)*: Confirm the version appears
+   in the version switcher on the product landing page.
 
 ---
 
@@ -859,8 +1011,9 @@ After all stages complete, verify the migration before committing:
 
 After all stages complete, return a `## Migration summary` section with:
 
-- Migration type: versioned or unversioned
-- Source repo, branch (versioned) or default branch (unversioned), and content paths
+- Migration type: versioned, unversioned, or in-repo versioned
+- Source repo (or repo, for in-repo versioned), branch (versioned and in-repo versioned)
+  or default branch (unversioned), and content paths
 - Target repo and content and static paths
 - Number of Markdown content files migrated
 - Number of static files migrated
