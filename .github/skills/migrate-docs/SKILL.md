@@ -1,14 +1,14 @@
 ---
 name: migrate-docs
-description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch, or unversion content from a release branch into the main branch of the same repository. Supports versioned repos (branch-based, with a product/version directory structure), unversioned repos (default branch, flat product directory), and in-repo versioned migrations (release branch to product/version subdirectory in the same repo). Copies content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links. Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation, in-repo versioned migration, unversion content, same-repository migration, in-repo content migration.'
-argument-hint: "Migration type (versioned, unversioned, or in-repo), product short name, version (versioned and in-repo only), source repo path, and target repo path — e.g. 'versioned 360 1.6 /path/to/source-repo /path/to/chef/chef-web-docs', 'unversioned inspec /path/to/source-repo /path/to/chef/chef-web-docs', or 'in-repo 360 1.6 /path/to/repo'"
+description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch, reorganize content within a single repository, or unversion content from a release branch. Supports versioned repos (branch-based, with a product/version directory structure), unversioned repos (default branch, flat product directory), in-repo versioned migrations (release branch to product/version subdirectory in the same repo), and in-repo reorganization (content root to product/version subdirectory on the same branch). Copies or moves content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links (skipped for in-repo reorganization). Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation, in-repo versioned migration, unversion content, same-repository migration, in-repo content migration, in-repo reorganization, reorganize content, move to versioned subdirectory, in-repo content reorganization.'
+argument-hint: "Migration type (versioned, unversioned, in-repo, or reorganize), product short name, version (versioned, in-repo, and reorganize only), source or repo path, and target repo path — e.g. 'versioned 360 1.6 /path/to/source-repo /path/to/chef/chef-web-docs', 'unversioned inspec /path/to/source-repo /path/to/chef/chef-web-docs', 'in-repo 360 1.6 /path/to/repo', or 'reorganize 360 1.6 /path/to/repo'"
 ---
 
 # Migrate docs to a product subdirectory
 
 Runs a workflow to migrate documentation from a source repo to the
-unified `chef/chef-web-docs` main branch, or to unversion content from a release branch
-into the `main` branch of the same repository. Supports three migration types:
+unified `chef/chef-web-docs` main branch, or to reorganize content within a single
+repository. Supports four migration types:
 
 - **Versioned** — source content lives on a `release-<version>` branch; target uses a
   `content/<product>/<version>/` directory structure in `chef/chef-web-docs`
@@ -17,14 +17,19 @@ into the `main` branch of the same repository. Supports three migration types:
 - **In-repo versioned** — source content lives on a `release-<version>` branch in the
   same repo as the target; target uses a `content/<product>/<version>/` directory structure
   in the `main` branch of the same repo
+- **In-repo reorganization** — content is reorganized within the same repo on the same
+  branch; content moves from `content/` to `content/<product>/<version>/` and static files
+  move from `static/images/` to `static/<product>/<version>/images/`; the
+  `docs.chef.io` domain-stripping stage is skipped for this type
 
 Stages:
 
 1. **Gather inputs and validate** — collects required inputs and confirms the repo or repos exist
-2. **Copy files** — sets up the working tree and copies content and static files to the target directory
+2. **Copy or move files** — sets up the working tree and copies or moves content and static files to the target directory
 3. **Update frontmatter** — rewrites `[menu.X]` references and `identifier`/`parent` values in every migrated file
-4. **Update menu.toml** — merges source menu sections into a single menu in the target; adds the version to the version switcher (versioned and in-repo versioned only)
-5. **Rewrite links** — updates internal content links, image paths, shortcode file paths, and strips the `docs.chef.io` domain from cross-product links
+4. **Update menu.toml** — merges source menu sections into a single menu in the target; adds the version to the version switcher (versioned, in-repo versioned, and in-repo reorganization only)
+5. **Rewrite links** — updates internal content links, image paths, and shortcode file paths
+6. **Strip docs.chef.io domain** — removes the `docs.chef.io` domain from cross-product links (versioned, unversioned, and in-repo versioned only; skip for in-repo reorganization)
 
 ---
 
@@ -32,7 +37,7 @@ Stages:
 
 Ask the user for the following if not already provided:
 
-1. **Migration type** — versioned, unversioned, or in-repo versioned:
+1. **Migration type** — versioned, unversioned, in-repo versioned, or in-repo reorganization:
    - **Versioned**: source content is on a `release-<version>` branch in a separate source
      repo; target uses `content/<product>/<version>/` in `chef/chef-web-docs`
    - **Unversioned**: source content is on the default branch of a separate source repo;
@@ -40,16 +45,33 @@ Ask the user for the following if not already provided:
    - **In-repo versioned**: source content is on a `release-<version>` branch in the same
      repo as the target; target uses `content/<product>/<version>/` in the `main` branch
      of the same repo
+   - **In-repo reorganization**: content in `content/` moves to
+     `content/<product>/<version>/` on the same branch; there is no separate source or
+     target repo — one repo path serves as both
 
 2. **Product short name** — the short identifier used in the URL and directory path, for
    example `360` for Chef 360 Platform or `inspec` for Chef InSpec.
 
-3. **Version** *(versioned migrations only)* — the version number to migrate, for example
-   `1.6`.
+   **In-repo reorganization** — after the user provides the product short name, confirm
+   it's correct by checking whether it already appears in the repo's config files:
 
-4. **Source repo path** — the absolute path to the local clone of the source documentation
-   repository, for example `/Users/me/code/progress-platform-services/chef-web-docs` or
+   ```shell
+   grep -r '<product>' <repo>/config/_default/params.toml
+   grep -r '<product>' <repo>/config/_default/menu.toml
+   ```
+
+   If the product name doesn't appear, that's expected for the first version being added.
+   Confirm the intended directory path with the user: `content/<product>/<version>/`.
+
+3. **Version** *(versioned, in-repo versioned, and in-repo reorganization migrations)* —
+   the version number to migrate, for example `1.6`.
+
+4. **Source repo path** *(versioned, unversioned, and in-repo versioned migrations only)* —
+   the absolute path to the local clone of the source documentation repository, for example
+   `/Users/me/code/progress-platform-services/chef-web-docs` or
    `/Users/me/code/inspec/chef-inspec-resource-docs`.
+
+   **In-repo reorganization** — skip this item. Provide a **repo path** instead (see item 7).
 
 5. **Source content subdirectory** *(unversioned migrations only)* — the subdirectory
    within the source repo where content lives. Common values:
@@ -62,8 +84,14 @@ Ask the user for the following if not already provided:
    ls <source-repo>/content 2>/dev/null || ls <source-repo>/docs-chef-io/content
    ```
 
-6. **Target repo path** — the absolute path to the local clone of `chef/chef-web-docs`,
-   for example `/Users/me/code/chef/chef-web-docs`.
+6. **Target repo path** *(versioned and unversioned migrations only)* — the absolute path
+   to the local clone of `chef/chef-web-docs`, for example
+   `/Users/me/code/chef/chef-web-docs`.
+
+7. **Repo path** *(in-repo reorganization only)* — the absolute path to the local clone of
+   the repository being reorganized, for example
+   `/Users/me/code/progress-platform-services/chef-web-docs`. This path serves as both
+   source and target.
 
 ### Derive migration identifiers
 
@@ -101,6 +129,17 @@ continuing:
 - **Content target path**: `<repo>/content/<product>/<version>/`
 - **Static target path**: `<repo>/static/<product>/<version>/images/`
 
+**In-repo reorganization:**
+
+- **Branch name**: current branch (no checkout needed; confirm it is not `main`)
+- **Menu name**: `<product>_<version>` with all dots replaced by underscores — for
+  example `360_1_6` for product `360` and version `1.6`
+- **Repo path**: `<repo>` — the single path provided in item 7 above
+- **Source content path**: `<repo>/content/`
+- **Content target path**: `<repo>/content/<product>/<version>/`
+- **Static source path**: `<repo>/static/images/`
+- **Static target path**: `<repo>/static/<product>/<version>/images/`
+
 ### Validate repos
 
 **Versioned and unversioned migrations** — confirm both repos exist and are valid git
@@ -119,6 +158,33 @@ ls <repo>/.git
 ```
 
 If the check fails, stop and ask the user to correct the path.
+
+**In-repo reorganization** — confirm the repo exists and is a valid git repository:
+
+```shell
+ls <repo>/.git
+```
+
+If the check fails, stop and ask the user to correct the path.
+
+Confirm the current branch is not `main`:
+
+```shell
+git -C <repo> branch --show-current
+```
+
+If the current branch is `main`, warn the user that in-repo reorganization should be done
+on a dedicated reorganization branch, not directly on `main`. Ask for confirmation before
+continuing.
+
+Check whether the target content directory already exists (indicating a partial move is
+already in progress):
+
+```shell
+ls <repo>/content/<product> 2>/dev/null
+```
+
+If the directory exists, warn the user and ask for confirmation before continuing.
 
 **Versioned migrations only** — confirm the source branch exists:
 
@@ -162,7 +228,7 @@ If it is missing, report the error and stop.
 
 ---
 
-## Stage 1: Copy files
+## Stage 1: Copy or move files
 
 ### Set up the working tree
 
@@ -212,6 +278,17 @@ git -C <repo> worktree add <worktree-path> release-<version>
 
 If the worktree add fails, show the error and stop.
 
+**In-repo reorganization** — confirm the current branch and that the working tree is
+clean:
+
+```shell
+git -C <repo> branch --show-current
+git -C <repo> status --short
+```
+
+If there are uncommitted changes, warn the user and ask for confirmation before
+proceeding. Do not discard changes without explicit permission.
+
 ### Create target directories
 
 **Versioned:**
@@ -229,6 +306,13 @@ mkdir -p <target-repo>/static/<product>/images
 ```
 
 **In-repo versioned:**
+
+```shell
+mkdir -p <repo>/content/<product>/<version>
+mkdir -p <repo>/static/<product>/<version>/images
+```
+
+**In-repo reorganization:**
 
 ```shell
 mkdir -p <repo>/content/<product>/<version>
@@ -266,6 +350,15 @@ rsync -av \
   <repo>/content/<product>/<version>/
 ```
 
+**In-repo reorganization** — move all content from the `content/` root to the target
+directory. The `content/<product>/` directory was just created, so exclude it from the
+move to avoid trying to move a directory into itself:
+
+```shell
+find <repo>/content -maxdepth 1 -mindepth 1 -not -name '<product>' \
+  -exec mv {} <repo>/content/<product>/<version>/ \;
+```
+
 ### Copy static files
 
 **Versioned:**
@@ -298,6 +391,34 @@ After the rsync completes, remove the worktree:
 ```shell
 git -C <repo> worktree remove <worktree-path>
 ```
+
+**In-repo reorganization** — move all images from `static/images/` to the target
+directory:
+
+```shell
+find <repo>/static/images -maxdepth 1 -mindepth 1 \
+  -exec mv {} <repo>/static/<product>/<version>/images/ \;
+```
+
+### Stage the moves (in-repo reorganization only)
+
+After moving files, stage all changes so Git can detect the renames. Git identifies
+moved files as renames automatically when file-content similarity is 50% or higher.
+
+```shell
+git -C <repo> add -A
+```
+
+Confirm that Git recognized the moves as renames rather than deletions:
+
+```shell
+git -C <repo> status --short | head -20
+```
+
+Expect to see lines beginning with `R` (renamed). If you see only `D` (deleted) and `A`
+(added) lines, Git didn't find matches above the similarity threshold. This is unusual
+but can happen if files were heavily modified before the move. No action is required —
+the files are still staged correctly; Git just won't record them as renames.
 
 ### Verify the copy
 
@@ -334,6 +455,26 @@ ls <repo>/static/<product>/<version>/images/ | head -10
 
 ```shell
 find <repo>/content/<product>/<version> -name "*.md" | wc -l
+```
+
+**In-repo reorganization:**
+
+```shell
+ls <repo>/content/<product>/<version>/ | head -20
+ls <repo>/static/<product>/<version>/images/ | head -10
+```
+
+Count the moved Markdown files and report the count to the user before continuing:
+
+```shell
+find <repo>/content/<product>/<version> -name "*.md" | wc -l
+```
+
+Also confirm the `content/` root is now empty (or contains only the new `<product>/`
+subdirectory):
+
+```shell
+ls <repo>/content/
 ```
 
 ---
@@ -390,8 +531,8 @@ already fully qualified, skip steps 2d and 2e and go directly to step 2f.
 **Note**: For unversioned migrations, the content target path is
 `<target-repo>/content/<product>/`. Replace `<target-repo>/content/<product>/<version>/`
 with `<target-repo>/content/<product>/` in all commands in this stage.
-For in-repo versioned migrations, replace `<target-repo>` with `<repo>` in all commands
-in this stage.
+For in-repo versioned migrations and in-repo reorganization, replace `<target-repo>`
+with `<repo>` in all commands in this stage.
 
 Work on all `.md` files under the content target path.
 
@@ -477,24 +618,40 @@ behavior for the entire section.
 
 **Versioned**: `<target-repo>/content/<product>/<version>/_index.md`
 **Unversioned**: `<target-repo>/content/<product>/_index.md`
+**In-repo versioned**: `<repo>/content/<product>/<version>/_index.md`
+**In-repo reorganization**: `<repo>/content/<product>/<version>/_index.md`
 
-Check whether this file exists after the rsync copy:
+Check whether this file exists at the target path:
 
 ```shell
 ls <target-repo>/content/<product>/<version>/_index.md   # versioned
 ls <target-repo>/content/<product>/_index.md              # unversioned
+ls <repo>/content/<product>/<version>/_index.md           # in-repo versioned and in-repo reorganization
 ```
 
 If the file is missing, create it with at least a `title` in the frontmatter before
 adding the cascade section.
 
+**In-repo reorganization note**: The `_index.md` at the content root (`content/_index.md`)
+was moved to `content/<product>/<version>/_index.md` in Stage 1 and should already exist
+at the new path. If it didn't exist in the source, create it now.
+
 #### Look up the swiftype_search_products value
 
-Find the search product key for the migrated product in the source repo's
+Find the search product key for the migrated product in the repo's
 `config/_default/params.toml`:
+
+**Versioned and unversioned migrations:**
 
 ```shell
 grep -A5 '\[search\.products\.' <source-repo>/config/_default/params.toml \
+  | grep -A4 '<product>'
+```
+
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -A5 '\[search\.products\.' <repo>/config/_default/params.toml \
   | grep -A4 '<product>'
 ```
 
@@ -527,12 +684,13 @@ Field reference:
   `product_key` (for example `["inspec"]`)
 - `version_selector_product` — the product short name without a version (for example
   `client`); same as the `product_key` in `params.toml`
-- `version_selector` — set to `true` for versioned migrations; set to `false` or omit
-  for unversioned products that don't have a version switcher
+- `version_selector` — set to `true` for versioned, in-repo versioned, and in-repo
+  reorganization migrations; set to `false` or omit for unversioned products that don't
+  have a version switcher
 - `this_version_text` — the full product display name and version as it should appear in
   the UI (for example `"Chef Infra Client 19"`)
 - `section_root` — the URL path to the root of this content section (for example
-  `"/client/19"` for versioned, `"/inspec"` for unversioned)
+  `"/client/19"` for versioned or in-repo reorganization, `"/inspec"` for unversioned)
 - `menu_id` — the `<menu-name>` value used in `menu.toml` and the frontmatter `[menu.X]`
   sections (for example `client_19` or `aws`)
 - `breadcrumbs` — set to `true`
@@ -541,18 +699,26 @@ Field reference:
 After editing, confirm the section is syntactically correct by checking that the
 frontmatter opens and closes with `+++` and that the TOML is properly indented.
 
-### Step 2h: Add version entry to params.toml (versioned and in-repo versioned migrations only)
+### Step 2h: Add version entry to params.toml (versioned, in-repo versioned, and in-repo reorganization only)
 
 For **unversioned migrations**, skip this step.
 
-The target repo's `config/_default/params.toml` contains a `[[versions.<product>]]`
+The repo's `config/_default/params.toml` contains a `[[versions.<product>]]`
 array that drives the version switcher UI. Each entry maps a display label to a URL.
-You must add an entry for the new version.
+Add an entry for the new version.
 
 Read the existing version entries for the product:
 
+**Versioned migrations:**
+
 ```shell
 grep -A3 '^\[\[versions\.<product>\]\]' <target-repo>/config/_default/params.toml
+```
+
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -A3 '^\[\[versions\.<product>\]\]' <repo>/config/_default/params.toml
 ```
 
 If no entries exist for `<product>` yet, add a new block at the end of the versioned
@@ -577,8 +743,16 @@ base_url = "/client/19/"
 
 After adding the entry, verify the block looks correct:
 
+**Versioned migrations:**
+
 ```shell
 grep -A3 '^\[\[versions\.<product>\]\]' <target-repo>/config/_default/params.toml
+```
+
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -A3 '^\[\[versions\.<product>\]\]' <repo>/config/_default/params.toml
 ```
 
 ---
@@ -599,6 +773,12 @@ cat <source-repo>/config/_default/menu.toml
 
 ```shell
 git -C <repo> show release-<version>:config/_default/menu.toml
+```
+
+**In-repo reorganization** — read from the current repo's `menu.toml`:
+
+```shell
+cat <repo>/config/_default/menu.toml
 ```
 
 Identify all menu arrays that are **not** `[[main]]`. These are the arrays you'll
@@ -693,18 +873,20 @@ After confirmation, append the new section to the target `menu.toml`:
 
 - **Versioned and unversioned migrations**: `<target-repo>/config/_default/menu.toml`
 - **In-repo versioned migrations**: `<repo>/config/_default/menu.toml`
+- **In-repo reorganization**: `<repo>/config/_default/menu.toml`
 
-Add it after the last existing `[[<product>_*]]` version menu block (versioned and in-repo versioned), or after
-the `[[<product>]]` version switcher block (unversioned), or at the end of the file if
-neither exists yet.
+Add it after the last existing `[[<product>_*]]` version menu block (versioned, in-repo
+versioned, and in-repo reorganization), or after the `[[<product>]]` version switcher
+block (unversioned), or at the end of the file if neither exists yet.
 
-### Step 3d: Update the version switcher (versioned and in-repo versioned migrations only)
+### Step 3d: Update the version switcher (versioned, in-repo versioned, and in-repo reorganization only)
 
 For **unversioned migrations**, skip this step.
 
 Read the `[[<product>]]` version switcher block in the target `menu.toml`
 (`<target-repo>/config/_default/menu.toml` for versioned migrations,
-`<repo>/config/_default/menu.toml` for in-repo versioned migrations).
+`<repo>/config/_default/menu.toml` for in-repo versioned migrations and in-repo
+reorganization).
 Check whether an entry for the version being migrated already exists by looking for
 `url = "/<product>/<version>/"` (for example `url = "/360/1.6/"`).
 
@@ -732,6 +914,7 @@ All link rewrites apply to every `.md` file under the content target path:
 - **Versioned**: `<target-repo>/content/<product>/<version>/`
 - **Unversioned**: `<target-repo>/content/<product>/`
 - **In-repo versioned**: `<repo>/content/<product>/<version>/`
+- **In-repo reorganization**: `<repo>/content/<product>/<version>/`
 
 Use the appropriate path in all commands in this stage.
 
@@ -743,6 +926,7 @@ prefix — and version prefix for versioned migrations:
 
 - **Versioned**: `[Install](/<product>/<version>/install/)`
 - **Unversioned**: `[Install](/<product>/install/)`
+- **In-repo reorganization**: `[Install](/<product>/<version>/install/)`
 
 First, find all candidate absolute links — paths starting with `/` that don't already
 include `/<product>/` and aren't external (`http://` or `https://`):
@@ -759,6 +943,14 @@ grep -rn '](/' <target-repo>/content/<product>/<version>/ \
 
 ```shell
 grep -rn '](/' <target-repo>/content/<product>/ \
+  | grep -v '](/<product>/' \
+  | grep -v '](https\?://'
+```
+
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -rn '](/' <repo>/content/<product>/<version>/ \
   | grep -v '](/<product>/' \
   | grep -v '](https\?://'
 ```
@@ -783,6 +975,13 @@ find <target-repo>/content/<product> -name "*.md" -exec \
   sed -i '' 's|](\(/[^)]*\))|](/<product>\1)|g' {} +
 ```
 
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+find <repo>/content/<product>/<version> -name "*.md" -exec \
+  sed -i '' 's|](\(/[^)]*\))|](/<product>/<version>\1)|g' {} +
+```
+
 On Linux, omit the `''` after `-i`.
 
 Verify the rewrite by running the grep again. The output should be empty or contain
@@ -805,6 +1004,12 @@ grep -rn '](/images/' <target-repo>/content/<product>/<version>/
 grep -rn '](/images/' <target-repo>/content/<product>/
 ```
 
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -rn '](/images/' <repo>/content/<product>/<version>/
+```
+
 Any remaining matches indicate image links that weren't caught by the substitution.
 Fix them manually.
 
@@ -818,12 +1023,13 @@ this:
 {{< readfile file="content/reusable_text/example.md" >}}
 ```
 
-Because the reusable files were copied into the migrated directory in Stage 1, every
-path must be updated to include the product prefix — and version prefix for versioned
-migrations:
+Because the reusable files were copied or moved into the migrated directory in Stage 1,
+every path must be updated to include the product prefix — and version prefix for
+versioned migrations:
 
 - **Versioned**: `file="content/reusable_text/..."` → `file="content/<product>/<version>/reusable_text/..."`
 - **Unversioned**: `file="content/reusable_text/..."` → `file="content/<product>/reusable_text/..."`
+- **In-repo reorganization**: `file="content/reusable_text/..."` → `file="content/<product>/<version>/reusable_text/..."`
 
 Find all readfile shortcodes in the migrated files:
 
@@ -837,6 +1043,12 @@ grep -rn 'readfile file=' <target-repo>/content/<product>/<version>/
 
 ```shell
 grep -rn 'readfile file=' <target-repo>/content/<product>/
+```
+
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -rn 'readfile file=' <repo>/content/<product>/<version>/
 ```
 
 Rewrite all paths that start with `content/`:
@@ -859,6 +1071,15 @@ find <target-repo>/content/<product> -name "*.md" -exec \
   {} +
 ```
 
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+find <repo>/content/<product>/<version> -name "*.md" -exec \
+  sed -i '' \
+    's|readfile file="content/|readfile file="content/<product>/<version>/|g' \
+  {} +
+```
+
 On Linux, omit the `''` after `-i`.
 
 Verify — the output should be empty:
@@ -877,6 +1098,13 @@ grep -rn 'readfile file="content/' <target-repo>/content/<product>/ \
   | grep -v 'readfile file="content/<product>/'
 ```
 
+**In-repo versioned and in-repo reorganization:**
+
+```shell
+grep -rn 'readfile file="content/' <repo>/content/<product>/<version>/ \
+  | grep -v 'readfile file="content/<product>/<version>/'
+```
+
 Any remaining matches reference content at a path that wasn't covered by the substitution.
 Review each one — the path may use a different prefix or point to shared content outside
 the migrated directory. Fix the path manually or flag it with a TODO comment:
@@ -889,12 +1117,16 @@ the migrated directory. Fix the path manually or flag it with a TODO comment:
 
 ## Stage 5: Strip docs.chef.io domain from cross-product links
 
+> **Skip this stage for in-repo reorganization.** The content stays within the same
+> repository and site, so cross-product links that include `https://docs.chef.io` are
+> still valid and should remain unchanged.
+
 In the source repo, links to other Chef products included the full domain name because
 the source repo was served as a standalone site. In `chef/chef-web-docs`, all Chef
 products are served from the same domain, so the domain prefix can be removed.
 
-This stage applies to all three migration types. Use the content target path for your
-migration type in all commands.
+This stage applies to versioned, unversioned, and in-repo versioned migration types only.
+Use the content target path for your migration type in all commands.
 
 ### Step 5a: Find all docs.chef.io links
 
@@ -979,7 +1211,7 @@ After all stages complete, verify the migration before committing:
    cd <target-repo> && hugo server
    ```
 
-   **In-repo versioned migrations:**
+   **In-repo versioned migrations and in-repo reorganization:**
 
    ```shell
    cd <repo> && hugo server
@@ -990,6 +1222,7 @@ After all stages complete, verify the migration before committing:
    - **Versioned**: `http://localhost:1313/<product>/<version>/`
    - **Unversioned**: `http://localhost:1313/<product>/`
    - **In-repo versioned**: `http://localhost:1313/<product>/<version>/`
+   - **In-repo reorganization**: `http://localhost:1313/<product>/<version>/`
 
    Confirm:
    - The section loads without errors
@@ -1002,8 +1235,8 @@ After all stages complete, verify the migration before committing:
 3. **Spot-check pages**: Manually verify at least three pages — choose a section index, a
    deeply nested content page, and a page with images and cross-product links.
 
-4. **Confirm menu** *(versioned and in-repo versioned only)*: Confirm the version appears
-   in the version switcher on the product landing page.
+4. **Confirm menu** *(versioned, in-repo versioned, and in-repo reorganization only)*:
+   Confirm the version appears in the version switcher on the product landing page.
 
 ---
 
@@ -1011,17 +1244,19 @@ After all stages complete, verify the migration before committing:
 
 After all stages complete, return a `## Migration summary` section with:
 
-- Migration type: versioned, unversioned, or in-repo versioned
-- Source repo (or repo, for in-repo versioned), branch (versioned and in-repo versioned)
-  or default branch (unversioned), and content paths
-- Target repo and content and static paths
-- Number of Markdown content files migrated
-- Number of static files migrated
+- Migration type: versioned, unversioned, in-repo versioned, or in-repo reorganization
+- Source repo or repo path, branch (versioned and in-repo versioned) or current branch
+  (in-repo reorganization) or default branch (unversioned), and content paths
+- Target repo and content and static paths (not applicable for in-repo reorganization;
+  list the single repo path instead)
+- Number of Markdown content files migrated (or moved, for in-repo reorganization)
+- Number of static files migrated (or moved, for in-repo reorganization)
 - Frontmatter updates: count of files updated
 - Menu entries added to `menu.toml`: count of `[[<menu-name>]]` entries added
 - Link rewrites: count of internal content links updated
 - Image path rewrites: count of image paths updated
 - Shortcode path rewrites: count of `readfile` paths updated
-- `docs.chef.io` links stripped: count
+- `docs.chef.io` links stripped: count (enter `N/A — skipped for in-repo reorganization`
+  if the migration type is in-repo reorganization)
 - Files that need manual review: list any files with unresolved `readfile` paths,
   skipped links, or items where automatic rewriting produced unexpected results
