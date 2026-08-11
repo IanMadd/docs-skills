@@ -285,7 +285,7 @@ Release date: <MONTH> <DAY>, <YEAR>
 
 ### Bug fixes
 
-- **[<issue-id>](<link>) <Short description>**: <What the software now does correctly>.
+- **[<issue-id>](<link>) <Short description>**: The <application or feature> now correctly <does XYZ>. Previously, it <did ABC>.
   See [<docs link>](<link>) for more information.
 
 ### Known issues
@@ -316,8 +316,8 @@ Packages are available for the following platforms and architectures:
 - Write in a positive, friendly tone; use plain language
 - Use second person: "You can now...", "Use the new... to..."
 - Use present tense for new features and improvements: "Adds support for...", "Lets you..."
-- Use past tense for bug fixes: "Fixed an issue where...", "Resolved a problem that caused..."
-- Don't start bug fix entries with "Fixed the bug..."---describe what the software now does correctly
+- For bug fixes, use this two-part pattern: "The <application or feature> now correctly <does XYZ>. Previously, it <did ABC>."
+- Don't start bug fix entries with "Fixed..." or "Resolved..."
 - List the most important items in each section first
 - Include issue or PR numbers and link them where your organization permits
 - Omit any section that has no entries
