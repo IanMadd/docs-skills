@@ -50,7 +50,7 @@ Keep this brief; link to conceptual docs for deeper explanations.
 Introductory sentence explaining what this step accomplishes and why.
 
 1. Step action. Start with an imperative verb.
-2. Step action.
+1. Step action.
 
    ```shell
    # Comment explaining what this command does
@@ -98,27 +98,45 @@ Steps to remove resources created during the tutorial.
 
 One or two sentences describing the task and when a reader would perform it.
 For example: "Use this guide to create a Kubernetes NetworkPolicy that restricts pod-to-pod traffic."
+If it's not obvious why the reader should do this task, state the benefit or outcome.
+If the task is routine (for example, a recurring backup) or follows another event (for example, an
+upgrade), state when to perform it.
+If the task carries risk or requires a safety measure first---a backup, a maintenance window, elevated
+permissions---state it before the steps.
+If the task takes a long time or affects a critical system, tell the reader up front.
 
 ## Before you begin (include only for non-obvious prerequisites)
 
 - Prerequisite: tool, permission, or environment needed
 - Link to relevant setup docs
+- If the reader will install third-party software, link to that software's system requirements
 
 ## <Task name: bare infinitive>
 
-Introductory sentence describing what these steps accomplish.
+(Include an introductory sentence unless the heading alone gives the reader everything they need.)
+Introductory sentence that adds context the heading doesn't already cover---don't just repeat the
+heading. End the sentence with a colon if it immediately precedes the steps, or a period if other
+material (for example, a note) comes between the sentence and the steps.
+For example: "To customize the buttons, follow these steps:" or "Customize the buttons:"
+Don't introduce the steps with a partial sentence that the numbered list completes, for example,
+"To customize the buttons:" followed directly by the steps.
 
-1. Step one. Start with an imperative verb.
-2. Step two.
+1. Step one. Start with an imperative verb. Write each step as one action or one decision the reader
+   makes---write at the highest level the reader will understand rather than splitting one action into
+   several small steps.
+1. Step two.
 
    ```shell
    # Comment explaining the command
    command --flag <value>
    ```
 
+   Replace `<value>` with <what it represents>.
    Expected output or result.
+   Explain the significance of the output in a separate paragraph if it isn't obvious.
 
-3. If <condition>, do <alternative step>.
+1. Optional: <step that isn't required>.
+1. If <condition>, do <alternative step>.
 
 ## Next steps
 
@@ -132,11 +150,32 @@ Introductory sentence describing what these steps accomplish.
 
 **Guidelines**:
 - One how-to guide covers exactly one task
-- Maximum 8–10 steps; if longer, split into multiple guides
-- Use conditional imperatives for variations: "If you want X, do Y. To achieve Z, run..."
+- Maximum 8–10 steps; if longer, split into multiple guides, or group related steps under subheadings so
+  the reader stays oriented
+- Introduce a set of steps with a sentence that adds context beyond the heading; skip the introductory
+  sentence entirely if the heading already says everything the reader needs
+- End an introductory sentence with a colon when the steps follow immediately, or a period when other
+  material comes between the sentence and the steps
+- Write the introductory sentence as a complete imperative statement, not a partial sentence the
+  numbered steps complete---write "To customize the buttons, follow these steps:" or
+  "Customize the buttons:", not "To customize the buttons:"
+- Apply the same introductory-sentence rules to a step that has sub-steps: end that step with a colon
+  or a period, as appropriate, before listing the sub-steps
+- Write each step as a single action the reader takes or a single decision they make; if an action
+  triggers a response from the application or system, describe that response in the same step, not as
+  its own step
+- Start the first sentence of every step with an imperative verb
+- Preface optional steps with "Optional:"
+- State conditions at the start of a step, not the end, so the reader doesn't act before realizing the
+  condition doesn't apply to them---for example, "If the test succeeds, reindex all organizations," not
+  "Reindex all organizations if the test succeeds"
+- Use a single unordered list item, not a numbered step, for single-step procedures
 - Don't explain concepts in the steps---link to conceptual docs instead
 - Document only the most common or recommended method; omit or link to alternative methods
 - Alert readers to possible unexpected scenarios with `> **Note:**` or `> **Warning:**` admonitions
+- Make the end point of the procedure clear---show expected output, a verification command, or a
+  screenshot so the reader knows they reached the end point, whether it's the end of the guide or a
+  waypoint in a longer set of procedures
 - Test instructions end-to-end before publishing; re-test after every notable product release
 - Include "Next steps" when the how-to guide is part of a larger workflow and leads directly into other procedures; omit it for standalone tasks
 
@@ -161,10 +200,19 @@ What the command, option set, or configuration does. Keep this concise.
 
 ## Options
 
-| Flag / Option | Type | Default | Description |
-|---------------|------|---------|-------------|
-| `--flag` | string | `""` | What it does |
-| `--required-flag` | int | required | What it does |
+`--flag`
+: What it does.
+
+  Type: string
+
+  Default: `""`
+
+`--required-flag`
+: What it does.
+
+  Type: int
+
+  Default: required
 
 ## Examples
 
@@ -186,10 +234,12 @@ command --flag <value> --other-flag
 
 **Guidelines**:
 - Every flag, option, and parameter must be documented; include type and default
-- Use `required` in the Default column when there is no default value
+- Document each flag or option as a description list: the term is the flag in code font, and the
+  definition starts with a one-line description followed by indented `Type:` and `Default:` lines
+- Use `required` for the `Default:` value when there is no default value
 - Examples must be present---at least two, showing different configurations
 - Use active voice in descriptions: "Returns a JSON object" not "A JSON object is returned"
-- Use tables and bulleted lists to maximize scannability
+- Use description lists and bulleted lists to maximize scannability
 - Maintain consistent structure, terminology, and tone across all reference pages
 - Don't include step-by-step procedures---link out to how-to guides
 
@@ -485,7 +535,7 @@ Link to installation instructions for each.
 The minimum steps to get something working. Keep to five steps or fewer.
 
 1. Step one.
-2. Step two.
+1. Step two.
 
 ## Installation
 
