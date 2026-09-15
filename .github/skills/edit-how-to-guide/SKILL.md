@@ -77,7 +77,7 @@ Guidelines to enforce:
   `<!-- TODO: link to conceptual doc explaining [concept] -->`
 - Document only the most common or recommended method; note alternatives as links,
   not full alternate procedures
-- Flag unexpected scenarios with `> **Note:**` or `> **Warning:**` admonitions
+- Flag unexpected scenarios with `{{< note >}}` or `{{< warning >}}` shortcodes
 
 ---
 
@@ -94,11 +94,11 @@ Guidelines to enforce:
    title.
 4. Reorganize existing steps into the numbered task list. Preserve all working
    commands and real examples — don't invent new ones.
-5. Convert any embedded concept explanations into `> **Note:**` callouts or a
+5. Convert any embedded concept explanations into `{{< note >}}` shortcodes or a
    `<!-- TODO: link to conceptual doc -->` marker instead of leaving long explanatory
    asides inside the steps.
 6. Convert any "if this doesn't work" or edge-case text into conditional imperative
-   steps or `> **Warning:**` admonitions.
+   steps or `{{< warning >}}` shortcodes.
 7. If more than 8–10 steps remain after consolidation, flag the file:
    `<!-- TODO: exceeds recommended step count; consider splitting into multiple guides -->`
 8. Add `Next steps` only if the existing content implies a larger workflow; otherwise

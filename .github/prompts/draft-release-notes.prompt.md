@@ -18,7 +18,7 @@ Produce structured release notes with:
 - An opening sentence summarizing the most significant change in this release
 - Sections in this order: Breaking changes, What's new, Improvements, Bug fixes, Upgrade notes, Known issues
   - Omit any section that has no entries
-  - Breaking changes must appear first if present, with a `> **Warning:**` admonition
+  - Breaking changes must appear first if present, wrapped in a `{{< warning >}}` shortcode
 - Each entry formatted as: `- **Short label**: One or two sentences describing the change and its impact`
 - PR or issue numbers linked inline where provided: `([#123](link))`
 - A `## Upgrade notes` section with numbered steps if any action is required to upgrade

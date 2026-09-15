@@ -11,6 +11,45 @@ Source guidance: [The Good Docs Project](https://www.thegooddocsproject.dev/temp
 
 ---
 
+## Admonitions
+
+This docs set renders notes, warnings, and danger callouts with Hugo shortcodes---never with
+blockquote text like `> **Note:**`. Use this syntax anywhere a doc type calls for an admonition:
+
+```markdown
+{{< note >}}
+
+Note text
+
+{{< /note >}}
+```
+
+```markdown
+{{< warning >}}
+
+Warning text
+
+{{< /warning >}}
+```
+
+```markdown
+{{< danger >}}
+
+Danger text
+
+{{< /danger >}}
+```
+
+Use `note` for supplementary information, `warning` for actions that could cause unexpected
+behavior, and `danger` for actions that risk data loss or a breaking change.
+
+Use admonitions only when necessary. Too many notices on a page lose their visual
+distinctiveness---see if you can convey the information in the surrounding prose instead.
+Avoid grouping two or more admonitions together, such as back-to-back warnings or a note
+nested inside a caution; if a page needs that, reorganize the content instead.
+
+---
+
 ## Tutorial
 
 **Purpose**: Learning-oriented. The reader follows a guided path and ends with a working result and new skills. Assumes no prior practical knowledge of the tool. Tutorials eliminate unexpected scenarios---engineer the reader toward a successful finish.
@@ -172,7 +211,7 @@ Don't introduce the steps with a partial sentence that the numbered list complet
 - Use a single unordered list item, not a numbered step, for single-step procedures
 - Don't explain concepts in the steps---link to conceptual docs instead
 - Document only the most common or recommended method; omit or link to alternative methods
-- Alert readers to possible unexpected scenarios with `> **Note:**` or `> **Warning:**` admonitions
+- Alert readers to possible unexpected scenarios with `{{< note >}}` or `{{< warning >}}` shortcodes (see [Admonitions](#admonitions))
 - Make the end point of the procedure clear---show expected output, a verification command, or a
   screenshot so the reader knows they reached the end point, whether it's the end of the guide or a
   waypoint in a longer set of procedures
@@ -315,7 +354,11 @@ Release date: <MONTH> <DAY>, <YEAR>
 
 ### Breaking changes (include if present---always lead with this section)
 
-> **Warning:** The following changes require action before upgrading.
+{{< warning >}}
+
+The following changes require action before upgrading.
+
+{{< /warning >}}
 
 - **<Change name>**: What changed, what the reader must do, and a link to the migration guide.
 
