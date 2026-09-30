@@ -52,21 +52,26 @@ through a task (that's a how-to guide).
 The required structure, from
 [doc-types.instructions.md](../../instructions/doc-types.instructions.md):
 
-- `# <Title: noun phrase>` — for example, "Deployment strategies in Kubernetes"
+- `# <Title: noun phrase>` — name the doc after the concept itself where possible
+  ("Deployment strategies in Kubernetes"); avoid bare titles like "Overview" or
+  "Introduction" with no accompanying noun
 - (Optional) An introductory paragraph framing the concept's relevance, using the
   inverted pyramid: high-level idea first, details later
 - `## What is <concept>` — a clear, scoped definition; state what's in scope and, if
-  useful, what's out of scope; explain how it fits into the broader system
+  useful, what's out of scope; explain how it fits into the broader system; favor
+  direct definition patterns ("<Concept> is...", "<Concept> solves the challenge
+  of...", "By using <concept>, you can...")
 - (Optional) A diagram or visual, placed near the top if it clarifies architecture or
-  data flow
+  data flow, and kept next to the text that explains it
 - (Optional) `## Background` — historical or design context, only if it meaningfully
   aids understanding
 - `## Use cases` — framed around the reader's problems: what challenges does this
   concept solve
 - (Optional) `## Comparison` — a table of options/versions/alternatives and when to
   use each, if the concept has more than one variant
-- `## Related resources` — links to a related conceptual doc, a how-to guide that
-  implements this concept, and a reference doc for its configuration options
+- `## Related resources` — subcategorized links: **How-to guides** (implements this
+  concept), **Related concepts** (a related conceptual doc), **Reference** (config
+  or options for this concept)
 
 Guidelines to enforce:
 
@@ -75,8 +80,15 @@ Guidelines to enforce:
 - Don't include step-by-step procedures — replace them with
   `<!-- TODO: link to how-to guide for [task] -->`
 - Use the inverted pyramid: high-level overview first, details later
-- Include a diagram whenever it clarifies structure, data flow, or relationships
 - Explain trade-offs and limitations honestly — don't gloss over them
+- Match the diagram type to what it needs to show: context diagram (how the concept
+  fits a broader system), flowchart (a sequential process or how the concept
+  evolved), decision tree (choices and consequences), or infographic (a high-level,
+  visual overview)
+- If the doc must serve both non-technical and technical readers, layer the content
+  (simple explanation first, then progressive technical depth) rather than mixing
+  depths inconsistently; split into separate docs if the audiences' needs diverge
+  too far to layer well
 
 ---
 
@@ -88,12 +100,17 @@ Guidelines to enforce:
    concept, flag the extra content:
    `<!-- TODO: split into a separate conceptual doc for [concept] -->` rather than
    deleting it.
-2. Rewrite the title as a noun phrase naming the concept.
+2. Rewrite the title as a noun phrase naming the concept itself ("Payments", not
+   "Overview"); use a generic label like "Understanding <concept>" only if the
+   concept name alone reads awkwardly as a title.
 3. Extract or write a scoped definition for `What is <concept>`, stating what's in
-   and out of scope.
+   and out of scope, using direct definition patterns ("<Concept> is...", "<Concept>
+   addresses the common pain points of...") rather than vague framing.
 4. If the file references a diagram or describes an architecture/data flow visually,
-   note its placement near the top; if no diagram exists but one would clarify the
-   content, add `<!-- TODO: add a diagram showing [architecture/data flow] -->`.
+   note its placement near the top, next to the text it explains; if no diagram
+   exists but one would clarify the content, add
+   `<!-- TODO: add a diagram showing [architecture/data flow] -->` and suggest the
+   diagram type (context diagram, flowchart, decision tree, or infographic).
 5. Move any historical or design-rationale content into `## Background`; drop this
    section if there's nothing that meaningfully aids understanding.
 6. Reframe any existing use case content around reader problems in `## Use cases`.
@@ -101,23 +118,34 @@ Guidelines to enforce:
    from existing content.
 8. Replace any embedded step-by-step instructions with
    `<!-- TODO: link to how-to guide for [task] -->` — don't leave procedures inline.
-9. Build `## Related resources` from any links already present in the file.
+9. Build `## Related resources` from any links already present in the file, grouped
+   under **How-to guides**, **Related concepts**, and **Reference** subheadings.
+10. If the file mixes a simple explanation with deep technical detail in no clear
+    order, reorder it to layer the content — high-level first, technical depth
+    after — instead of leaving the two interleaved.
 
 ### Create mode
 
-1. Draft the title and, if useful, an introductory paragraph from the source
-   material, applying the inverted pyramid.
-2. Draft `What is <concept>` as a scoped definition using the sources; note
-   in-scope/out-of-scope boundaries if the sources make them clear.
-3. Add `<!-- TODO: add a diagram showing [architecture/data flow] -->` if the concept
-   would benefit from one.
-4. Draft `Background` only if the sources include historical or design context worth
+1. Draft the title as a noun phrase naming the concept itself, applying the naming
+   conventions above.
+2. Draft an introductory paragraph from the source material, applying the inverted
+   pyramid, if useful.
+3. Draft `What is <concept>` as a scoped definition using the sources, favoring
+   direct definition patterns; note in-scope/out-of-scope boundaries if the sources
+   make them clear.
+4. Add `<!-- TODO: add a diagram showing [architecture/data flow] -->` if the concept
+   would benefit from one, and suggest which diagram type fits (context diagram,
+   flowchart, decision tree, or infographic).
+5. Draft `Background` only if the sources include historical or design context worth
    keeping.
-5. Draft `Use cases` from problems the sources describe the concept as solving.
-6. Draft `Comparison` only if the sources describe multiple variants or
+6. Draft `Use cases` from problems the sources describe the concept as solving.
+7. Draft `Comparison` only if the sources describe multiple variants or
    alternatives.
-7. Leave `Related resources` as `<!-- TODO: link to related content -->` for any
+8. Build `Related resources` under **How-to guides**, **Related concepts**, and
+   **Reference** subheadings; leave `<!-- TODO: link to related content -->` for any
    links not confirmed by the sources.
+9. If the sources suggest both non-technical and technical readers, layer the draft
+   (simple explanation first, technical depth after) rather than mixing depths.
 
 ---
 

@@ -54,12 +54,18 @@ The required structure, from
 [doc-types.instructions.md](../../instructions/doc-types.instructions.md):
 
 - `# <Title: bare infinitive>` — for example, "Deploy a container to Kubernetes"
-- One or two sentences describing the task and when a reader would perform it
+- Opening paragraph: "This guide explains how to <task>," naming the same task as
+  the title, optionally followed by one sentence on when and why a reader would
+  perform it. Assume the reader already has basic knowledge of the application —
+  don't re-explain concepts they're assumed to know
 - `## Before you begin` — include only for non-obvious prerequisites; omit if the
   task has none worth calling out
 - `## <Task name: bare infinitive>` — introductory sentence, then a numbered list of
   steps, each starting with an imperative verb; conditional steps use "If
   `<condition>`, do `<alternative step>`."
+- Each step states its action as a plain-text sentence---never a bolded lead-in
+  phrase. Put any supplemental information (why it matters, what to watch for) in a
+  separate paragraph below the action sentence, not merged into it
 - `## Next steps` — include only when this guide is part of a larger workflow and
   leads directly into other procedures; omit for standalone tasks
 - `## See also` — links to a related how-to guide, conceptual doc, or reference page
@@ -89,25 +95,35 @@ Guidelines to enforce:
    additional task(s) into `<!-- TODO: move to a separate how-to guide -->` blocks
    rather than deleting the content.
 2. Rewrite the title as a bare infinitive naming the task.
-3. Extract only non-obvious prerequisites into `Before you begin`; drop a generic
+3. Rewrite the opening paragraph as "This guide explains how to <task>," matching
+   the title, and keep or add one sentence on when and why a reader would perform
+   the task if that isn't already obvious. Remove any background or conceptual
+   explanation from the opening — replace it with
+   `<!-- TODO: link to conceptual doc explaining [concept] -->` if it's load-bearing.
+4. Extract only non-obvious prerequisites into `Before you begin`; drop a generic
    "Before you begin" section if every prerequisite is already obvious from the
    title.
-4. Reorganize existing steps into the numbered task list. Preserve all working
-   commands and real examples — don't invent new ones.
-5. Convert any embedded concept explanations into `{{< note >}}` shortcodes or a
+5. Reorganize existing steps into the numbered task list. Preserve all working
+   commands and real examples — don't invent new ones. If a step starts with a
+   bolded lead-in phrase (for example, "**Extract the key.** A full backup
+   requires..."), unbold the phrase, keep it as the step's action sentence, and
+   move the rest of the sentence into a new paragraph below it.
+6. Convert any embedded concept explanations into `{{< note >}}` shortcodes or a
    `<!-- TODO: link to conceptual doc -->` marker instead of leaving long explanatory
    asides inside the steps.
-6. Convert any "if this doesn't work" or edge-case text into conditional imperative
+7. Convert any "if this doesn't work" or edge-case text into conditional imperative
    steps or `{{< warning >}}` shortcodes.
-7. If more than 8–10 steps remain after consolidation, flag the file:
+8. If more than 8–10 steps remain after consolidation, flag the file:
    `<!-- TODO: exceeds recommended step count; consider splitting into multiple guides -->`
-8. Add `Next steps` only if the existing content implies a larger workflow; otherwise
+9. Add `Next steps` only if the existing content implies a larger workflow; otherwise
    omit it. Add `See also` with any related links already present in the content.
 
 ### Create mode
 
-1. Draft the title as a bare infinitive and the one- or two-sentence task
-   description from the source material.
+1. Draft the title as a bare infinitive and an opening paragraph in the form
+   "This guide explains how to <task>," matching the title, optionally followed by
+   one sentence on when and why a reader would perform the task, drawn from the
+   source material.
 2. Draft `Before you begin` only if the sources mention non-obvious prerequisites.
 3. Draft the numbered steps from the source material's procedure. Use conditional
    imperatives for variations described in the sources.
@@ -124,7 +140,9 @@ Apply [docs-style.instructions.md](../../instructions/docs-style.instructions.md
 Focus on these checks:
 
 - **Procedures**: imperative verbs to start every step, conditional-imperative
-  phrasing for variations, results kept in the same paragraph as the action
+  phrasing for variations, results kept in the same paragraph as the action, no
+  bolded lead-in phrases---supplemental information goes in a paragraph after the
+  plain-text action sentence
 - **Voice and tense**: active voice, "you" instead of "the user," present tense
 - **Headings**: sentence case, bare infinitive for the title and task heading
 - **UI elements**: bold UI element names, correct terminology (select/enter/choose)

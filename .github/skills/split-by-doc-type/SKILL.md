@@ -131,7 +131,9 @@ each generated page. Focus on these checks:
 - **Voice and tense**: active voice, "you" instead of "the user," present tense
 - **Headings**: sentence case, bare infinitive for how-to titles, noun phrase for
   reference and conceptual titles
-- **Procedures**: imperative verbs to start every step (how-to pages only)
+- **Procedures**: imperative verbs to start every step (how-to pages only), no
+  bolded lead-in phrases---supplemental information goes in a paragraph after the
+  plain-text action sentence
 - **UI elements**: bold UI element names, correct terminology (select/enter/choose)
 - **Language**: serial comma, contractions, no Latin abbreviations
 
