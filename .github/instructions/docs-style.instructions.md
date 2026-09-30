@@ -198,6 +198,6 @@ When documenting UI elements, follow these guidelines:
 - Wrap all commands in fenced code blocks with a language identifier
 - Use `shell` (not `bash`) unless the script targets bash specifically
 - Use `yaml`, `json`, `hcl`, `dockerfile`, or `console` where appropriate
-- Mark placeholder values with angle brackets: `<cluster-name>`, `<namespace>`
+- Mark placeholder values with angle brackets, using uppercase text and underscores: `<CLUSTER_NAME>`, `<NAMESPACE>`
 - Show expected output in a `console` block when it helps verify success
 - Add a comment above commands that need context: `# Run from the repo root`

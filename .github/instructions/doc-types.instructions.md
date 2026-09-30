@@ -93,7 +93,7 @@ Introductory sentence explaining what this step accomplishes and why.
 
    ```shell
    # Comment explaining what this command does
-   command --flag <value>
+   command --flag <VALUE>
    ```
 
    Expected result: describe what the reader should see.
@@ -173,10 +173,10 @@ Don't introduce the steps with a partial sentence that the numbered list complet
 
    ```shell
    # Comment explaining the command
-   command --flag <value>
+   command --flag <VALUE>
    ```
 
-   Replace `<value>` with <what it represents>.
+   Replace `<VALUE>` with <what it represents>.
    Expected output or result.
    Explain the significance of the output in a separate paragraph if it isn't obvious.
 
@@ -274,12 +274,12 @@ What the command, option set, or configuration does. Keep this concise.
 
 ```shell
 # Description of what this example does
-command --flag <value>
+command --flag <VALUE>
 ```
 
 ```shell
 # Description of a second variation
-command --flag <value> --other-flag
+command --flag <VALUE> --other-flag
 ```
 
 ## Related
@@ -667,7 +667,7 @@ If there are platform-specific steps or multiple installation methods, use a sub
 
 ```shell
 # Description of what this does
-command --flag <value>
+command --flag <VALUE>
 ```
 
 Show expected output when it helps readers verify success.
