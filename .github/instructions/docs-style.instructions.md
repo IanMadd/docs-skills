@@ -24,6 +24,7 @@ When contributing to Markdown documentation, follow these style guidelines in or
 - Use clear, concise language and ensure there are no spelling or grammatical issues
 - Avoid jargon and use plain US English to ensure clarity for a global audience
 - Use the serial comma in lists
+- Format em-dashes as three hyphens (`---`) with no spaces on either side---like this
 - Use "select" instead of "click" or "click on"
 - Use "use" rather than "utilize"
 - Don't use Latin abbreviations, for example, instead of "e.g." use "for example", instead of "i.e." use "that is"
@@ -45,6 +46,8 @@ When contributing to Markdown documentation, follow these style guidelines in or
 ### Product names
 
 - Use "Chef 360 Platform" instead of "Chef 360" or "Chef 360 platform"
+- Use "Chef Infra Client" instead of "Chef Client" or "client"
+- Use "Chef Infra Server" instead of "Chef Server"
 
 ### Procedures
 
@@ -189,3 +192,12 @@ When documenting UI elements, follow these guidelines:
 - Use alt text for images that describes their content and purpose
 - Ensure proper contrast and readability
 - Structure content logically with appropriate heading levels
+
+### Code and commands
+
+- Wrap all commands in fenced code blocks with a language identifier
+- Use `shell` (not `bash`) unless the script targets bash specifically
+- Use `yaml`, `json`, `hcl`, `dockerfile`, or `console` where appropriate
+- Mark placeholder values with angle brackets: `<cluster-name>`, `<namespace>`
+- Show expected output in a `console` block when it helps verify success
+- Add a comment above commands that need context: `# Run from the repo root`
