@@ -28,6 +28,7 @@ Prompts are single-task slash commands. Use them for drafting or editing one doc
 | `.github/prompts/edit-for-style.prompt.md` | `/edit-for-style` — rewrite a doc to comply with the style guide |
 | `.github/prompts/review-completeness.prompt.md` | `/review-completeness` — audit a doc for gaps, missing steps, and accuracy |
 | `.github/prompts/generate-code-examples.prompt.md` | `/generate-code-examples` — generate shell, YAML, CLI, HCL, or config examples |
+| `.github/prompts/generate-meta-description.prompt.md` | `/generate-meta-description` — generate or update the `description` field in a single file's frontmatter |
 | `.github/prompts/notes-to-doc.prompt.md` | `/notes-to-doc` — convert raw notes or tickets into a structured draft |
 | `.github/prompts/review-alt-text.prompt.md` | `/review-alt-text` — audit a doc for missing, weak, and unverified alt text; produces a per-image report with suggested fixes |
 
@@ -39,11 +40,23 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 |-----------|-------------|
 | `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
 | `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
+| `.github/skills/edit-conceptual-doc/` | `/edit-conceptual-doc` — restructure or draft a page to match the conceptual doc type template, then apply the style guide and lint it |
+| `.github/skills/edit-how-to-guide/` | `/edit-how-to-guide` — restructure or draft a page to match the how-to guide doc type template, then apply the style guide and lint it |
+| `.github/skills/edit-reference-doc/` | `/edit-reference-doc` — restructure or draft a page to match the reference doc type template, then apply the style guide and lint it |
+| `.github/skills/edit-tutorial/` | `/edit-tutorial` — restructure or draft a page to match the tutorial doc type template, then apply the style guide and lint it |
 | `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
 | `.github/skills/generate-examples-from-repo/` | `/generate-examples-from-repo` — fetch source code from a public GitHub repository, extract usage patterns for one command or all commands, and generate formatted, annotated examples ready for documentation |
+| `.github/skills/generate-meta-description/` | `/generate-meta-description` — generate or update the `description` field in frontmatter for one file or every file in a directory |
+| `.github/skills/generate-product-overview/` | `/generate-product-overview` — draft a product overview page from marketing materials and reference docs using the product overview doc type template |
+| `.github/skills/generate-readme/` | `/generate-readme` — read through a repository and generate or update a `README.md` file, creating it from scratch if one doesn't exist |
+| `.github/skills/generate-research-doc/` | `/generate-research-doc` — gather information from web pages, GitHub, Confluence, and Jira into a cited research report for use as input to other skills |
+| `.github/skills/markdownlint-edit/` | `/markdownlint-edit` — lint a file with markdownlint-cli2, auto-fix issues, then manually fix what remains |
+| `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation between repos or into product and version subdirectories |
 | `.github/skills/review-release-notes/` | `/review-release-notes` — fetch each referenced GitHub pull request, enrich release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
 | `.github/skills/review-system-requirements/` | `/review-system-requirements` — review and edit installation and configuration requirements for clarity, structure, scannability, and consistency without verifying technical claims |
-| `.github/skills/generate-readme/` | `/generate-readme` — read through a repository and generate or update a `README.md` file, creating it from scratch if one doesn't exist |
+| `.github/skills/split-by-doc-type/` | `/split-by-doc-type` — split a page that mixes doc types into separate pages that each match their doc type template |
+| `.github/skills/table-to-dlist/` | `/table-to-dlist` — convert Markdown tables that define properties or parameters into description lists |
+| `.github/skills/vale-style-edit/` | `/vale-style-edit` — lint a file with the Vale MCP server (or CLI) at error severity and fix every error |
 
 ### Install scripts
 
