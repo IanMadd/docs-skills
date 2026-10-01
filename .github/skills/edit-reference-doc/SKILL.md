@@ -121,6 +121,9 @@ Focus on these checks, since reference docs are scanned, not read linearly:
 - **Formatting**: consistent table structure and terminology across all reference
   pages in the repo; code font for flags, commands, and file paths
 - **Language**: serial comma, contractions, no Latin abbreviations
+- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+  documentation-only narration to surrounding prose, keep customization/warning/intent comments
+  inline, remove redundant comments
 
 ---
 

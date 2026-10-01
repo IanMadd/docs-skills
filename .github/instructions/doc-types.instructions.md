@@ -123,7 +123,9 @@ Steps to remove resources created during the tutorial.
 - Each step builds on the previous one---don't jump ahead
 - Show expected output after commands so the reader can verify success
 - Use real, working examples---not placeholder logic
-- Add comments to all code samples explaining what each part does
+- Add comments to code samples following the comment style rules in
+  [docs-style.instructions.md](docs-style.instructions.md#comments-in-code-and-configuration-examples)---explain
+  why and customization points, and move documentation-only narration into the surrounding prose
 - Include a "Clean up" section whenever the tutorial creates persistent or billable resources
 
 ---

@@ -136,6 +136,9 @@ Focus on these checks, since tutorials are heavy on procedures:
   not click/utilize)
 - **Language**: serial comma, contractions, no Latin abbreviations, "select" instead
   of "click"
+- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+  documentation-only narration to surrounding prose, keep customization/warning/intent comments
+  inline, remove redundant comments
 
 ---
 

@@ -161,6 +161,9 @@ Focus on these checks:
   for global readability
 - **Accessibility**: clear headings describing the content that follows, alt text
   for any images/diagrams
+- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+  documentation-only narration to surrounding prose, keep customization/warning/intent comments
+  inline, remove redundant comments
 
 ---
 

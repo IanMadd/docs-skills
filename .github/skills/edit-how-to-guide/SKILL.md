@@ -147,6 +147,9 @@ Focus on these checks:
 - **Headings**: sentence case, bare infinitive for the title and task heading
 - **UI elements**: bold UI element names, correct terminology (select/enter/choose)
 - **Language**: serial comma, contractions, no Latin abbreviations
+- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+  documentation-only narration to surrounding prose, keep customization/warning/intent comments
+  inline, remove redundant comments
 
 ---
 
