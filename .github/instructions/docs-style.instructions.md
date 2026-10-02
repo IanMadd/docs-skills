@@ -199,5 +199,9 @@ When documenting UI elements, follow these guidelines:
 - Use `shell` (not `bash`) unless the script targets bash specifically
 - Use `yaml`, `json`, `hcl`, `dockerfile`, or `console` where appropriate
 - Mark placeholder values with angle brackets, using uppercase text and underscores: `<CLUSTER_NAME>`, `<NAMESPACE>`
+- Explain every placeholder immediately after the code example that introduces it---don't leave the reader to guess what a placeholder represents:
+  - For a single placeholder, add one sentence: "Replace `<PLACEHOLDER_NAME>` with <description>."
+  - For two or more placeholders, introduce a bulleted list with "Replace the following:", then list one item per placeholder in the order it appears in the example: `` `<PLACEHOLDER_NAME>`: <description, starting with a lowercase letter> ``
+  - You don't need to repeat an explanation already given earlier on the page, unless the document is lengthy, introduces several other placeholders first, or isn't meant to be read start to finish
 - Show expected output in a `console` block when it helps verify success
 - For comment style rules, see [code-comments.instructions.md](code-comments.instructions.md)

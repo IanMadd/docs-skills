@@ -50,7 +50,9 @@ Don't introduce the steps with a partial sentence that the numbered list complet
    command --flag <VALUE>
    ```
 
-   Replace `<VALUE>` with <what it represents>.
+   Replace `<VALUE>` with <what it represents>. For two or more placeholders, use "Replace the
+   following:" and a bulleted list instead (see
+   [Code and commands](../docs-style.instructions.md#code-and-commands)).
    Expected output or result.
    Explain the significance of the output in a separate paragraph if it isn't obvious.
 
@@ -100,6 +102,10 @@ Don't introduce the steps with a partial sentence that the numbered list complet
   condition doesn't apply to them---for example, "If the test succeeds, reindex all organizations," not
   "Reindex all organizations if the test succeeds"
 - Use a single unordered list item, not a numbered step, for single-step procedures
+- Explain every placeholder immediately after the code example that introduces it, using the
+  single- or multiple-placeholder pattern from
+  [Code and commands](../docs-style.instructions.md#code-and-commands)---don't leave the reader to
+  guess what a placeholder represents
 - Don't explain concepts in the steps---link to conceptual docs instead
 - Document only the most common or recommended method; omit or link to alternative methods
 - Alert readers to possible unexpected scenarios with `{{< note >}}` or `{{< warning >}}` shortcodes (see [Admonitions](../doc-types.instructions.md#admonitions))
