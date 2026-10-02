@@ -207,7 +207,7 @@ Apply these rules to every section of the README:
 ### README structure
 
 Follow the README doc type structure defined in
-[doc-types.instructions.md](../../instructions/doc-types.instructions.md).
+[doc-types/readme.md](../../instructions/doc-types/readme.md).
 
 Use the following table to determine which source data from Stage 2 populates each
 section.

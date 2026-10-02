@@ -6,7 +6,7 @@ agent: "agent"
 ---
 
 Draft release notes for a DevOps tool or platform.
-Use the structure in [doc-types.instructions.md](../instructions/doc-types.instructions.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
+Use the structure in [doc-types/release-notes.md](../instructions/doc-types/release-notes.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
 
 **Input — PR list, commit log, or change summary**:
 

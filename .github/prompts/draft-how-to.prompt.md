@@ -6,7 +6,7 @@ agent: "agent"
 ---
 
 Draft a how-to guide for a DevOps audience.
-Use the structure in [doc-types.instructions.md](../instructions/doc-types.instructions.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
+Use the structure in [doc-types/how-to-guide.md](../instructions/doc-types/how-to-guide.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
 
 **Task**: $input
 

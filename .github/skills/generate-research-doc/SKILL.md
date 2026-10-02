@@ -1,6 +1,6 @@
 ---
 name: generate-research-doc
-description: 'Gather information from any combination of optional sources — web pages, a GitHub repo (local or remote), a GitHub pull request, Confluence pages, and Jira stories or epics — and compile it into a lengthy, detailed, free-form Markdown research report on a given topic, with every claim inline-cited back to its source. The report is an input for other skills in this repo (edit-how-to-guide, edit-conceptual-doc, and so on), not a publishable doc itself. Uses read-only GitHub, Confluence, and Jira operations. Never create, update, or delete anything in GitHub, Confluence, or Jira. Triggers on: research this topic, compile research, gather research, generate research doc, research report, research from sources, build a research doc, investigate and summarize, research brief.'
+description: 'Gather information from any combination of optional sources — web pages, a GitHub repo (local or remote), a GitHub pull request, Confluence pages, and Jira stories or epics — and compile it into a lengthy, detailed, free-form Markdown research report on a given topic, with every claim inline-cited back to its source. The report is an input for other skills in this repo (edit-how-to-guide, edit-conceptual-doc, edit-workflow-guide, and so on), not a publishable doc itself. Uses read-only GitHub, Confluence, and Jira operations. Never create, update, or delete anything in GitHub, Confluence, or Jira. Triggers on: research this topic, compile research, gather research, generate research doc, research report, research from sources, build a research doc, investigate and summarize, research brief.'
 argument-hint: "Research topic (free text), followed by one or more source lines, each prefixed by type — web: https://example.com/post — repo: /local/path/to/repo or repo: owner/repo — pr: owner/repo#123 or a PR URL — confluence: https://example.atlassian.net/wiki/spaces/KEY/pages/123 — jira: PROJ-123 or a Jira issue/epic/version URL"
 ---
 
@@ -12,9 +12,14 @@ remote), a GitHub pull request, Confluence pages, and Jira stories or epics.
 
 The report is a research artifact, not a publishable doc. It's meant to be handed to
 other skills in this repo (`edit-how-to-guide`, `edit-conceptual-doc`,
-`edit-reference-doc`, `edit-tutorial`) as source material when drafting a specific doc
-type. It doesn't follow a `doc-types.instructions.md` template and isn't linted with
-Vale or cspell.
+`edit-reference-doc`, `edit-tutorial`, `edit-workflow-guide`) as source material when
+drafting a specific doc type. It doesn't follow a `doc-types.instructions.md` template
+and isn't linted with Vale or cspell.
+
+It's especially useful for [edit-workflow-guide](../edit-workflow-guide/SKILL.md):
+researching every product involved in a cross-product workflow first, in one pass,
+produces the multi-source, pre-cited material a workflow guide needs to link each step
+back to the right product's documentation.
 
 Read-only policy:
 

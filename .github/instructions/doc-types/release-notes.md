@@ -1,0 +1,79 @@
+---
+description: "Structural template and guidelines for release notes doc type pages."
+---
+
+# Release notes
+
+**Purpose**: Communicate new features, improvements, bug fixes, and known issues to stakeholders. Release notes are customer-facing---use plain language, not developer-facing changelog language. Written for both technical and non-technical readers.
+
+```markdown
+## <PRODUCT> <VERSION>
+
+Release date: <MONTH> <DAY>, <YEAR>
+
+(Optional) One to two sentences highlighting the most important items in this release.
+
+### Breaking changes (include if present---always lead with this section)
+
+{{< warning >}}
+
+The following changes require action before upgrading.
+
+{{< /warning >}}
+
+- **<Change name>**: What changed, what the reader must do, and a link to the migration guide.
+
+### New features
+
+- **<Feature name>**: What the feature does and how it benefits the reader.
+  See [<feature docs>](<link>) for more information.
+
+### New features requiring configuration updates
+
+- **<Feature name>**: What the feature does. To use this feature, you must <describe the required config>.
+  See [<feature docs>](<link>) for configuration steps.
+
+### Improvements
+
+- **<Area or feature>**: What was added, updated, or removed and the benefit to the reader.
+
+### Bug fixes
+
+- **[<issue-id>](<link>) <Short description>**: The <application or feature> now correctly <does XYZ>. Previously, it <did ABC>.
+  See [<docs link>](<link>) for more information.
+
+### Known issues
+
+- **[<issue-id>](<link>) <Short description>**: <What happens and in what scenario>.
+  Workaround: <Steps to work around the issue, if available>.
+
+### Deprecated features (optional)
+
+- **<Feature name>**: <Feature> will be removed in <version or date>.
+  <Replacement feature> replaces it. The system will <describe data migration if applicable>.
+  See [<deprecated feature docs>](<link>).
+
+### Packages
+
+Packages are available for the following platforms and architectures:
+
+| Platform | Architecture | Package format |
+|----------|--------------|----------------|
+| Windows | x86-64 | `.msi` |
+| macOS | x86-64, ARM64 | `.pkg` |
+| Red Hat Enterprise Linux, CentOS | x86-64, ARM64 | `.rpm` |
+| Debian, Ubuntu | x86-64, ARM64 | `.deb` |
+| Chef Habitat | x86-64, ARM64 | `.hart` |
+```
+
+**Guidelines**:
+- Write in a positive, friendly tone; use plain language
+- Use second person: "You can now...", "Use the new... to..."
+- Use present tense for new features and improvements: "Adds support for...", "Lets you..."
+- For bug fixes, use this two-part pattern: "The <application or feature> now correctly <does XYZ>. Previously, it <did ABC>."
+- Don't start bug fix entries with "Fixed..." or "Resolved..."
+- List the most important items in each section first
+- Include issue or PR numbers and link them where your organization permits
+- Omit any section that has no entries
+- Use semantic versioning for release numbers (for example, `1.3.2`); include the date in `YYYY-MM-DD` format
+- In the Packages section, list only the platforms and architectures available for the specific release; omit rows that don't apply

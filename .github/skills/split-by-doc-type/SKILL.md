@@ -16,7 +16,9 @@ type template, apply the team style guide, and lint every generated file.
 1. **Resolve output targets** — matches user-supplied output paths to detected types,
    or derives default filenames next to the source file
 2. **Draft each output page** — pulls the matching template from
-   [doc-types.instructions.md](../../instructions/doc-types.instructions.md) and
+   [doc-types/how-to-guide.md](../../instructions/doc-types/how-to-guide.md),
+   [doc-types/reference.md](../../instructions/doc-types/reference.md), or
+   [doc-types/conceptual.md](../../instructions/doc-types/conceptual.md) and
    populates it with the mapped content, flagging gaps and mixed content with
    `<!-- TODO: -->` comments
 3. **Apply the team style guide** — applies rules from
@@ -80,7 +82,9 @@ Skip generating a file for any type with no content assigned in Stage 0.
 ## Stage 2: Draft each output page
 
 For each detected type with content, apply its template from
-[doc-types.instructions.md](../../instructions/doc-types.instructions.md):
+[doc-types/how-to-guide.md](../../instructions/doc-types/how-to-guide.md),
+[doc-types/reference.md](../../instructions/doc-types/reference.md), or
+[doc-types/conceptual.md](../../instructions/doc-types/conceptual.md):
 
 ### How-to guide
 

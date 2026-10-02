@@ -249,6 +249,6 @@ The generated draft is a **first pass**. You'll need to:
 
 ## Related resources
 
-- [Product overview doc type](https://link-to-doc-types-reference) — full template, guidelines, and best practices
+- [Product overview doc type](../../instructions/doc-types/product-overview.md) — full template, guidelines, and best practices
 - [Tom Johnson's product overview guide](https://idratherbewriting.com/learnapidoc/docapis_doc_overview.html) — comprehensive reference on writing effective product overviews
 - [Good Docs Project: API Overview template](https://github.com/thegooddocsproject/templates/tree/master/api-overview) — community best practices

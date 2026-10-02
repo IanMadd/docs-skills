@@ -12,7 +12,7 @@ reference doc type template and the team style guide.
 0. **Determine mode** — reads the target file and classifies it as restructure mode
    (real content exists) or create mode (file is missing, empty, or placeholder-only)
 1. **Apply the reference doc template** — pulls the structural rules for reference
-   docs from [doc-types.instructions.md](../../instructions/doc-types.instructions.md)
+   docs from [doc-types/reference.md](../../instructions/doc-types/reference.md)
 2. **Map or draft content** — in restructure mode, moves and rewrites existing content
    into the template sections; in create mode, drafts new content, optionally using
    source links, and flags gaps with `<!-- TODO: -->` comments
@@ -52,7 +52,7 @@ document and avoid high-level instructions or usage guidance — that belongs in
 how-to guide.
 
 The required structure, from
-[doc-types.instructions.md](../../instructions/doc-types.instructions.md):
+[doc-types/reference.md](../../instructions/doc-types/reference.md):
 
 - `# <Title: noun phrase>` — for example, "kubectl rollout options"
 - One sentence describing what this reference covers
@@ -121,7 +121,7 @@ Focus on these checks, since reference docs are scanned, not read linearly:
 - **Formatting**: consistent table structure and terminology across all reference
   pages in the repo; code font for flags, commands, and file paths
 - **Language**: serial comma, contractions, no Latin abbreviations
-- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+- **Comments in examples**: apply [code-comments.instructions.md](../../instructions/code-comments.instructions.md)'s comment rules---move
   documentation-only narration to surrounding prose, keep customization/warning/intent comments
   inline, remove redundant comments
 

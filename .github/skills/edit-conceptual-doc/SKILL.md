@@ -12,7 +12,7 @@ conceptual doc type template and the team style guide.
 0. **Determine mode** — reads the target file and classifies it as restructure mode
    (real content exists) or create mode (file is missing, empty, or placeholder-only)
 1. **Apply the conceptual doc template** — pulls the structural rules for conceptual
-   docs from [doc-types.instructions.md](../../instructions/doc-types.instructions.md)
+   docs from [doc-types/conceptual.md](../../instructions/doc-types/conceptual.md)
 2. **Map or draft content** — in restructure mode, moves and rewrites existing content
    into the template sections; in create mode, drafts new content, optionally using
    source links, and flags gaps with `<!-- TODO: -->` comments
@@ -50,7 +50,7 @@ build a mental model rather than teaching by doing (that's a tutorial) or walkin
 through a task (that's a how-to guide).
 
 The required structure, from
-[doc-types.instructions.md](../../instructions/doc-types.instructions.md):
+[doc-types/conceptual.md](../../instructions/doc-types/conceptual.md):
 
 - `# <Title: noun phrase>` — name the doc after the concept itself where possible
   ("Deployment strategies in Kubernetes"); avoid bare titles like "Overview" or
@@ -161,7 +161,7 @@ Focus on these checks:
   for global readability
 - **Accessibility**: clear headings describing the content that follows, alt text
   for any images/diagrams
-- **Comments in examples**: apply docs-style.instructions.md's comment rules---move
+- **Comments in examples**: apply [code-comments.instructions.md](../../instructions/code-comments.instructions.md)'s comment rules---move
   documentation-only narration to surrounding prose, keep customization/warning/intent comments
   inline, remove redundant comments
 

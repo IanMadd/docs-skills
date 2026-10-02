@@ -232,7 +232,7 @@ Stage 1:
 Apply the following guidelines when writing in either mode:
 
 - **Release notes doc type guidelines** from
-  [doc-types.instructions.md](../../instructions/doc-types.instructions.md) — use the
+  [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md) — use the
   release notes section for structural guidance, section order, entry format, tense rules,
   and language conventions. This is the primary reference for how release notes should be
   structured and written.
@@ -264,7 +264,7 @@ For each entry:
      request
 
 4. **Apply these style rules**, derived from the release notes guidelines in
-   [doc-types.instructions.md](../../instructions/doc-types.instructions.md):
+   [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md):
    - Use present tense for new features and improvements: "Adds support for…",
      "Lets you…" — not "Added support for…"
    - Use past tense for bug fixes: "Fixed an issue where…",
@@ -281,7 +281,7 @@ For each entry:
    - List the most important items in each section first
 
 5. **Check section structure** against the release notes template in
-   [doc-types.instructions.md](../../instructions/doc-types.instructions.md).
+   [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md).
    Ensure the file uses the correct section order and omits any empty sections.
    The defined sections are:
    - Breaking changes (always first, if present)
@@ -370,7 +370,7 @@ issues and/or PR data.
 1. **Create the release section** at the appropriate location in the file, using the
    version number, product name, and release date.
    Follow the release notes section template in
-   [doc-types.instructions.md](../../instructions/doc-types.instructions.md).
+   [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md).
 
 2. **Map each source item to a section** based on issue type or PR label:
 
@@ -429,7 +429,7 @@ When no Jira or GitHub PR data is available, edit the file for style and structu
    sentence length, serial comma, and so on.
 
 3. **Check section structure** against the release notes template in
-   [doc-types.instructions.md](../../instructions/doc-types.instructions.md), using the
+   [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md), using the
    same rules as edit mode step 5.
 
 4. **Don't infer or expand** content — only correct what's already written for style,

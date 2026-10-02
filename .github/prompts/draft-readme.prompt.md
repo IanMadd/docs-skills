@@ -6,7 +6,7 @@ agent: "agent"
 ---
 
 Draft a README for a DevOps tool or repository.
-Use the structure in [doc-types.instructions.md](../instructions/doc-types.instructions.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
+Use the structure in [doc-types/readme.md](../instructions/doc-types/readme.md) and the style rules in [docs-style.instructions.md](../instructions/docs-style.instructions.md).
 
 **Tool / repo description**: $input
 
