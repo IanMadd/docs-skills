@@ -27,6 +27,7 @@ instead so there's a single source of truth.
 
 - **Tutorials** — learning-oriented, guided walkthroughs with a working end result
 - **How-to guides** — task-based procedures with a clear, specific outcome
+- **Workflow guides** — cross-product outcomes that connect existing product documentation instead of duplicating it
 - **Reference docs** — CLI commands, config options, API parameters; designed to be scanned
 - **Conceptual docs** — architecture overviews, explanations, mental models
 - **Release notes** — changes per version, grouped by type
