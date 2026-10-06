@@ -279,12 +279,18 @@ For each entry:
    - Use the serial comma in lists
    - Don't start a note with "This PR…" or "This change…"
    - List the most important items in each section first
+   - Apply the [description lists and run-in headings](../../instructions/docs-style.instructions.md#description-lists-and-run-in-headings)
+     rule: the bold run-in heading must be the specific feature, change, or issue name, not a
+     generic category label like "Authentication" or "Reporting". For each entry, ask whether
+     the run-in heading conveys meaning independent of the description that follows — if not,
+     drop the bold label or replace it with the specific name
 
 5. **Check section structure** against the release notes template in
    [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md).
    Ensure the file uses the correct section order and omits any empty sections.
    The defined sections are:
    - Breaking changes (always first, if present)
+   - Security
    - New features
    - New features requiring configuration updates
    - Improvements
@@ -319,6 +325,7 @@ For each entry:
    | Past-tense "fixed", "resolved", "corrected" | Bug fixes |
    | "deprecated", "removed", "no longer" | Deprecated features |
    | "breaking", "requires updating", "must migrate" | Breaking changes |
+   | "vulnerability", "CVE", "security fix", "exploit" | Security |
 
    Apply a confidence threshold: only move a note when its destination section is
    unambiguous. If a note is vague or could fit more than one section, leave it in

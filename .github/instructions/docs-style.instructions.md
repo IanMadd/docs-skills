@@ -172,6 +172,85 @@ When documenting UI elements, follow these guidelines:
 - Use semantic line breaks where each sentence is on a separate line
 - Format code and UI elements consistently
 
+### Description lists and run-in headings
+
+Use a description list (also called a run-in heading) only when the introductory term conveys meaningful information that readers scan for independently of the description that follows.
+
+#### Appropriate uses
+
+Use a description list when:
+
+- Defining terms in a glossary
+- Explaining named concepts, statuses, states, options, or components
+- Presenting a set of items where the term itself is significant and readers might look for a specific term
+- The introductory term provides information distinct from the explanatory text
+
+For example:
+
+```markdown
+- **Deprecated**. This API will be removed in a future release.
+- **Preview**. This feature isn't supported for production workloads.
+- **RPM package**. Use this package on RHEL-compatible systems.
+```
+
+#### Avoid unnecessary run-in headings
+
+Don't use a description list when the bold text merely repeats the subject of the sentence or acts only as a label before the actual content. If removing the run-in heading doesn't substantially change the meaning, use a standard bulleted list or sentence instead.
+
+Avoid patterns such as:
+
+```markdown
+- **Authentication**: Added support for token rotation.
+- **Reporting**: Fixed dashboard filtering.
+- **Compliance**: Updated bundled profiles.
+```
+
+Instead, write:
+
+```markdown
+- Added support for token rotation in authentication workflows.
+- Fixed dashboard filtering issues.
+- Updated bundled compliance profiles.
+```
+
+Or group related changes under their own heading:
+
+```markdown
+### Authentication
+
+- Added support for token rotation.
+
+### Reporting
+
+- Fixed dashboard filtering.
+```
+
+#### Release notes
+
+In release notes, prioritize communicating the change over categorizing it. Don't use a bold run-in label to flag a category of change---promote the category to its own section heading instead. Always give **breaking changes**, **deprecations**, and **security** fixes their own heading, since readers scan for these categories specifically and a run-in label buries them among other entries:
+
+```markdown
+### Breaking changes
+
+- Legacy authentication endpoints have been removed.
+
+### Deprecated features
+
+- Support for Python 3.9 will be removed in the next release.
+
+### Security
+
+- Resolved a vulnerability in certificate validation.
+```
+
+See [doc-types/release-notes.md](doc-types/release-notes.md) for the complete set of standard release notes headings, including new features, improvements, bug fixes, known issues, and packages.
+
+Don't add a bold label to every release note entry when the label only identifies the affected area, component, or feature---excessive run-in headings create visual noise and reduce scannability.
+
+#### Editing rule
+
+When reviewing content, ask: does the run-in heading provide meaningful information independent of the description? If the answer is no, rewrite the content as a standard bulleted list, sentence, or section with its own heading.
+
 ### Links
 
 - Ensure that all hyperlinks are descriptive and provide context for the destination content

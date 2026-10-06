@@ -23,6 +23,10 @@ The following changes require action before upgrading.
 
 - **<Change name>**: What changed, what the reader must do, and a link to the migration guide.
 
+### Security (include if present---lead with this section after breaking changes)
+
+- **[<CVE or issue-id>](<link>) <Short description>**: Resolved a vulnerability that <describe impact>. <Severity, if disclosed>.
+
 ### New features
 
 - **<Feature name>**: What the feature does and how it benefits the reader.
@@ -73,6 +77,8 @@ Packages are available for the following platforms and architectures:
 - For bug fixes, use this two-part pattern: "The <application or feature> now correctly <does XYZ>. Previously, it <did ABC>."
 - Don't start bug fix entries with "Fixed..." or "Resolved..."
 - List the most important items in each section first
+- Use the bold run-in heading (`**<Change name>**`) only for the specific feature, change, or issue name---not as a generic category label like "Authentication" or "Reporting". See [Description lists and run-in headings](../docs-style.instructions.md#description-lists-and-run-in-headings) for the full rule
+- Give breaking changes, deprecations, and security fixes their own section heading---don't rely on a bold run-in label alone to flag these categories
 - Include issue or PR numbers and link them where your organization permits
 - Omit any section that has no entries
 - Use semantic versioning for release numbers (for example, `1.3.2`); include the date in `YYYY-MM-DD` format
