@@ -288,19 +288,32 @@ For each entry:
 5. **Check section structure** against the release notes template in
    [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md).
    Ensure the file uses the correct section order and omits any empty sections.
-   The defined sections are:
+   The defined sections, in order, are:
    - Breaking changes (always first, if present)
+   - Upgrade notes
    - Security
    - New features
    - New features requiring configuration updates
    - Improvements
+   - Licensing
    - Bug fixes
    - Known issues
    - Deprecated features
+   - Platform support
    - Packages
+   - Dependency updates
+   - Bundled components
+   - Supported `<extension type>` versions (named for the product's extension
+     mechanism, for example "Supported skill versions")
 
    If sections are missing, misordered, or need to be created based on the source data,
    add or reorder them to match the template.
+
+   Upgrade notes, Platform support, Packages, Dependency updates, Bundled components,
+   and Supported `<extension type>` versions are usually populated from release or build
+   metadata rather than individual Jira issues or PRs. Don't fabricate entries for these
+   sections from Jira or PR data alone — only add or edit them when the user supplies the
+   relevant information, or when an existing entry needs a style-only correction.
 
    Delete any section heading that has no associated content. A section is empty if the
    only content under the heading is one of the following:
