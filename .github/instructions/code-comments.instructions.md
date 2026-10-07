@@ -57,13 +57,13 @@ This is the most important distinction in this section.
   instead of leaving it as a comment inside the code block. This applies even to single-line
   comments.
 
-  Preferred---add a prose sentence before the code block, then keep the code minimal:
-
-  Replace `<TENANT_ID>` with the tenant ID shown on the **Tenant Details** page.
+  Preferred---keep the code minimal, then add a prose sentence after the code block:
 
   ```yaml
   tenant_id: <TENANT_ID>
   ```
+
+  Replace `<TENANT_ID>` with the tenant ID shown on the **Tenant Details** page.
 
   Avoid---leaving the same information trapped inside a code comment:
 
@@ -71,6 +71,10 @@ This is the most important distinction in this section.
   # Find this value on the Tenant Details page.
   tenant_id: <TENANT_ID>
   ```
+
+  See [Code and commands](docs-style.instructions.md#code-and-commands) for the exact
+  placeholder explanation format, including the bulleted "Replace the following:" pattern
+  to use when an example introduces two or more placeholders.
 
 - **Downloadable files** (standalone YAML, TOML, shell, PowerShell, or code files a reader
   downloads and modifies) are operational artifacts. Comments stay in the file, but they must
