@@ -324,8 +324,40 @@ For each entry:
    Don't add a comment or flag before deleting — just remove the heading and any
    placeholder content.
 
-   If the file contains a section that is **not** in the template above, don't delete
-   it. Instead, do the following in a single pass over all notes in that section:
+   If the file contains a heading that isn't an exact match for one of the defined
+   sections, don't delete it. First try to **normalize** the heading; only fall back to
+   **relocating notes** or **flagging** it if normalization doesn't apply.
+
+   **Normalize known synonyms** — many non-standard headings are just a different name
+   for a defined section. Compare the heading against the synonym table below. If it
+   matches (case-insensitive, ignoring minor wording differences), rename the heading
+   to the standard name and keep all of its content and position as-is — don't move or
+   reclassify individual notes.
+
+   | Non-standard heading (examples) | Standard heading |
+   |----------------------------------|-------------------|
+   | "Chef packaged product versions", "Packaged product versions", "Bundled software", "Bundled dependencies", "Components included" | Bundled components |
+   | "Package information", "Available packages", "Platform packages", "Downloads", "Packaging" | Packages |
+   | "Supported platforms", "Platform availability" | Platform support |
+   | "Dependencies", "Dependency changes", "Updated dependencies" | Dependency updates |
+   | "Fixes", "Fixed issues", "Resolved issues" | Bug fixes |
+   | "Features", "What's new", "New in this release" | New features |
+   | "Enhancements" | Improvements |
+   | "Breaking", "Important changes", "Compatibility notes" | Breaking changes |
+   | "Deprecations", "Deprecated" | Deprecated features |
+   | "Known limitations", "Limitations" | Known issues |
+   | "Security fixes", "Security updates", "CVEs" | Security |
+   | "Upgrade considerations", "Before you upgrade", "Migration notes" | Upgrade notes |
+   | "Licensing changes", "License updates" | Licensing |
+   | "Supported skills", "Supported plugins", "Extension versions" | Supported `<extension type>` versions |
+
+   This list isn't exhaustive — use judgment for other close variants, but only rename
+   when you're confident the heading refers to the same content as the standard
+   section. If renaming would merge content into an existing section of the same name
+   elsewhere in the file, merge the entries instead of creating a duplicate heading.
+
+   If no synonym match applies, do the following in a single pass over all notes in
+   that section:
 
    **Classify notes for relocation** — if the section name suggests it may contain
    release-note-worthy content (for example, "Technical changes", "Miscellaneous",
@@ -352,11 +384,13 @@ For each entry:
    **Edit remaining content** — apply the team style guide to any notes that stay in
    the section.
 
-   **Flag the section for review** — add an HTML comment immediately above the section
-   heading regardless of how many notes were moved:
+   **Flag the section for review** — if the heading couldn't be normalized and still
+   has notes left in it after classification (whether some, all, or none were moved),
+   add an HTML comment immediately above the section heading listing the standard
+   headings so a human can pick the right one:
 
    ```markdown
-   <!-- TODO: review — this section is not defined in the release notes doc type; confirm it should be included -->
+   <!-- TODO: review — "<original heading text>" isn't a standard release notes heading; confirm it should be included or rename it to one of: Breaking changes, Upgrade notes, Security, New features, New features requiring configuration updates, Improvements, Licensing, Bug fixes, Known issues, Deprecated features, Platform support, Packages, Dependency updates, Bundled components, Supported <extension type> versions -->
    ```
 
 6. **Flag notes that need human review** with an inline comment if:
@@ -481,6 +515,8 @@ After editing the file, report:
 - **Notes unchanged**: how many entries needed no edits
 - **Sections removed**: list any section headings that were deleted because they had no
   content or contained only placeholder text
+- **Sections renamed**: list any non-standard heading that was normalized to a standard
+  heading (for example, "Chef packaged product versions" → "Bundled components")
 - **Flagged for review**: list each flagged note with its PR number or Jira key and the
   reason it was flagged; include any sections flagged as unrecognized
 - **Breaking changes**: whether any breaking change notes were identified or moved

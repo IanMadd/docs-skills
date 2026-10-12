@@ -243,7 +243,7 @@ In release notes, prioritize communicating the change over categorizing it. Don'
 - Resolved a vulnerability in certificate validation.
 ```
 
-See [doc-types/release-notes.md](doc-types/release-notes.md) for the complete set of standard release notes headings, including new features, improvements, bug fixes, known issues, and packages.
+See [doc-types/release-notes.md](doc-types/release-notes.md) for the complete set of standard release notes headings, including new features, improvements, bug fixes, known issues, and package changes.
 
 Don't add a bold label to every release note entry when the label only identifies the affected area, component, or feature---excessive run-in headings create visual noise and reduce scannability.
 
