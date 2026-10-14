@@ -119,6 +119,20 @@ For every comment:
 - Apply the language-specific notes from code-comments.instructions.md --- for example, Shell and
   PowerShell scripts can carry slightly more explanatory comments than YAML or TOML.
 
+Check whether the file needs a header comment and whether it already has one. Add or edit one
+per
+[File-level comments](../../instructions/code-comments.instructions.md#file-level-comments) ---
+purpose always, audience, setup required, and reference link only when applicable, and never
+duplicating what a per-setting comment already documents. Don't add a header to a short file
+where the existing inline comments already give the reader everything they need.
+
+Check whether each group of two or more related settings has an appropriate section comment.
+Add, edit, or remove one per
+[Section-level comments](../../instructions/code-comments.instructions.md#section-level-comments)
+--- keep a section comment only when the file's native syntax doesn't already name the group
+self-explanatorily, or when the grouping itself needs explaining; remove one that just restates
+the group's own key name.
+
 Check every placeholder value against the downloadable-file format: the same uppercase,
 underscore, no-determiner token inside angle brackets, formatted so it stays valid syntax for
 the file type --- quoted for YAML/JSON/TOML string values, matching the native string literal
@@ -182,6 +196,7 @@ After the file content, add an `## Edit summary` section with:
   location (before or after the code block)
 - Comments reworded for formatting or placeholder fixes, showing old --- new
 - Comments added for missing customization or warning coverage, and why
+- Comments added, edited, or removed for a file header or section comment, and why
 - If a documenting Markdown page was used: the page's path, and every mismatch found between
   the page and the file's comments, with how each was resolved
 - Any code block or section skipped or left ambiguous, and why

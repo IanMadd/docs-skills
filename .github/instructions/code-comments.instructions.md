@@ -169,6 +169,9 @@ region: <AWS_REGION>
   example a constraint between two settings---for example `# IMPORTANT: This value must match the server configuration.`
 - **TODO**: used sparingly, only in source repositories, never in reader-facing downloadable files, for example `# TODO: Remove after migration to v3.`
 - **Section**: describes a group of related settings, in 2 to 4 lines
+- **File header**: a short block at the top of a downloadable file naming purpose, required
+  setup, and a reference link, scaled to the file's complexity (see
+  [File-level comments](#file-level-comments))
 
 Use the labels `NOTE:`, `REQUIRED:`, `RECOMMENDED:`, `IMPORTANT:`, `WARNING:`, and `TODO:` as
 plain-text prefixes inside a comment. Choose the label that matches what the reader needs to do,
@@ -193,6 +196,120 @@ These labels are a different mechanism from the `{{< note >}}` and `{{< warning 
 Hugo shortcodes used for prose-level admonitions---see
 [Admonitions](doc-types.instructions.md#admonitions). Don't use a shortcode inside a code
 comment, and don't use a comment label where a shortcode belongs in the surrounding prose.
+
+## File-level comments
+
+Applies only to downloadable files---a Markdown-embedded example is already introduced by the
+surrounding prose, so a file-level header would just duplicate that framing inside the code
+block (see
+[Markdown-embedded examples vs. downloadable files](#markdown-embedded-examples-vs-downloadable-files)).
+
+A file header orients the reader; it isn't a substitute for full documentation. Treat it the
+way a reference page's introduction works: state what the file configures, when the reader
+should touch it, and what they need to know before making changes---then stop. If a header
+starts turning into a mini user guide, move that content to the project's external
+documentation and link to it instead.
+
+A downloadable file with enough settings to need one opens with a short header block, set off
+from the first setting by a blank line. Skip it on a short file where the inline comment on
+each setting already tells the reader everything they need.
+
+Recommended contents, in this order, each as one line unless noted otherwise:
+
+- **Purpose**: what the file configures and for what system or product. Always include this
+  line.
+- **Audience**: who should edit it, only when that isn't obvious---for example a file generated
+  by automation and never meant for manual edits, or one restricted to a specific role. Omit
+  this line for an ordinary, freely editable config; adding it to every file produces
+  boilerplate the reader has to skip past.
+- **Setup required**: use the `REQUIRED:` label from
+  [Approved comment types](#approved-comment-types) to summarize what the reader must do before
+  the file works, for example fill in placeholders, run a command, or satisfy a deployment
+  prerequisite. Omit if the file needs no setup.
+- **Environment-specific considerations**: a short note on behavior that differs by
+  environment, cloud provider, or platform version, only when it would otherwise surprise the
+  reader---for example a setting that's required in production but ignored in a local dev
+  profile. Omit when the file behaves the same everywhere it's used.
+- **Reference link**: one stable, canonical documentation URL for the file's full option
+  reference, following
+  [Linking to external documentation](#linking-to-external-documentation). Omit if no such
+  reference exists.
+
+Scale the header to the file's complexity, and lean toward the shorter end:
+
+- A simple, single-purpose file: 2 to 6 lines.
+- A complex deployment template covering multiple components or environments: up to 10 to 15
+  lines maximum. At that point, each recommended item above may need more than one line---keep
+  every line earning its place rather than padding toward the limit.
+- Past the maximum, stop adding content to the header and move it to external documentation
+  instead, linking to it from the **Reference link** line.
+
+Preferred:
+
+```yaml
+# Chef Automate cluster configuration.
+# REQUIRED: Replace every placeholder value before running `chef-automate deploy`.
+# See https://docs.chef.io/automate/config/ for the full configuration reference.
+
+fqdn: <CLUSTER_FQDN>
+channel: current
+```
+
+Avoid---restates what the file extension already shows and gives the reader nothing to act on:
+
+```yaml
+# This is a YAML configuration file for Chef Automate.
+# It contains various settings.
+# Please configure as needed.
+
+fqdn: <CLUSTER_FQDN>
+channel: current
+```
+
+- Don't restate the file name, file format, or language---the reader can already see these.
+- Don't duplicate a setting's own inline comment in the header---the header previews the file,
+  it doesn't replace per-setting comments.
+- Don't let the header grow into a comprehensive guide---every added line raises the
+  maintenance burden of keeping it in sync with the rest of the file.
+
+## Section-level comments
+
+A section comment introduces a group of two or more related settings and names what the group
+configures. Add one only when it earns its place:
+
+- **Add one** when the file's native syntax doesn't already name the group self-explanatorily (a
+  bare YAML mapping key, or a run of related shell variables with no native grouping syntax), or
+  when the group's purpose needs more than its own name to understand---why these settings
+  belong together, or what feature they enable.
+- **Skip one** when the file format already supplies a self-explanatory header (a TOML
+  `[server]` table, or a YAML key whose name alone fully explains the group---`logging:` above a
+  block of logging settings needs no further comment), or when the group has only one setting;
+  document that with an inline comment instead.
+
+Follow the existing [Length limits](#length-limits) (2 to 4 lines) and
+[Spacing between settings](#spacing-between-settings) rules---a section comment still needs a
+blank line separating it from whatever came before it. See
+[Optional settings with blank fields](#optional-settings-with-blank-fields) for the related case
+of a section comment that also documents a conditionally required block.
+
+Preferred---names the group's purpose and its relevant default:
+
+```yaml
+# External object storage used for backups and large file uploads.
+# Leave enabled false to use local disk storage instead.
+external:
+  s3_config:
+    enabled: false
+```
+
+Avoid---restates the key name without adding information:
+
+```yaml
+# External settings.
+external:
+  s3_config:
+    enabled: false
+```
 
 ## Formatting
 
@@ -255,6 +372,8 @@ slug: ""
 - Inline comments: 1 line
 - Section comments: 2 to 4 lines, maximum about 5 lines before moving the explanation into
   surrounding Markdown prose instead
+- File header comments: 2 to 6 lines for a simple file, up to 10 to 15 lines maximum for a
+  complex deployment template (see [File-level comments](#file-level-comments))
 - In a downloadable file there's no surrounding prose to move an over-length explanation
   into---shorten the wording instead of deleting the information it conveys. See
   [Optional settings with blank fields](#optional-settings-with-blank-fields) for the common case
