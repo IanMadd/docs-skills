@@ -267,10 +267,30 @@ For each entry:
    [doc-types/release-notes.md](../../instructions/doc-types/release-notes.md):
    - Use present tense for new features and improvements: "Adds support for…",
      "Lets you…" — not "Added support for…"
-   - Use past tense for bug fixes: "Fixed an issue where…",
-     "Resolved a problem that caused…"
-   - Don't start bug fix entries with "Fixed the bug…" — describe what the software
-     now does correctly
+   - For bug fixes, use this two-part pattern: "The <application or feature> now
+     correctly <does XYZ>. Previously, it <did ABC>."
+   - Don't start bug fix entries with "Fixed…" or "Resolved…"
+   - For CVE fixes, use this pattern: "Updated <package> to <version> to address
+     <CVE-id>, which fixes <describe the vulnerability in plain language>." Don't lead
+     with "Fixed <CVE-id>…"
+   - If a single package update addresses multiple CVEs, use one bullet naming the
+     package and version, followed by an indented sub-list of the bare CVE IDs — don't
+     repeat the package name and description for each CVE: "Updated <package> to
+     <version> to address the following CVEs:" followed by one indented `- <CVE-id>`
+     bullet per CVE
+   - If one patch addresses CVEs in multiple distinct underlying libraries (for example,
+     a vendor patch that updates both a web framework and an unrelated logging
+     library), use a separate parent bullet per library, each with its own nested CVE list
+   - For a security fix to application code rather than a dependency update, use the
+     bug-fix two-part pattern instead: "The <application or feature> now correctly
+     <does XYZ>. Previously, it was vulnerable to <describe the vulnerability in plain
+     language>."
+   - For security fixes with no assigned CVE, use this pattern: "Updated <package> to
+     resolve a security issue that <describe the vulnerability in plain language>."
+     Don't lead with "Fixed…" or "Resolved a vulnerability…"
+   - Never use "Bumped" for a package, dependency, or bundled component version change
+     (for example, don't write "Bumped the PostgreSQL 13 tuxcare patch to 1.0.1"); use
+     "Updated" instead
    - Use second person: "You can now…", "Use the new… to…"
    - Use active voice and lead with user impact, not implementation detail
    - Don't reproduce the PR title verbatim if it's written for developers rather than users
@@ -309,6 +329,13 @@ For each entry:
    If sections are missing, misordered, or need to be created based on the source data,
    add or reorder them to match the template.
 
+   Convert every Markdown heading in the file to sentence case---the release version
+   heading (for example, "<PRODUCT> <VERSION>") as well as each section heading---per
+   [Heading format](../../instructions/docs-style.instructions.md#heading-format).
+   Capitalize only the first word and any proper nouns (for example, rewrite
+   "New Features" or "BUG FIXES" to "New features", and "Known Issues With Docker" to
+   "Known issues with Docker").
+
    Upgrade notes, Platform support, Packages, Dependency updates, Bundled components,
    and Supported `<extension type>` versions are usually populated from release or build
    metadata rather than individual Jira issues or PRs. Don't fabricate entries for these
@@ -325,8 +352,18 @@ For each entry:
    placeholder content.
 
    If the file contains a heading that isn't an exact match for one of the defined
-   sections, don't delete it. First try to **normalize** the heading; only fall back to
-   **relocating notes** or **flagging** it if normalization doesn't apply.
+   sections, don't delete it. First check whether it's an **established convention**;
+   otherwise try to **normalize** the heading; only fall back to **relocating notes** or
+   **flagging** it if neither applies.
+
+   **Check established convention first** — if the same non-standard heading text
+   (case-insensitive) already appears in this file for one or more prior, previously
+   published releases, treat it as an established per-file convention rather than a
+   one-off mistake. Don't rename it through the synonym table below, even if it would
+   otherwise match. Just convert it to sentence case and still flag it for review (see
+   **Flag the section for review** below) — flag it on every edit, not just the first
+   time, since an established convention is still outside the documented doc type and a
+   human should periodically confirm it's intentional.
 
    **Normalize known synonyms** — many non-standard headings are just a different name
    for a defined section. Compare the heading against the synonym table below. If it
@@ -356,8 +393,9 @@ For each entry:
    section. If renaming would merge content into an existing section of the same name
    elsewhere in the file, merge the entries instead of creating a duplicate heading.
 
-   If no synonym match applies, do the following in a single pass over all notes in
-   that section:
+   If no synonym match applies, or the heading was kept as an established convention
+   per the check above, do the following in a single pass over all notes in that
+   section:
 
    **Classify notes for relocation** — if the section name suggests it may contain
    release-note-worthy content (for example, "Technical changes", "Miscellaneous",
@@ -384,8 +422,9 @@ For each entry:
    **Edit remaining content** — apply the team style guide to any notes that stay in
    the section.
 
-   **Flag the section for review** — if the heading couldn't be normalized and still
-   has notes left in it after classification (whether some, all, or none were moved),
+   **Flag the section for review** — if the heading couldn't be normalized, or was kept
+   as an established convention, and still has notes left in it after classification
+   (whether some, all, or none were moved),
    add an HTML comment immediately above the section heading listing the standard
    headings so a human can pick the right one:
 
@@ -517,6 +556,10 @@ After editing the file, report:
   content or contained only placeholder text
 - **Sections renamed**: list any non-standard heading that was normalized to a standard
   heading (for example, "Chef packaged product versions" → "Bundled components")
+- **Established conventions kept as-is**: list any non-standard heading that was left
+  unrenamed because it's an established per-file convention, with its review flag
+- **Headings converted to sentence case**: list any heading that was rewritten (for
+  example, "New Features" → "New features")
 - **Flagged for review**: list each flagged note with its PR number or Jira key and the
   reason it was flagged; include any sections flagged as unrecognized
 - **Breaking changes**: whether any breaking change notes were identified or moved
