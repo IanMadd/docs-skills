@@ -45,6 +45,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/edit-reference-doc/` | `/edit-reference-doc` — restructure or draft a page to match the reference doc type template, then apply the style guide and lint it |
 | `.github/skills/edit-tutorial/` | `/edit-tutorial` — restructure or draft a page to match the tutorial doc type template, then apply the style guide and lint it |
 | `.github/skills/fix-broken-links/` | `/fix-broken-links` — run linkchecker against a site or build output, map broken links to Markdown source files, suggest replacements, and apply confirmed fixes |
+| `.github/skills/fix-menu-branches/` | `/fix-menu-branches` — move Hugo menu branch entries from page front matter into `menu.toml` so every page is a navigable leaf in the left nav |
 | `.github/skills/generate-examples-from-repo/` | `/generate-examples-from-repo` — fetch source code from a public GitHub repository, extract usage patterns for one command or all commands, and generate formatted, annotated examples ready for documentation |
 | `.github/skills/generate-meta-description/` | `/generate-meta-description` — generate or update the `description` field in frontmatter for one file or every file in a directory |
 | `.github/skills/generate-product-overview/` | `/generate-product-overview` — draft a product overview page from marketing materials and reference docs using the product overview doc type template |
