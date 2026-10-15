@@ -6,8 +6,8 @@ description: "Structural template and guidelines for reference doc type pages."
 
 **Purpose**: Provides accurate, complete technical information designed to be scanned, not read top to bottom. Mirrors the structure of the application or system it documents. Avoid high-level instructions or usage guides---link to how-to guides instead.
 
-```markdown
-# <Title: noun phrase---"kubectl rollout options">
+````markdown
+# <Title: subject and reference scope, or exact command name---"AWS CLI Command Reference" or "accessanalyzer">
 
 One sentence describing what this reference covers.
 
@@ -51,9 +51,23 @@ command --flag <VALUE> --other-flag
 
 - Link to related reference page
 - Link to related how-to guide
-```
+````
 
 **Guidelines**:
+
+- Name the subject and, when useful, the reference scope or information type, such as a command
+  reference, language reference, or support matrix. Use a noun phrase, not a task-based verb phrase.
+- For a page that lists all commands, use the CLI name and a scope label such as "Command Reference".
+  For a page about one CLI or command, the exact name alone can be the clearest title.
+  Don't append "reference", "command", or "options" when it adds no useful distinction.
+- Use sentence case for descriptive titles, but preserve official product names, established reference
+  names, and exact command spelling and capitalization. These are examples of good reference titles:
+  - "SQL++ for Query Reference" for a query language reference
+  - "Office and Windows configuration support matrix" for a support matrix
+  - "AWS CLI Command Reference" for the page that lists all AWS CLI commands
+  - "accessanalyzer" for the accessanalyzer AWS CLI command
+  - "gcloud" for the gcloud CLI
+  - "az" for the az CLI
 - Every flag, option, and parameter must be documented; include type and default
 - Document each flag or option as a description list: the term is the flag in code font, and the
   definition starts with a one-line description followed by indented `Type:` and `Default:` lines
