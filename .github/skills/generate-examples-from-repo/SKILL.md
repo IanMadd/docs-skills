@@ -307,6 +307,10 @@ Write a short paragraph covering:
 - Use realistic argument values from spec files when showing concrete examples
 - Keep each code block minimal — one concept per block
 - Add a `#` comment above blocks whose purpose isn't obvious from the command itself
+- Define non-standard acronyms the first time they appear in a comment, using the full term
+  followed by the acronym in parentheses (for example, `Horizontal Pod Autoscaling (HPA)`).
+  Preserve an existing expansion when adapting a source comment; don't guess an expansion
+  that isn't supported by the source.
 - Don't invent flags, arguments, or behavior not evidenced in the fetched source files
 
 ### Scope: one command vs. all commands

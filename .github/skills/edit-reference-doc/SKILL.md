@@ -123,7 +123,8 @@ Focus on these checks, since reference docs are scanned, not read linearly:
 - **Language**: serial comma, contractions, no Latin abbreviations
 - **Comments in examples**: apply [code-comments.instructions.md](../../instructions/code-comments.instructions.md)'s comment rules---move
   documentation-only narration to surrounding prose, keep customization/warning/intent comments
-  inline, remove redundant comments
+  inline, remove redundant comments, and define non-standard acronyms at first use without
+  removing existing expansions
 
 ---
 

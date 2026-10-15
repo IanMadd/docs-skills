@@ -143,6 +143,13 @@ paths) for an embedded determiner --- `my`, `your`, `our` --- and reword them to
 form, for example `tenant-name.example.com` instead of `mytenant.example.com`. See
 [Placeholder values](../../instructions/code-comments.instructions.md#placeholder-values).
 
+Define non-standard acronyms at first use in each comment or closely related comment block:
+write the full term followed by the acronym in parentheses, such as `Horizontal Pod
+Autoscaling (HPA)`. Preserve an existing expansion when rewriting a comment. Don't guess an
+expansion when the full term isn't clear from a reliable source; flag the acronym instead.
+Follow
+[Formatting](../../instructions/code-comments.instructions.md#formatting).
+
 If a documenting Markdown page was found in Step 1, cross-check the file's comments against it:
 
 - For every setting the page describes as required, optional, conditionally required, or
@@ -173,6 +180,9 @@ Steps 2 and 3:
   reader must set, not `IMPORTANT:`---reserve `IMPORTANT:` for a hard requirement that isn't
   about entering a value. Keep the label and its text on the same comment line
 - No restating a setting name or value that's already visible in the code
+- Define non-standard acronyms on first use, and don't remove an existing full-term
+  expansion when editing a comment. If an acronym's meaning can't be verified, flag it
+  instead of guessing.
 - State a conditional requirement condition-first --- lead with the `if` clause, then the
   requirement it triggers. Reword "X is required only when Y" to "If Y, set X."
 - In a standalone file with many settings, add a blank line before a comment that introduces a
@@ -195,6 +205,7 @@ After the file content, add an `## Edit summary` section with:
 - Comments moved to prose, showing the original comment and the new prose sentence plus its
   location (before or after the code block)
 - Comments reworded for formatting or placeholder fixes, showing old --- new
+- Acronyms defined or flagged for verification
 - Comments added for missing customization or warning coverage, and why
 - Comments added, edited, or removed for a file header or section comment, and why
 - If a documenting Markdown page was used: the page's path, and every mismatch found between

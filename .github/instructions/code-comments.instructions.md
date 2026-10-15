@@ -316,6 +316,14 @@ external:
 - Use sentence case
 - Write complete sentences and end each one with a period
 - Don't restate the setting name or a value already visible in the code
+- Define non-standard acronyms at first use in a comment or closely related
+  comment block. Write the full term followed by the acronym in parentheses,
+  such as `Horizontal Pod Autoscaling (HPA)`. Don't replace an existing
+  expansion with the acronym alone when rewriting a comment. Common acronyms
+  that the intended audience recognizes without explanation, such as API and
+  URL, don't need expansion. If the full term isn't clear from a reliable
+  source, preserve the original wording and flag the acronym rather than
+  guessing.
 - State a conditional requirement condition-first: lead with the `if` clause, then the
   requirement it triggers. Write "If enabled is true, set hostname, username, and password."
   not "hostname, username, and password are required only when enabled is true."
