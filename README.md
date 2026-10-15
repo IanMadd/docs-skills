@@ -59,6 +59,9 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/table-to-dlist/` | `/table-to-dlist` — convert Markdown tables that define properties or parameters into description lists |
 | `.github/skills/vale-style-edit/` | `/vale-style-edit` — lint a file with the Vale MCP server (or CLI) at error severity and fix every error |
 
+Use [/review-page-titles](.github/skills/review-page-titles/SKILL.md) to identify a page's doc type,
+align its page and menu titles, and rename its Markdown file while checking affected references.
+
 ### Install scripts
 
 | File | What it does |
