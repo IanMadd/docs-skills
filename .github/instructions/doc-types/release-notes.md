@@ -116,7 +116,11 @@ This release supports the following <extension type> versions.
 - Give breaking changes, deprecations, and security fixes their own section heading---don't rely on a bold run-in label alone to flag these categories
 - Include issue or PR numbers and link them where your organization permits
 - Omit any section that has no entries
-- Use semantic versioning for release numbers (for example, `1.3.2`); include the date in `YYYY-MM-DD` format
+- Use semantic versioning for release numbers (for example, `1.3.2`).
+  For products with date-based version identifiers, follow the product's
+  established format (for example, `20261015`).
+  The version identifier is separate from the release date field, which follows
+  the `Release date: <MONTH> <DAY>, <YEAR>` format in the template.
 - In Packages, list only what changed this release---a new platform or architecture, a new installer type (native or Habitat), a package format change, a Docker image update, or a package no longer provided. Don't restate a full matrix of every currently supported platform and package in each release; that list goes stale and adds maintenance burden without helping readers find what's new. Maintain a definitive, always-current platform/package matrix on a separate reference page if your project needs one
 - In Packages, call out the installer type (native or Habitat) when it's part of what changed, since installation and management differs between the two
 - In Upgrade notes, cover only what the reader must verify or do before upgrading---don't repeat Breaking changes content
