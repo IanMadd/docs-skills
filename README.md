@@ -62,6 +62,40 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 Use [/review-page-titles](.github/skills/review-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
 
+### Chef platform overviews
+
+Use the [platform overview type](.github/instructions/doc-types/platform-overview.md) to explain multiple Chef products and their relationships for decision-makers, engineers, and new users.
+Use a product overview for one product or a workflow guide for a cross-product task.
+
+Start with `/generate-research-doc` and request its platform overview profile, supplying documentation, blog, and marketing sources with the existing source prefixes.
+The profile records product roles, relationship evidence, source dates, conflicts, and gaps.
+Then pass the report to `/generate-platform-overview`, for example:
+
+```text
+/generate-platform-overview content/platform_overview.md research/chef-portfolio.md
+```
+
+You can also supply sources directly to the drafting skill; it runs the research stage first.
+The skill recommends a single page or companion pages for approval before writing.
+Choose `mode=markdown` (the default), `mode=cards`, or `mode=compare`.
+The `cards` mode uses prose with the destination theme's `cards`, `card`, and `card_links` shortcodes for selected sections.
+The `compare` mode creates a separate unpublished prototype with the same wording and links presented as Markdown and cards, for example:
+
+```text
+/generate-platform-overview research/chef-portfolio.md mode=compare
+```
+
+For `compare`, approve the prototype path and sections before writing, then choose an alternative for each section after review.
+The main overview stays unchanged unless you authorize applying those choices.
+Use the Chef Hugo theme for visual comparison; VS Code's standard Markdown preview doesn't render the shortcodes.
+Without preview tooling, the skill can create a source-only comparison outside Hugo's content tree if shortcode definitions are available.
+Research-only requests can stop before drafting.
+Existing files require permission before replacement, and new drafts require factual review before publication.
+
+This workflow is currently supported within the docs-skills checkout.
+The installers don't copy the doc-type template directory, so installing the skill alone doesn't deliver all required writing rules.
+Installer support and changes to Chef's published overview are outside this addition's scope.
+
 ### Install scripts
 
 | File | What it does |

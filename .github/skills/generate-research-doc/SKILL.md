@@ -12,7 +12,7 @@ remote), a GitHub pull request, Confluence pages, and Jira stories or epics.
 
 The report is a research artifact, not a publishable doc. It's meant to be handed to
 other skills in this repo (`edit-how-to-guide`, `edit-conceptual-doc`,
-`edit-reference-doc`, `edit-tutorial`, `edit-workflow-guide`) as source material when
+`edit-reference-doc`, `edit-tutorial`, `edit-workflow-guide`, `generate-platform-overview`) as source material when
 drafting a specific doc type. It doesn't follow a `doc-types.instructions.md` template
 and isn't linted with Vale or cspell.
 
@@ -20,6 +20,12 @@ It's especially useful for [edit-workflow-guide](../edit-workflow-guide/SKILL.md
 researching every product involved in a cross-product workflow first, in one pass,
 produces the multi-source, pre-cited material a workflow guide needs to link each step
 back to the right product's documentation.
+
+For a Chef platform or portfolio overview, optionally use the
+[platform overview research profile](./references/platform-overview.md).
+Load it when the request names that profile or asks for research to support a platform overview.
+Apply its product inventory and relationship evidence requirements within the stages below.
+Keep the existing source prefixes and read-only policy; other research topics retain the default free-form report.
 
 Read-only policy:
 

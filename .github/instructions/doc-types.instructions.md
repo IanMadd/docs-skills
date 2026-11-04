@@ -1,5 +1,5 @@
 ---
-description: "Use when asking about doc structure, how to organize a document, or what sections to include. Covers structural templates for tutorials, how-to guides, reference docs, system requirements, conceptual docs, release notes, and READMEs."
+description: "Use when asking about doc structure, how to organize a document, or what sections to include. Covers tutorials, how-to guides, workflow guides, reference docs, system requirements, conceptual docs, release notes, product overviews, platform overviews, and READMEs."
 ---
 
 <!-- vale Microsoft.Quotes = NO -->
@@ -23,6 +23,7 @@ relevant to your current task:
 | [Conceptual doc](doc-types/conceptual.md)               | Architecture overviews, explanations, mental models                         |
 | [Release notes](doc-types/release-notes.md)             | Changes per version, grouped by type                                        |
 | [Product overview](doc-types/product-overview.md)       | High-level product value and capabilities                                   |
+| [Platform overview](doc-types/platform-overview.md)     | Chef product roles, relationships, adoption considerations, and next steps  |
 | [README](doc-types/readme.md)                           | Project and repository overview                                             |
 
 ---

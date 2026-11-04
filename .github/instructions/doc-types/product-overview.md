@@ -8,6 +8,9 @@ description: "Structural template and guidelines for product overview doc type p
 
 Product overview pages combine information that overlaps with marketing and READMEs, but focus on linking readers to relevant documentation resources within your product ecosystem.
 
+For multiple products and their relationships, use the [platform overview](platform-overview.md) type.
+Use a [workflow guide](workflow-guide.md) instead when the purpose is to complete a cross-product task.
+
 # PRODUCT NAME Overview
 
 Introductory paragraph(s) explaining what the product is, what it does, what problems it solves, and the benefits to the user.

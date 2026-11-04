@@ -31,6 +31,7 @@ instead so there's a single source of truth.
 - **Reference docs** — CLI commands, config options, API parameters; designed to be scanned
 - **Conceptual docs** — architecture overviews, explanations, mental models
 - **Product overview** — high-level product value and capabilities; often an entry point for evaluators
+- **Platform overview**: Chef portfolio value, product roles and relationships, and starting points for decision-makers and engineers
 - **Release notes** — changes per version, grouped by type
 - **READMEs** — project and repository overviews
 
