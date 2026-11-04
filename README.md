@@ -62,6 +62,25 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 Use [/review-page-titles](.github/skills/review-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
 
+### Compare document drafts
+
+Use [/compare-doc-drafts](.github/skills/compare-doc-drafts/SKILL.md) to review a revision against its intended outcome without changing the source documents.
+Supply original and updated sets of Markdown paths, web page URLs, or both, plus the intention of the change.
+The skill asks you to confirm which set is original and which is updated before comparing them.
+Include all affected pages when a document is split or multiple documents are consolidated, for example:
+
+```text
+/compare-doc-drafts
+Original: https://docs.chef.io/example-installation/
+Updated: http://localhost:1313/example-requirements/ http://localhost:1313/example-installation/
+Intention: Clarify system requirements and separate prerequisites from installation steps.
+```
+
+The URLs in this example illustrate the input format; replace them with your document URLs or Markdown paths.
+The report assesses the intention, summarizes changes, traces content across pages, and suggests corrections for gaps or possible information loss.
+Web inputs require an available browser tool; if a page can't be read, the skill asks for a local copy or pasted text and identifies any review limits.
+The review doesn't verify technical claims or automatically apply suggestions.
+
 ### Chef platform overviews
 
 Use the [platform overview type](.github/instructions/doc-types/platform-overview.md) to explain multiple Chef products and their relationships for decision-makers, engineers, and new users.
