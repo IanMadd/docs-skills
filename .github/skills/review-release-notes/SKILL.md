@@ -528,6 +528,8 @@ When no Jira or GitHub PR data is available, edit the file for style and structu
 4. **Don't infer or expand** content — only correct what's already written for style,
    grammar, and structure. Don't add context, rewrite entries for accuracy, or flag notes
    as needing content review, since there's no source data to verify against.
+   The cross-entry dependency version check below is an exception: add its TODO when
+   release notes list potentially conflicting versions for the same dependency.
 
 ### Breaking changes
 
@@ -536,6 +538,31 @@ If a PR is labeled `breaking change` or its body explicitly states the change is
 - Move the note into a **Breaking changes** section if one exists in the file
 - If no such section exists, add one immediately above the first regular change section
 - Write the note to clearly explain what breaks and what users need to do
+
+### Cross-entry dependency version check
+
+Before finalizing the release notes, compare dependency versions across the entire release,
+including multiple versions listed in one note and separate notes in different sections.
+Check updates mentioned for bug fixes and CVEs as well as entries in dependency-update
+sections. Two notes may describe fixes that each require a different version of the same
+dependency, even though a release can include only one version of that dependency for a
+given product target.
+
+- Use the available Jira, PR, release, or build data to identify whether different
+  versions apply to explicitly distinct product versions, platforms, or other targets.
+  Versions clearly scoped to separate targets aren't a conflict.
+- If the notes appear to claim conflicting versions for the same dependency and the
+  available information doesn't resolve the difference, don't choose a version or rewrite
+  the entries. Add an HTML TODO immediately above the first relevant note, naming the
+  dependency and versions:
+
+  ```markdown
+  <!-- TODO: verify — <DEPENDENCY> is listed with versions <VERSION_1> and <VERSION_2>; confirm whether these apply to separate targets or conflict within this release -->
+  ```
+
+- Run this check in edit, add, and style-only modes. In style-only mode, check the notes
+  themselves and flag only apparent dependency-version conflicts; don't otherwise infer
+  or expand their content.
 
 ---
 
@@ -561,5 +588,6 @@ After editing the file, report:
 - **Headings converted to sentence case**: list any heading that was rewritten (for
   example, "New Features" → "New features")
 - **Flagged for review**: list each flagged note with its PR number or Jira key and the
-  reason it was flagged; include any sections flagged as unrecognized
+  reason it was flagged; include dependency-version conflicts and any sections flagged
+  as unrecognized
 - **Breaking changes**: whether any breaking change notes were identified or moved
