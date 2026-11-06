@@ -1,10 +1,10 @@
 ---
-name: alt-text-edit
+name: edit-alt-text
 description: 'Scan a Markdown file for images, audit every alt text value against accessibility and style guidelines, view each image in the workspace, draft accurate alt text, and edit the file in place. Use when you want to audit and fix image alt text for accessibility compliance and style quality. Triggers on: alt text, alternative text, image accessibility, fix alt text, audit alt text, missing alt text, edit alt text, image descriptions, accessibility, a11y, screen reader.'
 argument-hint: "Path to the Markdown file to audit and edit---for example: docs/how-to-deploy.md"
 ---
 
-# Alt text audit and edit
+# Edit alt text
 
 Runs a four-stage workflow on a Markdown documentation file:
 

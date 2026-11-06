@@ -1,12 +1,12 @@
 ---
-name: review-release-notes
-description: 'Read a release notes file and edit it using Jira release data and GitHub pull requests as co-equal, optional sources. If entries are already drafted, review and improve them using the available source data; if not, add new sections. If no sources are provided, edit the file for style and structure only. Uses read-only Atlassian and GitHub MCP operations. Never create, update, or delete anything in GitHub or Jira. Triggers on: review release notes, update release notes, fix release notes, release notes from PRs, release notes from pull requests, release notes from Jira, sync release notes, edit release notes.'
+name: edit-release-notes
+description: 'Edit a release notes file using Jira release data and GitHub pull requests as co-equal, optional sources. Improve drafted entries or add new sections from source data. If no sources are provided, edit the file for style and structure only. Uses read-only Atlassian and GitHub MCP operations. Never create, update, or delete anything in GitHub or Jira. Triggers on: edit release notes, update release notes, fix release notes, release notes from PRs, release notes from pull requests, release notes from Jira, sync release notes.'
 argument-hint: "Path to the release notes file. Optionally add one or both sources: docs/release-notes.md https://example.atlassian.net/projects/CHEF/versions/43153/tab/release-report-all-issues — or — docs/release-notes.md chef/chef-infra-client — or — docs/release-notes.md https://example.atlassian.net/projects/CHEF/versions/43153/tab/release-report-all-issues chef/chef-infra-client — or — docs/release-notes.md (style and structure edit only)"
 ---
 
-# Review and edit release notes from Jira and pull requests
+# Edit release notes from Jira and pull requests
 
-Runs a five-stage workflow to review a release notes file using Jira release data and
+Runs a five-stage workflow to edit a release notes file using Jira release data and
 GitHub pull requests as optional sources.
 If entries for the release are already drafted, the skill reviews and improves them using
 the available source data.

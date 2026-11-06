@@ -1,10 +1,10 @@
-# Review release notes skill
+# Edit release notes skill
 
-Reviews and edits a release notes file using Jira release data and GitHub pull requests as optional sources.
+Edits a release notes file using Jira release data and GitHub pull requests as optional sources.
 
 ## Description
 
-With this skill, you can review and improve a draft release notes file, add new entries from source data, or edit an existing file for style and structure only.
+With this skill, you can improve a draft release notes file, add new entries from source data, or edit an existing file for style and structure only.
 The skill uses Jira and GitHub as co-equal, optional sources.
 It applies the team style guide and release notes doc type structure to all edits.
 
@@ -15,7 +15,7 @@ The skill never creates, updates, or deletes anything in Jira or GitHub---it app
 
 Documentation writers, technical writers, and engineers who maintain release notes and want to:
 
-- Review and improve existing release note entries using Jira issues or merged pull requests as source data
+- Edit and improve existing release note entries using Jira issues or merged pull requests as source data
 - Add new release note sections from Jira or GitHub data when no entries exist yet
 - Edit a release notes file for style, structure, and consistency without source data
 
@@ -26,7 +26,7 @@ Jira and GitHub sources are optional---if neither is provided, the skill edits t
 
 | Input | Required | Description | Example |
 |-------|----------|-------------|---------|
-| Release notes file path | Yes | Path to the Markdown file to review | `docs/release-notes/v2.4.md` |
+| Release notes file path | Yes | Path to the Markdown file to edit | `docs/release-notes/v2.4.md` |
 | Jira release URL or epic key | No | A Jira release/version URL or an epic key | `https://example.atlassian.net/projects/CHEF/versions/43153/tab/release-report-all-issues` or `PLATFORM-456` |
 | GitHub repository | No | The `owner/repo` the PRs belong to | `chef/chef-infra-client` |
 

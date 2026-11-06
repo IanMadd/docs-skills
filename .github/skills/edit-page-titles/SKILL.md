@@ -1,10 +1,10 @@
 ---
-name: review-page-titles
-description: "Review a Markdown page's documentation type, update its page and menu titles to match the doc-type title guidance, and rename the Markdown file to match the page title when necessary. Triggers on: review page titles, fix page title, menu title, navigation title, title by doc type, rename Markdown file, filename consistency."
+name: edit-page-titles
+description: "Update a Markdown page's title, menu labels, and filename to match its doc type. Use when editing page titles, menu titles, navigation titles, or filenames for consistency."
 argument-hint: "Path to one Markdown file"
 ---
 
-# Review page titles
+# Edit page titles
 
 Review one Markdown page, infer its documentation type from its content, and update its page title,
 menu labels, and filename only where necessary.

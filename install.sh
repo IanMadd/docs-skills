@@ -75,7 +75,7 @@ usage() {
   echo "  ./install.sh --target ../my-docs-repo --skills fix-broken-links"
   echo ""
   echo "  # Install specific prompts and a skill to a docs repo"
-  echo "  ./install.sh --target ../my-docs-repo --prompts review-alt-text --skills alt-text-edit"
+  echo "  ./install.sh --target ../my-docs-repo --prompts review-alt-text --skills edit-alt-text"
 }
 
 # ── Parse arguments ───────────────────────────────────────────────────────────

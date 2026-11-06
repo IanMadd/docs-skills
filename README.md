@@ -39,7 +39,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | Directory | What it does |
 |-----------|-------------|
 | `.github/skills/docs-style-edit/` | `/docs-style-edit` — lint with markdownlint-cli2 and vale, fix all flagged issues, then apply the style guide |
-| `.github/skills/alt-text-edit/` | `/alt-text-edit` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
+| `.github/skills/edit-alt-text/` | `/edit-alt-text` — scan a file for images, audit every alt text value, view each image, draft accurate descriptions, and edit the file in place |
 | `.github/skills/edit-conceptual-doc/` | `/edit-conceptual-doc` — restructure or draft a page to match the conceptual doc type template, then apply the style guide and lint it |
 | `.github/skills/edit-how-to-guide/` | `/edit-how-to-guide` — restructure or draft a page to match the how-to guide doc type template, then apply the style guide and lint it |
 | `.github/skills/edit-reference-doc/` | `/edit-reference-doc` — restructure or draft a page to match the reference doc type template, then apply the style guide and lint it |
@@ -54,13 +54,13 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/markdownlint-edit/` | `/markdownlint-edit` — lint a file with markdownlint-cli2, auto-fix issues, then manually fix what remains |
 | `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation between repos or into product and version subdirectories |
 | `.github/skills/review-cognitive-load/` | `/review-cognitive-load` — assess avoidable reader effort and recommend text, structure, navigation, and visual changes without editing the document |
-| `.github/skills/review-release-notes/` | `/review-release-notes` — fetch each referenced GitHub pull request, enrich release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
-| `.github/skills/review-system-requirements/` | `/review-system-requirements` — review and edit installation and configuration requirements for clarity, structure, scannability, and consistency without verifying technical claims |
+| `.github/skills/edit-release-notes/` | `/edit-release-notes` — fetch each referenced GitHub pull request, edit release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
+| `.github/skills/edit-system-requirements/` | `/edit-system-requirements` — propose and apply approved editorial edits to installation and configuration requirements without verifying technical claims |
 | `.github/skills/split-by-doc-type/` | `/split-by-doc-type` — split a page that mixes doc types into separate pages that each match their doc type template |
 | `.github/skills/table-to-dlist/` | `/table-to-dlist` — convert Markdown tables that define properties or parameters into description lists |
 | `.github/skills/vale-style-edit/` | `/vale-style-edit` — lint a file with the Vale MCP server (or CLI) at error severity and fix every error |
 
-Use [/review-page-titles](.github/skills/review-page-titles/SKILL.md) to identify a page's doc type,
+Use [/edit-page-titles](.github/skills/edit-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
 
 ### Review cognitive load
@@ -356,9 +356,9 @@ uses the Vale MCP server when available and falls back to the CLI. See
 > or Edit) and that `.github/skills/docs-style-edit/` exists in the repo you have open. Run
 > `./install.sh <path-to-your-docs-repo>` to install it.
 
-## How to use the alt-text-edit skill
+## How to use the edit-alt-text skill
 
-The `/alt-text-edit` skill runs a four-stage workflow to audit and fix alt text in an
+The `/edit-alt-text` skill runs a four-stage workflow to audit and fix alt text in an
 existing Markdown file:
 
 1. **Stage 1 — Find images**: Scans the file for all image references in Markdown
@@ -376,13 +376,13 @@ flagged with a `<!-- TODO: verify -->` comment for human review.
 **Usage**:
 
 1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
-2. Type `/alt-text-edit`.
+2. Type `/edit-alt-text`.
 3. Enter the path to the file you want to edit, for example: `docs/how-to-deploy.md`
 4. Copilot audits every image, views local image files, drafts alt text, edits the file,
    and returns a summary of every change made.
 
-> **Tip**: If `/alt-text-edit` doesn't appear, check that you're in **Agent** mode (not Ask
-> or Edit) and that `.github/skills/alt-text-edit/` exists in the repo you have open. Run
+> **Tip**: If `/edit-alt-text` doesn't appear, check that you're in **Agent** mode (not Ask
+> or Edit) and that `.github/skills/edit-alt-text/` exists in the repo you have open. Run
 > `./install.sh <path-to-your-docs-repo>` to install it.
 
 ## How to use the fix-broken-links skill
@@ -452,9 +452,9 @@ Examples come from spec and test files, so they reflect how the tool is actually
 > repo has more than 15 commands, it asks you to confirm scope or select a subset before
 > fetching anything.
 
-## How to use the review-release-notes skill
+## How to use the edit-release-notes skill
 
-The `/review-release-notes` skill reads a release notes file, fetches each referenced pull
+The `/edit-release-notes` skill reads a release notes file, fetches each referenced pull
 request using the GitHub MCP server, and rewrites each note to accurately reflect the actual
 changes in the PR.
 Optionally, provide a Jira epic key and the skill uses the Atlassian MCP server to retrieve
@@ -475,16 +475,16 @@ To use Jira context, the Atlassian MCP server must also be configured.
 **Usage**:
 
 1. Open Copilot Chat in VS Code and switch to **Agent** mode using the mode dropdown.
-2. Type `/review-release-notes`.
+2. Type `/edit-release-notes`.
 3. Enter the path to the release notes file, for example: `docs/release-notes/v2.4.md`
 4. Optionally add a Jira epic key after the file path, for example:
    `docs/release-notes/v2.4.md PLATFORM-456`
 5. Copilot runs all stages and returns the edited file plus a summary of every change made,
    PRs that couldn't be fetched, and any notes flagged for human review.
 
-> **Tip**: If `/review-release-notes` doesn't appear, check that you're in **Agent** mode
-> (not Ask or Edit) and that `.github/skills/review-release-notes/` exists in the repo you
-> have open. Run `./install.sh --target <path-to-your-docs-repo> --skills review-release-notes`
+> **Tip**: If `/edit-release-notes` doesn't appear, check that you're in **Agent** mode
+> (not Ask or Edit) and that `.github/skills/edit-release-notes/` exists in the repo you
+> have open. Run `./install.sh --target <path-to-your-docs-repo> --skills edit-release-notes`
 > to install it.
 
 ## How the style instructions work

@@ -93,7 +93,7 @@ EXAMPLES
   .\install.ps1 -TargetRepo ..\my-docs-repo -Skills fix-broken-links
 
   # Install specific prompts and a skill to a docs repo
-  .\install.ps1 -TargetRepo ..\my-docs-repo -Prompts review-alt-text -Skills alt-text-edit
+  .\install.ps1 -TargetRepo ..\my-docs-repo -Prompts review-alt-text -Skills edit-alt-text
 "@
 }
 

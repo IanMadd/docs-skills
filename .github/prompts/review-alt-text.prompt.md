@@ -76,7 +76,7 @@ When suggesting fixes, apply these rules:
 
 Note: this prompt audits alt text values already present in the source. It cannot view
 image files. Mark any suggestion that depends on seeing the image as
-`[requires image review]` so a human or the `/alt-text-edit` skill can verify it.
+`[requires image review]` so a human or the `/edit-alt-text` skill can verify it.
 
 ---
 

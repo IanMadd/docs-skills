@@ -161,7 +161,7 @@ Use the Atlassian MCP server's read operations (`getJiraIssue`,
 - **Single issue key** — fetch the issue directly: summary, description, status,
   issue type.
 - **Epic key** — fetch the epic (summary, description, status), then fetch its child
-  issues the same way [review-release-notes](../review-release-notes/SKILL.md) Stage 2
+  issues the same way [edit-release-notes](../edit-release-notes/SKILL.md) Stage 2
   does for epics.
 - **Release/version URL** — parse the project key and version ID from the URL, then
   fetch all issues in that version.

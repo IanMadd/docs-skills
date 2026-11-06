@@ -1,10 +1,10 @@
 ---
-name: review-system-requirements
-description: 'Review and edit customer-facing system requirements in installation and configuration documentation for clarity, structure, scannability, and consistency. Use the repository instructions and Good Docs Project installation-guide guidance. Do not verify technical claims or change requirement values. Triggers on: review system requirements, edit system requirements, clarify requirements, improve requirements, installation requirements, configuration requirements, prerequisites review.'
+name: edit-system-requirements
+description: 'Edit customer-facing system requirements in installation and configuration documentation for clarity, structure, scannability, and consistency. Use the repository instructions and Good Docs Project installation-guide guidance. Do not verify technical claims or change requirement values. Triggers on: edit system requirements, review and edit system requirements, clarify requirements, improve requirements, installation requirements, configuration requirements, prerequisites.'
 argument-hint: "Path to a Markdown file, file#heading, directory, or space-separated file list."
 ---
 
-# Review system requirements
+# Edit system requirements
 
 Review and edit customer-facing installation and configuration requirements for clarity,
 structure, scannability, and consistency.
