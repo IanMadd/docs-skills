@@ -53,6 +53,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/generate-research-doc/` | `/generate-research-doc` — gather information from web pages, GitHub, Confluence, and Jira into a cited research report for use as input to other skills |
 | `.github/skills/markdownlint-edit/` | `/markdownlint-edit` — lint a file with markdownlint-cli2, auto-fix issues, then manually fix what remains |
 | `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation between repos or into product and version subdirectories |
+| `.github/skills/review-cognitive-load/` | `/review-cognitive-load` — assess avoidable reader effort and recommend text, structure, navigation, and visual changes without editing the document |
 | `.github/skills/review-release-notes/` | `/review-release-notes` — fetch each referenced GitHub pull request, enrich release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
 | `.github/skills/review-system-requirements/` | `/review-system-requirements` — review and edit installation and configuration requirements for clarity, structure, scannability, and consistency without verifying technical claims |
 | `.github/skills/split-by-doc-type/` | `/split-by-doc-type` — split a page that mixes doc types into separate pages that each match their doc type template |
@@ -61,6 +62,23 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 
 Use [/review-page-titles](.github/skills/review-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
+
+### Review cognitive load
+
+Use [/review-cognitive-load](.github/skills/review-cognitive-load/SKILL.md) to review a Markdown page, document URL, or scoped set of related pages for avoidable cognitive burden.
+Supply the reader's goal and product familiarity when known, for example:
+
+```text
+/review-cognitive-load content/example-installation.md
+Goal: Complete a first-time installation. Audience: DevOps engineers new to the product.
+```
+
+Replace the example path with the document to review.
+The skill distinguishes necessary system complexity from avoidable effort in finding, interpreting, remembering, and applying information.
+It returns prioritized findings and concrete suggestions, including text edits, notices, section changes, removals, page splits, diagrams, and doc-type changes when justified.
+The review preserves technical meaning and safety, explains tradeoffs, and proposes reader checks rather than claiming to measure cognitive load.
+It doesn't edit or delete documents, verify product claims, or publish a report.
+Web and visual reviews require available browser or image tools; the report identifies anything it couldn't inspect.
 
 ### Compare document drafts
 
