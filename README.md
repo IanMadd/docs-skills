@@ -26,7 +26,6 @@ Prompts are single-task slash commands. Use them for drafting or editing one doc
 | `.github/prompts/draft-release-notes.prompt.md` | `/draft-release-notes` — convert a changelog or PR list to structured release notes |
 | `.github/prompts/draft-readme.prompt.md` | `/draft-readme` — generate a README for a tool or repo |
 | `.github/prompts/edit-for-style.prompt.md` | `/edit-for-style` — rewrite a doc to comply with the style guide |
-| `.github/prompts/review-completeness.prompt.md` | `/review-completeness` — audit a doc for gaps, missing steps, and accuracy |
 | `.github/prompts/generate-code-examples.prompt.md` | `/generate-code-examples` — generate shell, YAML, CLI, HCL, or config examples |
 | `.github/prompts/generate-meta-description.prompt.md` | `/generate-meta-description` — generate or update the `description` field in a single file's frontmatter |
 | `.github/prompts/notes-to-doc.prompt.md` | `/notes-to-doc` — convert raw notes or tickets into a structured draft |
@@ -53,7 +52,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/generate-research-doc/` | `/generate-research-doc` — gather information from web pages, GitHub, Confluence, and Jira into a cited research report for use as input to other skills |
 | `.github/skills/markdownlint-edit/` | `/markdownlint-edit` — lint a file with markdownlint-cli2, auto-fix issues, then manually fix what remains |
 | `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation between repos or into product and version subdirectories |
-| `.github/skills/review-cognitive-load/` | `/review-cognitive-load` — assess avoidable reader effort and recommend text, structure, navigation, and visual changes without editing the document |
+| `.github/skills/review-documentation/` | `/review-documentation` — produce a comprehensive, read-only report on completeness, clarity, cognitive load, navigation, and doc-type fit, including a split plan when warranted |
 | `.github/skills/edit-release-notes/` | `/edit-release-notes` — fetch each referenced GitHub pull request, edit release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
 | `.github/skills/edit-system-requirements/` | `/edit-system-requirements` — propose and apply approved editorial edits to installation and configuration requirements without verifying technical claims |
 | `.github/skills/split-by-doc-type/` | `/split-by-doc-type` — split a page that mixes doc types into separate pages that each match their doc type template |
@@ -63,22 +62,20 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 Use [/edit-page-titles](.github/skills/edit-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
 
-### Review cognitive load
+### Comprehensive documentation review
 
-Use [/review-cognitive-load](.github/skills/review-cognitive-load/SKILL.md) to review a Markdown page, document URL, or scoped set of related pages for avoidable cognitive burden.
-Supply the reader's goal and product familiarity when known, for example:
+Use [/review-documentation](.github/skills/review-documentation/SKILL.md) for a comprehensive review of one page. It combines completeness, clarity, cognitive load, navigation, and doc-type analysis in one report. If the page mixes documentation types, it maps the sections, proposes destination pages, and explains what to move, retain, and verify.
+The review is read-only. It doesn't apply recommendations or split the source page. Use [/split-by-doc-type](.github/skills/split-by-doc-type/SKILL.md) separately when you're ready to create split pages.
+
+Include the reader's goal and familiarity when known, for example:
 
 ```text
-/review-cognitive-load content/example-installation.md
+/review-documentation content/example-installation.md
 Goal: Complete a first-time installation. Audience: DevOps engineers new to the product.
 ```
 
 Replace the example path with the document to review.
-The skill distinguishes necessary system complexity from avoidable effort in finding, interpreting, remembering, and applying information.
-It returns prioritized findings and concrete suggestions, including text edits, notices, section changes, removals, page splits, diagrams, and doc-type changes when justified.
-The review preserves technical meaning and safety, explains tradeoffs, and proposes reader checks rather than claiming to measure cognitive load.
-It doesn't edit or delete documents, verify product claims, or publish a report.
-Web and visual reviews require available browser or image tools; the report identifies anything it couldn't inspect.
+The report also recommends other useful review passes when relevant, such as source-based technical verification, link checking, accessibility review, or task-based testing.
 
 ### Compare document drafts
 
