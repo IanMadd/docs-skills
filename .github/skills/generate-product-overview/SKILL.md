@@ -1,3 +1,8 @@
+---
+name: generate-product-overview
+description: "Draft a product overview page from marketing materials and reference documentation. Use when creating or updating an overview that explains one product's value, use cases, components, requirements, and related documentation."
+---
+
 # generate-product-overview Skill
 
 **WORKFLOW SKILL** — Automate drafting product overview pages by extracting key product information from marketing materials and reference documentation, then generating a structured overview page based on the product overview doc type template. Use when you need to quickly create a product overview draft from existing source materials.
