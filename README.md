@@ -51,7 +51,7 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 | `.github/skills/generate-readme/` | `/generate-readme` — read through a repository and generate or update a `README.md` file, creating it from scratch if one doesn't exist |
 | `.github/skills/generate-research-doc/` | `/generate-research-doc` — gather information from web pages, GitHub, Confluence, and Jira into a cited research report for use as input to other skills |
 | `.github/skills/markdownlint-edit/` | `/markdownlint-edit` — lint a file with markdownlint-cli2, auto-fix issues, then manually fix what remains |
-| `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation between repos or into product and version subdirectories |
+| `.github/skills/migrate-docs/` | `/migrate-docs` — migrate or reorganize Chef documentation; import one, selected, or all release versions with shared final validation |
 | `.github/skills/review-documentation/` | `/review-documentation` — produce a comprehensive, read-only report on completeness, clarity, cognitive load, navigation, and doc-type fit, including a split plan when warranted |
 | `.github/skills/edit-release-notes/` | `/edit-release-notes` — fetch each referenced GitHub pull request, edit release notes with accurate descriptions from PR content, and optionally align notes with a Jira epic |
 | `.github/skills/edit-system-requirements/` | `/edit-system-requirements` — propose and apply approved editorial edits to installation and configuration requirements without verifying technical claims |
@@ -61,6 +61,32 @@ Skills are multi-stage workflows. Use them when a task requires sequential steps
 
 Use [/edit-page-titles](.github/skills/edit-page-titles/SKILL.md) to identify a page's doc type,
 align its page and menu titles, and rename its Markdown file while checking affected references.
+
+### Batch documentation migration
+
+Use [/migrate-docs](.github/skills/migrate-docs/SKILL.md) to import multiple release branches
+for one product in a single invocation:
+
+```text
+/migrate-docs versioned inspec all <SOURCE_REPO> <TARGET_REPO>
+```
+
+Replace the following:
+
+- `<SOURCE_REPO>`: the local Chef InSpec documentation repository path
+- `<TARGET_REPO>`: the local `chef/chef-web-docs` repository path
+
+Use a comma-separated list such as `7.3,7.2,6.8` instead of `all` to select versions.
+The skill discovers local and remote-tracking `release-<version>` branches, confirms the
+version mapping, and processes each version's content in an isolated source worktree.
+Before importing, it detects nonempty content or static destinations, including versions
+already migrated, and asks whether to exclude them or stop.
+It doesn't overwrite existing imports without explicit approval.
+It applies shared navigation configuration after all content imports, then runs final
+validation against one site build and preview server with coverage for every selected
+version.
+Batch imports also support in-repo versioned migrations; unversioned migrations and
+same-branch reorganization remain single-import workflows.
 
 ### Comprehensive documentation review
 

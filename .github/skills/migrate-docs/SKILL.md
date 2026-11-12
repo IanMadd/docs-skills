@@ -1,7 +1,7 @@
 ---
 name: migrate-docs
-description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch, reorganize content within a single repository, or unversion content from a release branch. Supports versioned repos (branch-based, with a product/version directory structure), unversioned repos (default branch, flat product directory), in-repo versioned migrations (release branch to product/version subdirectory in the same repo), and in-repo reorganization (content root to product/version subdirectory on the same branch). Copies or moves content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links (skipped for in-repo reorganization). Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation, in-repo versioned migration, unversion content, same-repository migration, in-repo content migration, in-repo reorganization, reorganize content, move to versioned subdirectory, in-repo content reorganization.'
-argument-hint: "Migration type (versioned, unversioned, in-repo, or reorganize), product short name, version (versioned, in-repo, and reorganize only), source or repo path, and target repo path — e.g. 'versioned 360 1.6 /path/to/source-repo /path/to/chef/chef-web-docs', 'unversioned inspec /path/to/source-repo /path/to/chef/chef-web-docs', 'in-repo 360 1.6 /path/to/repo', or 'reorganize 360 1.6 /path/to/repo'"
+description: 'Migrate Chef documentation from a source repo to a product subdirectory in the chef/chef-web-docs main branch, reorganize content within a single repository, or unversion content from a release branch. Supports versioned repos (branch-based, with a product/version directory structure), unversioned repos (default branch, flat product directory), in-repo versioned migrations (release branch to product/version subdirectory in the same repo), and in-repo reorganization (content root to product/version subdirectory on the same branch). Imports one version, an explicit version list, or all discovered release versions in one batch for branch-based migrations, with shared configuration updates and final validation after all imports. Copies or moves content and static files, updates frontmatter menu references, transforms menu.toml, rewrites internal links, and strips the docs.chef.io domain from cross-product links (skipped for in-repo reorganization). Triggers on: migrate docs, versioned docs migration, unversioned docs migration, branch to subdirectory, docs migration, move versioned content, migrate unversioned content, reorganize docs, migrate versioned documentation, in-repo versioned migration, unversion content, same-repository migration, in-repo content migration, in-repo reorganization, reorganize content, move to versioned subdirectory, in-repo content reorganization, batch import docs, migrate all versions, import multiple versions.'
+argument-hint: "Migration type (versioned, unversioned, in-repo, or reorganize), product short name, version or comma-separated versions or all (branch-based migrations), source or repo path, and target repo path. Examples: 'versioned inspec all /path/to/chef-inspec-docs /path/to/chef-web-docs', 'versioned inspec 7.3,7.2,6.8 /path/to/chef-inspec-docs /path/to/chef-web-docs', 'unversioned inspec /path/to/source-repo /path/to/chef-web-docs', 'in-repo 360 all /path/to/repo', or 'reorganize 360 1.6 /path/to/repo'"
 ---
 
 # Migrate docs to a product subdirectory
@@ -22,6 +22,10 @@ repository. Supports four migration types:
   move from `static/images/` to `static/<product>/<version>/images/`; the
   `docs.chef.io` domain-stripping stage is skipped for this type
 
+Versioned and in-repo versioned migrations accept one version, a comma-separated version
+list, or `all` to import every discovered release version in one invocation.
+Unversioned migrations and in-repo reorganization remain single-import workflows.
+
 Stages:
 
 1. **Gather inputs and validate** — collects required inputs and confirms the repo or repos exist
@@ -30,6 +34,9 @@ Stages:
 4. **Update menu.toml** — merges source menu sections into a single menu in the target; adds the version to the version switcher (versioned, in-repo versioned, and in-repo reorganization only)
 5. **Rewrite links** — updates internal content links, image paths, and shortcode file paths
 6. **Strip docs.chef.io domain** — removes the `docs.chef.io` domain from cross-product links (versioned, unversioned, and in-repo versioned only; skip for in-repo reorganization)
+
+For a batch, follow [Batch execution](#batch-execution) instead of completing the entire
+workflow, including verification, separately for each version.
 
 ---
 
@@ -63,8 +70,12 @@ Ask the user for the following if not already provided:
    If the product name doesn't appear, that's expected for the first version being added.
    Confirm the intended directory path with the user: `content/<product>/<version>/`.
 
-3. **Version** *(versioned, in-repo versioned, and in-repo reorganization migrations)* —
-   the version number to migrate, for example `1.6`.
+3. **Version selection** _(versioned and in-repo versioned migrations)_---one version
+   (for example `1.6`), a comma-separated list (for example `7.3,7.2,6.8`), or `all`.
+   Discover and confirm the exact versions before importing when the user requests all
+   versions or provides a list.
+   **In-repo reorganization** accepts exactly one version; don't repeat a root-content
+   move for multiple versions.
 
 4. **Source repo path** *(versioned, unversioned, and in-repo versioned migrations only)* —
    the absolute path to the local clone of the source documentation repository, for example
@@ -93,10 +104,53 @@ Ask the user for the following if not already provided:
    `/Users/me/code/progress-platform-services/chef-web-docs`. This path serves as both
    source and target.
 
+### Resolve the version selection
+
+For version lists and `all` in versioned and in-repo versioned migrations, list local
+and remote-tracking release branches once:
+
+```shell
+git -C <SOURCE_REPO> for-each-ref --format='%(refname)' 'refs/heads/release-*' 'refs/remotes/*/release-*'
+```
+
+Replace `<SOURCE_REPO>` with the source repository path, or the shared repository path
+for an in-repo versioned migration.
+This discovers refs already available locally; it doesn't fetch or create local branches.
+If the expected refs aren't available, report that and ask whether to fetch before
+continuing.
+
+- Extract the version suffix from each `release-<version>` branch.
+  For `all`, select numeric versions such as `5.23` and `7.3`; flag other suffixes for
+  clarification rather than silently treating maintenance branches as versions.
+- Deduplicate local and remote-tracking copies of the same version.
+  Prefer the local branch only when its commit matches the remote-tracking copies.
+  If refs for the same version point to different commits, record the conflict and ask
+  which ref to use before importing that version.
+  Resolve destination collisions first so an already migrated version can be excluded
+  without choosing a source commit unnecessarily.
+- For an explicit list, trim whitespace, deduplicate versions, and resolve only those
+  requested.
+  If any version remaining in the approved import queue is missing or ambiguous, stop
+  before importing anything.
+- Sort the selected versions newest first using numeric version components, not
+  alphabetical or decimal-number ordering; for example, `7.10` precedes `7.3`.
+- Record each selected version's full ref and resolved commit ID.
+  Use the recorded commit throughout the import so a moving ref can't change the source
+  halfway through the batch.
+
+For example, a checkout with `release-5.23`, `release-5.24`, `release-6.8`,
+`release-7.0`, `release-7.1`, `release-7.2`, and `release-7.3` produces seven imports,
+ordered `7.3,7.2,7.1,7.0,6.8,5.24,5.23`.
+Don't hard-code this example list or count.
+
 ### Derive migration identifiers
 
 From the inputs, derive the following values and confirm them with the user before
 continuing:
+
+For a batch, derive a separate set of identifiers for each selected version.
+Confirm the complete version-to-ref, commit, menu, content, and static path mapping in
+one plan rather than asking for each version separately.
 
 **Versioned migration:**
 
@@ -167,7 +221,7 @@ ls <repo>/.git
 
 If the check fails, stop and ask the user to correct the path.
 
-Confirm the current branch is not `main`:
+**In-repo reorganization only**---confirm the current branch is not `main`:
 
 ```shell
 git -C <repo> branch --show-current
@@ -185,6 +239,72 @@ ls <repo>/content/<product> 2>/dev/null
 ```
 
 If the directory exists, warn the user and ask for confirmation before continuing.
+
+### Detect destination collisions
+
+For both single-version and batch branch-based migrations, inspect every proposed
+destination before creating directories, worktrees, or copied files.
+Check the content target `content/<product>/<version>/` and the static version root
+`static/<product>/<version>/` in the target repository, including untracked and hidden
+entries.
+Don't infer that a version is unmigrated just because its configuration is missing.
+
+If a destination exists and is a directory, check for any entry, not just Markdown files:
+
+```shell
+find <DESTINATION_PATH> -mindepth 1 -maxdepth 1 -print -quit
+```
+
+Replace `<DESTINATION_PATH>` with each resolved content or static destination path.
+Any output means the directory is nonempty and the version has a collision.
+An absent or empty directory alone isn't a content collision.
+Treat a file or symlink at a destination, or an inspection error such as a permissions
+failure, as blocking rather than treating it as an empty directory.
+Check existing menu and version-switcher entries separately for configuration conflicts.
+
+Report all collisions together, with the version and occupied paths.
+Ask the user to exclude those versions from this invocation, stop, or explicitly approve
+a scoped replacement or resumption plan.
+Recommend excluding versions already migrated; never silently overwrite, merge, delete,
+or rerun transformations on their content.
+An instruction to import `all` isn't permission to replace existing content.
+
+After the user approves exclusions, remove those versions from the import queue and
+leave their content, static files, menus, and version entries unchanged.
+For example, if `7.3` already has content, report it as a collision and, with approval,
+import only `7.2,7.1,7.0,6.8,5.24,5.23`.
+Record excluded versions separately from successful imports and don't count them in
+batch totals.
+If no versions remain, report that there's nothing to import and stop without editing
+files or running final validation.
+
+Recheck destinations immediately before each version's Stage 1 directory creation and
+copy.
+If a previously empty destination now contains entries, stop for a new decision rather
+than letting `rsync` merge or overwrite files.
+
+### Validate source snapshots
+
+For batches, validate every selected commit before creating any target files.
+Validate only versions remaining in the approved import queue after collision handling.
+Complete these checks before importing:
+
+- Confirm its `content/`, `config/_default/menu.toml`, and
+  `config/_default/params.toml` exist using `git ls-tree` and `git show`.
+  Check whether `static/images/` exists; if it doesn't, confirm that no images need to
+  be copied rather than letting an unexpected copy error pass.
+  Skip that version's static copy only when the absence is confirmed and recorded.
+- Read menu names, identifier conventions, and search product/version keys from that
+  commit, not from the source checkout or another release.
+  Don't assume these values stay the same between versions.
+- Inspect the target working tree and resolve any remaining configuration conflicts
+  for every selected version before writing.
+- Confirm distinct versions produce distinct target paths and menu names.
+  Stop on collisions or missing required inputs.
+
+The branch and source-file checks below apply to single imports.
+For batches, the commit-based checks above replace them, including the final
+source-checkout `menu.toml` check.
 
 **Versioned migrations only** — confirm the source branch exists:
 
@@ -225,6 +345,109 @@ ls <source-repo>/config/_default/menu.toml
 ```
 
 If it is missing, report the error and stop.
+
+---
+
+## Batch execution
+
+Use this execution order for version lists and `all` in versioned or in-repo versioned
+migrations.
+Keep the batch workflow even if discovery or approved exclusions leave only one version.
+A request for one explicit version uses the existing single-import workflow.
+
+1. Complete Stage 0 once for the entire selection.
+   Record the approved plan, existing target changes, and per-version progress in session
+   state outside the target content tree.
+   Collect confirmations for source menu names and identifier conventions together.
+1. Process each selected version sequentially through Stages 1–5, with the shared writes
+   below deferred.
+   Scope every copy, transformation, and local check to that version's destination.
+   Complete its content transformations before starting the next version; don't run
+   replacements across the entire product directory.
+1. Apply the accumulated shared configuration changes once, after every selected
+   version completes its content stages.
+1. Run [Verification](#verification) once for the completed batch, using one site build
+   and preview server, with coverage for every selected version.
+1. Return one combined migration summary with per-version results and batch totals.
+
+Sequential per-version transformations keep source-specific rules isolated and bound
+temporary disk use.
+Batch repository discovery, confirmations, shared configuration writes, and site
+validation instead of parallelizing writes to shared target files.
+Don't claim a speed improvement without measuring it.
+
+### Keep source snapshots isolated
+
+For both branch-based migration types, create a temporary detached worktree for the
+current version's recorded commit instead of checking out branches in the source
+working tree:
+
+```shell
+git -C <SOURCE_REPO> worktree add --detach <WORKTREE_PATH> <SOURCE_COMMIT>
+```
+
+Replace the following:
+
+- `<SOURCE_REPO>`: the source repository path, or the shared repository path for in-repo migrations
+- `<WORKTREE_PATH>`: a unique, unused temporary path outside the source and target repositories
+- `<SOURCE_COMMIT>`: the commit ID recorded for this version in Stage 0
+
+For batch imports, this overrides Stage 1's checkout and worktree setup instructions.
+Use this worktree for every source read in Stages 1–5, including content, images, menus,
+and search/version parameters.
+Keep it until all source reads and local transformations for that version finish;
+don't remove it immediately after copying static files.
+Then remove only this skill-created worktree with `git worktree remove` before
+processing the next version.
+Don't use force removal or change the source checkout.
+If cleanup fails, report the error and preserve the worktree for inspection.
+
+### Defer shared configuration writes
+
+During each version's content stages:
+
+- Run Stage 2g using that version's source search keys and write its cascade only to its
+  own destination `_index.md`.
+- Prepare the Stage 2h `params.toml` version entry without writing it.
+- Read and transform that version's source menu in Stages 3a and 3b, but defer the
+  Stage 3c confirmation and write and the Stage 3d version-switcher write.
+- Keep Stage 1's copy checks and Stages 2–5's scoped transformation checks.
+  These catch import errors early; they're not the final build, browser, or link check.
+
+After all versions finish, combine the prepared changes with the target's existing
+`menu.toml` and `params.toml`.
+Preserve unrelated configuration and any pre-existing target edits.
+Show the complete combined configuration diff and request one confirmation before
+writing either file.
+If the user declines, leave configuration unapplied and report the batch as incomplete.
+
+Apply approved additions in one editing pass per shared file.
+Add each version's menu and switcher entries exactly once; reuse an existing entry only
+if it matches the intended configuration.
+Ask before replacing a conflicting entry.
+Order version entries newest first by numeric components, and assign menu switcher
+weights consistently with that order, including existing versions.
+If that requires editing an excluded version's entry, show the conflict and request
+approval rather than changing the excluded entry.
+Don't change which version is the default unless the user approves that change.
+
+### Handle failures and interrupted batches
+
+If preflight or a per-version step fails, stop and report the version, stage, error, and
+paths already changed.
+Don't silently skip a version, apply incomplete shared configuration, or start final
+validation while selected imports remain unfinished.
+Preserve completed imports and unrelated working-tree changes; don't roll back or delete
+them automatically.
+Clean up only skill-created worktrees when safe.
+
+Record which versions completed content stages, whether shared configuration was applied,
+and whether final validation passed.
+On resumption, compare that state with the actual files and ask about discrepancies.
+Don't rerun non-idempotent prefix or link substitutions on already transformed content.
+Resume at the first unfinished operation; if a partial version needs a clean reimport,
+get approval for the exact destination files to replace first.
+Don't report success until every selected version and the final batch validation pass.
 
 ---
 
@@ -290,6 +513,9 @@ If there are uncommitted changes, warn the user and ask for confirmation before
 proceeding. Do not discard changes without explicit permission.
 
 ### Create target directories
+
+For branch-based migrations, complete the destination collision check immediately before
+this step, even for a single-version import.
 
 **Versioned:**
 
@@ -378,7 +604,7 @@ rsync -av \
   <target-repo>/static/<product>/images/
 ```
 
-**In-repo versioned** — copy from the worktree, then remove the worktree:
+**In-repo versioned** — copy from the worktree:
 
 ```shell
 rsync -av \
@@ -386,7 +612,10 @@ rsync -av \
   <repo>/static/<product>/<version>/images/
 ```
 
-After the rsync completes, remove the worktree:
+Keep the worktree until all source reads finish, including the search parameter lookup
+in Stage 2g and the source menu read in Stage 3a.
+For batches, follow the worktree lifetime in [Batch execution](#batch-execution).
+After the final source read, remove the worktree:
 
 ```shell
 git -C <repo> worktree remove <worktree-path>
@@ -494,6 +723,9 @@ example `get_started/enroll_nodes`). Preserve whichever convention the source re
 Before running any replacements, read the source `menu.toml` to identify all menu array
 names used in that repo. Don't assume them — they vary by product.
 
+For batches, read the current source worktree's `config/_default/menu.toml` instead of
+using the source checkout or an unpinned release branch in the commands below.
+
 **Versioned and unversioned migrations:**
 
 ```shell
@@ -518,8 +750,7 @@ Check the identifier format used in a few source files to understand the convent
 before running any replacements:
 
 ```shell
-grep '^identifier = ' <target-repo>/content/<product>/*/about.md 2>/dev/null \
-  || grep -r '^identifier = ' <target-repo>/content/<product>/ | head -5
+grep -r '^identifier = ' <target-repo>/content/<product>/<version>/ | head -5
 ```
 
 Note whether identifiers use fully qualified paths (for example
@@ -648,7 +879,18 @@ grep -A5 '\[search\.products\.' <source-repo>/config/_default/params.toml \
   | grep -A4 '<product>'
 ```
 
-**In-repo versioned and in-repo reorganization:**
+**In-repo versioned** (read from the source worktree, not the target's current branch):
+
+```shell
+grep -A5 '\[search\.products\.' <WORKTREE_PATH>/config/_default/params.toml
+```
+
+For a single in-repo import, `<WORKTREE_PATH>` is the temporary release worktree.
+For batches, use the current version's source worktree for both branch-based migration
+types, including in the versioned source-path command above.
+Read the matching product and version entry, not another release's search key.
+
+**In-repo reorganization:**
 
 ```shell
 grep -A5 '\[search\.products\.' <repo>/config/_default/params.toml \
@@ -702,6 +944,8 @@ frontmatter opens and closes with `+++` and that the TOML is properly indented.
 ### Step 2h: Add version entry to params.toml (versioned, in-repo versioned, and in-repo reorganization only)
 
 For **unversioned migrations**, skip this step.
+For batches, prepare this entry per version, but defer the write to the shared
+configuration pass in [Batch execution](#batch-execution).
 
 The repo's `config/_default/params.toml` contains a `[[versions.<product>]]`
 array that drives the version switcher UI. Each entry maps a display label to a URL.
@@ -762,6 +1006,8 @@ grep -A3 '^\[\[versions\.<product>\]\]' <repo>/config/_default/params.toml
 ### Step 3a: Read the source menu
 
 Read the source `config/_default/menu.toml` in full.
+For batches, read from the current source worktree, not from the source checkout or an
+unpinned release branch in the commands below.
 
 **Versioned and unversioned migrations:**
 
@@ -865,6 +1111,9 @@ weight = 10
 ```
 
 ### Step 3c: Confirm and append
+
+For batches, defer this step and Step 3d until all versions complete their content
+stages, then confirm and apply the combined configuration diff once.
 
 Show the user the complete new section before making any changes. Ask for confirmation
 before writing to the file.
@@ -1201,7 +1450,13 @@ them manually.
 
 ## Verification
 
-After all stages complete, verify the migration before committing:
+For a single import, verify after all stages complete and before committing.
+For a batch, don't run these final checks inside the per-version loop.
+Start only after every selected version completes Stages 1–5 and the combined shared
+configuration is applied.
+Run one target-site build and reuse one preview server for the entire batch.
+If a check fails, fix the affected files and rerun the necessary checks; don't repeat
+successful imports.
 
 1. **Build locally**: Run the Hugo dev server in the target repo and confirm pages load:
 
@@ -1229,20 +1484,46 @@ After all stages complete, verify the migration before committing:
    - The left-nav menu appears and is structured correctly
    - Images render correctly on content pages
 
+   For batches, open every selected `/<product>/<version>/` section using the same server.
+
 2. **Check links**: Run the `fix-broken-links` skill against the locally served site,
    scoped to the product path, to catch any links that weren't updated.
+
+   For batches, run this as one final link-checking phase after all versions are present
+   so cross-version destinations exist.
+   Ensure every selected version is crawled; don't assume one version's links reach all
+   others.
+   Use one product-scoped crawl if it reaches them all; otherwise check each selected
+   version from its own start URL using the same server.
+   Report unrelated existing product-path failures separately from migration failures.
 
 3. **Spot-check pages**: Manually verify at least three pages — choose a section index, a
    deeply nested content page, and a page with images and cross-product links.
 
+   For batches, select at least three pages per version, not three pages for the batch.
+
 4. **Confirm menu** *(versioned, in-repo versioned, and in-repo reorganization only)*:
    Confirm the version appears in the version switcher on the product landing page.
+
+   For batches, confirm every selected version appears once, in newest-first order,
+   points to the correct section, and selects the correct menu when opened.
+   Verify the existing default version hasn't changed without approval.
 
 ---
 
 ## Final output
 
 After all stages complete, return a `## Migration summary` section with:
+
+For batches, return one summary, not a separate final response per version.
+Include the selected versions and pinned refs/commits, a per-version table of the counts
+below, and batch totals.
+List excluded versions and their collision paths separately; don't label them as newly
+imported or validated.
+List shared configuration changes once and report the exact validation commands,
+results, and browser coverage by version.
+If the batch stops early, distinguish completed content imports, partial or unstarted
+versions, shared configuration status, and final validation that hasn't run or passed.
 
 - Migration type: versioned, unversioned, in-repo versioned, or in-repo reorganization
 - Source repo or repo path, branch (versioned and in-repo versioned) or current branch
